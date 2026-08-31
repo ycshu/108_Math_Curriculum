@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>數學領域108課綱興革簡介</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f4; --bg-line:#d7dee6; --surface:#ffffff; --surface-2:#f6f8fa;
+  --ink:#1a2733; --ink-soft:#4b5b6b; --ink-faint:#7c8b99; --border:#d7dee6;
+  --accent:#1f3a5f; --accent-soft:#eaf0f8; --accent-strong:#13253f;
+  --chip-bg:#f3f5f8; --chip-border:#c9d3dc; --chip-text:#1f3a5f;
+  --hl-bg:#f7efdd; --hl-border:#e0cfa4;
+  --shadow:0 1px 2px rgba(20,30,45,.06), 0 6px 20px -8px rgba(20,30,45,.12);
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#111823; --bg-line:#1e2836; --surface:#161f2b; --surface-2:#1b2531;
+    --ink:#e7edf3; --ink-soft:#aebccb; --ink-faint:#7f8fa0; --border:#28333f;
+    --accent:#8fb2de; --accent-soft:#1c2d42; --accent-strong:#c3d8f0;
+    --chip-bg:#1c2733; --chip-border:#334454; --chip-text:#a9c5e6;
+    --hl-bg:#2c2413; --hl-border:#57491f;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+body{
+  margin:0;
+  background:
+    linear-gradient(var(--bg-line) 1px, transparent 1px) 0 0/100% 32px,
+    linear-gradient(90deg, var(--bg-line) 1px, transparent 1px) 0 0/32px 100%,
+    var(--bg);
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px; line-height:1.85;
+}
+h1,h2,h3,h4{ font-family:"Noto Serif TC","Noto Sans TC",serif; color:var(--ink); text-wrap:balance; margin:0; }
+a{color:var(--accent);}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
+.shell{ max-width:1140px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 96px; }
+
+.masthead{ padding:56px 0 34px; border-bottom:1px solid var(--border); margin-bottom:36px; }
+.eyebrow{ font-family:"IBM Plex Mono",monospace; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-faint); display:flex; gap:10px; align-items:center; margin-bottom:18px; }
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.masthead h1{ font-size:clamp(1.9rem,4.2vw,2.8rem); font-weight:900; line-height:1.2; max-width:20ch; }
+.masthead .subtitle{ font-family:"Noto Serif TC",serif; font-size:1.1rem; color:var(--ink-soft); margin-top:6px; }
+.masthead .byline{ margin-top:18px; font-size:.92rem; color:var(--ink-soft); }
+.masthead .byline b{ color:var(--ink); }
+.masthead p.lede{ margin-top:18px; max-width:68ch; color:var(--ink-soft); font-size:1.02rem; }
+
+.layout{ display:grid; grid-template-columns:216px minmax(0,1fr); gap:48px; align-items:start; }
+@media (max-width:900px){ .layout{grid-template-columns:1fr;} }
+nav.toc{ position:sticky; top:20px; max-height:calc(100vh - 40px); overflow-y:auto; padding-right:8px; border-right:1px solid var(--border); }
+@media (max-width:900px){
+  nav.toc{ position:static; max-height:none; border-right:none; border-bottom:1px solid var(--border); padding-bottom:14px; margin-bottom:8px; }
+}
+nav.toc .toc-label{ font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:12px; display:block; }
+nav.toc a{ display:block; text-decoration:none; color:var(--ink-soft); font-size:.87rem; padding:6px 8px; border-radius:7px; }
+nav.toc a.lv2{ padding-left:22px; font-size:.82rem; }
+nav.toc a:hover{ background:var(--surface-2); color:var(--ink); }
+
+main{min-width:0;}
+section.block{ margin-bottom:56px; scroll-margin-top:20px; }
+section.block .kicker{ font-family:"IBM Plex Mono",monospace; font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+section.block h2{ font-size:clamp(1.4rem,2.6vw,1.8rem); font-weight:700; margin-bottom:16px; }
+section.block h3{ font-size:1.12rem; font-weight:700; margin:30px 0 12px; }
+section.block h4{ font-size:1rem; font-weight:700; margin:22px 0 10px; font-family:"Noto Sans TC"; }
+section.block p{ max-width:72ch; margin:0 0 14px; }
+section.block ul{ max-width:72ch; padding-left:1.3em; margin:0 0 14px; }
+section.block li{ margin-bottom:6px; }
+
+.keypoints{
+  background:var(--accent-soft); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px 24px; margin:24px 0; max-width:76ch;
+}
+.keypoints .kp-label{ font-family:"IBM Plex Mono",monospace; font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+.keypoints ul{ margin:0; padding-left:1.2em; }
+.keypoints li{ font-size:.92rem; color:var(--ink-soft); margin-bottom:6px; }
+.keypoints li b{ color:var(--ink); }
+
+.table-wrap{ overflow-x:auto; margin:18px 0 26px; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); }
+table{ border-collapse:collapse; width:100%; min-width:560px; background:var(--surface); font-size:.89rem; }
+th,td{ padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
+thead th{ background:var(--surface-2); font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface-2);}
+td.rowhead{ font-weight:700; white-space:nowrap; }
+td.hl{ background:var(--hl-bg); }
+tbody tr:hover td.hl{ background:var(--hl-bg); filter:brightness(.97); }
+.tbl-note{ font-size:.82rem; color:var(--ink-faint); margin:-16px 0 24px; max-width:72ch; }
+
+.pill{ display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.74rem; font-weight:600;
+  padding:2px 10px; border-radius:999px; white-space:nowrap; }
+.p-add{ color:#1f7a52; background:#e6f3ec; }
+.p-move{ color:#96650c; background:#f7efdd; }
+.p-lite{ color:#3f6a86; background:#e9f0f4; }
+.p-del{ color:#a13c3c; background:#f6e9e9; }
+.p-strong{ color:#1f3a5f; background:#eaf0f8; }
+@media (prefers-color-scheme: dark){
+  .p-add{ color:#5cb98b; background:#12291f; }
+  .p-move{ color:#d9a441; background:#2c2413; }
+  .p-lite{ color:#8bacc4; background:#182530; }
+  .p-del{ color:#e08585; background:#2c1717; }
+  .p-strong{ color:#8fb2de; background:#182739; }
+}
+code.code{ font-family:"IBM Plex Mono",monospace; font-size:.86em; background:var(--chip-bg); border:1px solid var(--chip-border);
+  color:var(--chip-text); padding:.05em .45em; border-radius:6px; white-space:nowrap; }
+
+figure.diagram{ margin:24px 0; padding:20px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow-x:auto; }
+figure.diagram svg{ max-width:100%; height:auto; display:block; margin:0 auto; }
+figure.diagram figcaption{ font-size:.84rem; color:var(--ink-soft); margin-top:12px; max-width:70ch; }
+
+footer{ margin-top:64px; padding-top:24px; border-top:1px solid var(--border); color:var(--ink-faint); font-size:.82rem;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+footer a{ color:var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="masthead">
+  <div class="eyebrow"><span class="dot"></span>寫給中等學校師培教授・108 課綱 × 99 課綱／九年一貫</div>
+  <h1>數學領域 108 課綱興革簡介</h1>
+  <div class="subtitle">數學領域教學研究中心（中學組）設置計畫</div>
+  <div class="byline"><b>單維彰、舒宇宸</b>・2025 年 12 月 31 日</div>
+  <p class="lede">中等學校教育學程是培育國中、高中教師的學程，屬於師資職前教育。這份簡報是為了在此學程中負責數學領域教材教法、教學實習或相關課程的師長們準備的，旨在說明 108 課程綱要（數學領域）相對於過去的主要變異，讓教學過程中更能掌握學生先備知識，釐清知識建構脈絡，鋪墊未來學習目標。</p>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="目錄">
+  <span class="toc-label">目錄</span>
+  <a href="#origin">壹・源起：課綱、總綱與領綱</a>
+  <a class="lv2" href="#goal">教育目標</a>
+  <a class="lv2" href="#track">高二分類</a>
+  <a class="lv2" href="#hours">課時規劃</a>
+  <a class="lv2" href="#content">內容與表現多元對應</a>
+  <a href="#stages">貳・各階段的變革</a>
+  <a class="lv2" href="#elementary">國小階段</a>
+  <a class="lv2" href="#junior">國中階段</a>
+  <a href="#senior">參・高中階段的變革</a>
+  <a class="lv2" href="#senior-table">高中異動簡表</a>
+  <a class="lv2" href="#mathb99">數學乙：99 vs 108</a>
+  <a class="lv2" href="#ab11">11 年級 A／B 差異</a>
+  <a class="lv2" href="#ab12">12 年級甲／乙差異</a>
+</nav>
+
+<main>
+
+<!-- ================= 壹 ================= -->
+<section class="block" id="origin">
+  <div class="kicker">壹</div>
+  <h2>源起：課綱、總綱與領綱</h2>
+  <p>50 年前，小學、初等中學、高級中學各有一份「課程標準」。而民國 89 年起，國中小合併為一份「九年一貫」「課程綱要」；於 108 年高中也整併起來，成為「十二年一貫」「課程綱要」，成為目前大家口中的 108 課綱。在課綱中，過去習慣說的國一、高一等年級，正式名稱分別為七年級、十年級。這個一貫性，使得不同學習階段的內容可以完整地被檢視、考量及設計。而課程「標準」與「綱要」的差異，主要在於法律位階的用詞，與師資職前教育的關係不大。</p>
+  <p>108 課綱分為「總綱」與「領綱」兩個層次，總綱規劃了整體的教育目標與方向以及原則，如其核心的三面九項等。總綱中也規定各領域各學習階段的每週課時──國中（七至九年級）為第四學習階段、高中（十至十二年級）為第五學習階段。高中又分為普通型與技術型。本文在高中階段，多針對普通型高中進行比較。</p>
+  <p>「領綱」是各學習領域的課程綱要。以前習慣說「科」，現在合併某些科為「領域」。數學領域目前只有數學科，所以這種新分類格式對我們影響很小。其他領域──例如語文領域、自然領域、社會領域──各分為三、四或更多科。後續用「領域」來分配資源會是一個可能的趨勢。</p>
+  <p>由於總綱的規劃，數學領綱在以下四個面向因應總綱的設計：教育目標、高二分類、課時規畫，以及內容與表現。以下就這四個面向進一步說明。</p>
+
+  <h3 id="goal">教育目標</h3>
+  <p>十二年國民教育的總教育目標就是「素養導向」。關於這個標語已經有非常多的闡述，可參閱筆者為數學領域所做的專題網頁：<a href="https://shann.idv.tw/edu/literacy.html" target="_blank" rel="noopener">shann.idv.tw/edu/literacy.html</a>。</p>
+  <p>簡要言之：素養導向的數學教育並不意味著變淺變簡單，也未否定做純數學的解題的重要性，而是關注每個教學與評量活動的目的，是為了支持學生在未來社會生活與專業發展所需的、基礎的、具有普遍性的數學知識內容與思考能力。為此，我們希望數學教學所提出的課程設計與評量問題，能呼應課綱所提出的素養導向，避免如「謎題」似的造作難題，以提升學生的知識泛化能力，引領學生有感的數學直覺與深入的剖析闡釋為目標。</p>
+  <p>因此，數學領綱非常嚴肅地支持「素養導向」總目標，具體的宣示即展現於數學教育的五大理念：</p>
+  <ul>
+    <li>數學是一種語言，宜由自然語言的題材導入學習。</li>
+    <li>數學是一種實用的規律科學，教學宜重視跨領域的統整。</li>
+    <li>數學是一種人文素養，宜培養學生的文化美感。</li>
+    <li>數學應提供每位學生有感的學習機會。</li>
+    <li>數學教學應培養學生正確使用工具的素養。</li>
+  </ul>
+  <p>但所有興革都不會一次到位，教育需要大量教師的共同參與，更不能操之過急。故 108 課綱實施以來的教科書作者與審訂同仁都認真評估這五項教育理念的實踐情形，逐步調整教材，（高中）數學學科中心以及（國中）數學輔導團也都持續辦理教師在職培訓研習，來逐步落實這些理念。所以，素養導向的數學教育目標，絕非口號而已，而是已經在各個階段中落實。</p>
+
+  <h3 id="track">高二分類</h3>
+  <p>總綱要求數學領域在 11 年級分 A、B 兩類課程──而且強調不接受一類者包含另一類者之設計，必須為「需要不同類型數學」的學生專門設計課程。加上原來在 12 年級行之多年的甲、乙兩門選修課，導致大考中心一共為數學領域提供四種考試，兩種（A、B）在學科能力測驗，兩種（甲、乙）在分科測驗。四種考試並不是總綱與領綱的設計初衷，但是課綱當責機構（國家教育研究院）與大考中心有各自的堅持與理念。</p>
+  <p>課綱設計的初衷是：首先，全國學生共同學習的數學內容在 10 年級結束。技術型高中的數學課綱與普通高中雖然不同，但是也最大限度地對齊 10 年級的課程，使得 10 年級完成「共同必修」的設計理念，得以實踐。從 11 年級起，（普通型）高中數學為學生提供多元學習路徑，如下圖。</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 260" role="img" aria-label="11年級起數學分為三個軌道的學習路徑：10年級共同必修後，數學A可接數學甲或數學乙，數學B依公告版路徑經補足先備後選修數學乙，或不選修">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="20"  y="100" width="150" height="56" rx="9"/>
+        <rect x="280" y="30"  width="150" height="56" rx="9"/>
+        <rect x="280" y="170" width="150" height="56" rx="9"/>
+        <rect x="545" y="8"   width="150" height="48" rx="9"/>
+        <rect x="545" y="86"  width="150" height="48" rx="9"/>
+        <rect x="545" y="196" width="150" height="48" rx="9"/>
+      </g>
+      <g font-family="'Noto Sans TC',sans-serif" font-size="14" fill="currentColor" text-anchor="middle">
+        <text x="95" y="123">10 年級</text><text x="95" y="143">共同必修</text>
+        <text x="355" y="53">11 年級</text><text x="355" y="73">數學 A</text>
+        <text x="355" y="193">11 年級</text><text x="355" y="213">數學 B</text>
+        <text x="620" y="37">12 年級・數學甲</text>
+        <text x="620" y="115">12 年級・數學乙</text>
+        <text x="620" y="225">自行選修或不選</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.4" fill="none" marker-end="url(#arr)">
+        <path d="M170,116 C 220,100 235,80 278,64"/>
+        <path d="M170,140 C 220,158 235,178 278,192"/>
+        <path d="M430,50 C 490,42 500,36 543,32"/>
+        <path d="M430,70 C 490,84 500,96 543,106"/>
+        <path d="M430,206 C 490,212 500,216 543,219"/>
+      </g>
+      <path d="M430,186 C 495,168 505,140 543,122" stroke="currentColor" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+      <text x="497" y="148" font-family="'Noto Sans TC',sans-serif" font-size="11.5" fill="currentColor" opacity=".75" text-anchor="middle">補足先備知識後選修</text>
+    </svg>
+    <figcaption>11 年級起的多元學習路徑。虛線是公告版領綱所示、由數學 B 銜接數學乙的「繞道」路徑；如下文所述，課綱原意是數學 A 或數學 B 皆可直接選修數學乙。</figcaption>
+  </figure>
+
+  <p>在學習路徑圖中，原先的設計並沒有從「數學B」先轉進「數學A」再拉到「數學乙」的路徑，而是從「數學A」或「數學B」都可以選修「數學乙」；如前述，數學B並不是數學A的子集合。「數學乙」的內容設計，使得「數學A」或「數學B」都包含「數學乙」的先備知識，而「數學乙」教科書須適應數學成熟度與代數操作能力都比較基本的學生。但是在審議過程中，與課審委員討論協調之後，改成了「繞道」的路徑圖。改變之後公告於領綱的圖，容易讓人詮釋「數學B」的學生必須具備「數學A」的能力，才能選修「數學乙」──大考中心本來也如此主張，後來改正了──這並不是課綱的原意；各版本「數學乙」教科書應該可以讓「數學B」的學生選修。</p>
+  <p>我們建議如此理解高中數學學習路徑的設計：數學A、B是不同的模組設計，課綱預期選擇數學A的同學在數學甲研究更深入的數學，而數學B著重在數學與各領域的連結，選擇數學A或數學B都可在數學乙學習更廣泛的應用。</p>
+
+  <h3 id="hours">課時規劃</h3>
+  <p>跟三十年前相比，數學課的授課時數有相當明顯的降幅。但是最近二十年以來，也就是自從高中的 95 暫綱、國中的九年一貫 97 課綱實施以來，中學數學的授課時數改變不大：基本上 7 至 11 年級的必修課程，額定授課時數皆為每週四節，但 7 至 9 年級（國中）各校可以從「彈性學習節數」增加 0 至 1 節數學課，私立學校的自由度可能更高，實際情況可以詢問現場教師或者剛從高中畢業的學生。12 年級的選修課程時數還略為提高了：從 95 暫綱的每週三節課，到 99 課綱數學甲每週四節課、數學乙每週三節課，現在 108 課綱不論「數學甲」或「數學乙」都是每週四節課。</p>
+  <p>九年一貫課綱已成歷史，本文補註一點細節。九年一貫課程的總綱為語文領域保留較高比例的授課時數，而「平等」看待數學及其他五個領域，這六個領域均分剩下的「領域節數」。按此原則，7 至 9 年級應該有每週四節數學課。此外，所有領域可以協商若干「彈性節數」；有些學校的數學領域可能爭取到每週一節彈性節數，那麼每週就有五節數學課，但是確實有些學校沒有爭取到，那就是每週四節數學課。相對地，108 課綱的國中階段數學課時則是固定的每週四節。</p>
+  <p>相對而言，高中「數學B」和「數學乙」的授課時數確實變得較為寬裕。希望教師善用這些時間，用較平緩的學習坡度、較細緻的教學活動來教學。</p>
+
+  <h3 id="content">內容與表現的多元對應</h3>
+  <p>過去的課程標準曾經寫得像教科書的目錄，但 108 課綱按照學習內容與學習表現兩大向度來編寫；形式上，它們就是兩張大表格。學習內容以學年為單位，按各主題描述教學的知識內容，各版教科書只要在一年內（兩冊書）完成這些內容即可，不限定先後順序。學習表現則描述知識教學的目標，是為了讓學生展現怎樣的能力、怎樣的態度。內容與表現之間有多對多的連結，整體組成數學教育的目標。</p>
+  <p>108 數學領綱計有以下七個主題，它們各以一個英文字母標記。</p>
+  <ul>
+    <li>數與量，記作 <code class="code">N</code>。</li>
+    <li>空間與形狀，記作 <code class="code">S</code>；亦即無坐標的幾何。</li>
+    <li>關係，記作 <code class="code">R</code>；國小階段專用，7 年級以後發展為代數或函數。</li>
+    <li>資料與不確定性，記作 <code class="code">D</code>。</li>
+    <li>坐標幾何，記作 <code class="code">G</code>。</li>
+    <li>代數，記作 <code class="code">A</code>。</li>
+    <li>函數，記作 <code class="code">F</code>。</li>
+  </ul>
+  <p>教科書必須根據學習內容和學習表現提供學生學習的機會。有時候學習表現牽動學習內容，例如學習表現 <code class="code">s-IV-12</code>「理解直角三角形中某一銳角的角度決定邊長的比值，認識這些比值的符號，並能運用到日常生活的情境解決問題」引導了 9 年級基本三角比的教材內容。</p>
+
+  <div class="keypoints">
+    <div class="kp-label">重點整理</div>
+    <ul>
+      <li><b>課綱演變脈絡</b>：50 年前小學、國中、高中各有獨立「課程標準」→ 民國 89 年國中小合併為「九年一貫課程綱要」→ 民國 108 年高中整併進來，成為「十二年一貫課程綱要」，即 108 課綱。</li>
+      <li><b>年級正式名稱</b>：國一改稱七年級、高一改稱十年級。</li>
+      <li><b>素養導向的教育目標</b>：不是變淺變簡單，而是關注教學與評量活動的目的；具體體現於五大理念（語言、實用、人文、有感學習、工具素養）。</li>
+      <li><b>不同需求的分流機制</b>：數學 A、B、甲、乙為不同模組；選 A 可在數學甲更深入，選 B 著重數學與各領域連結；不論數 A 或數 B 均可在數學乙學習跨域應用。</li>
+      <li><b>固定時數的課時規劃</b>：維持每週四節；教師可為不同需求的學生設計不同的學習坡度。</li>
+      <li><b>內容與表現多元對應</b>：學習內容（知識內容，以學年為單位）與學習表現（能力與態度目標）兩大向度，多對多連結。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 貳 ================= -->
+<section class="block" id="stages">
+  <div class="kicker">貳</div>
+  <h2>各階段的變革：國小、國中到高中</h2>
+
+  <h3 id="elementary">108 數學領綱國小階段的變革</h3>
+  <p>中等學校的數學教師有必要知道國小課程的關鍵變革，特別是 7 年級教師，更需要留意。</p>
+  <p><b>兩件重要的遷移</b>：第一，原本 6 年級的比與比值單元之後，接著正比，但 108 課綱的 6 年級沒有正比。雖然正比關係可能保留在「速度」的解題中，但是畢竟沒有正式的「正比」單元。第二，國小不再講等量公理，推移到國中了。這是 7 年級教師要負責教導的內容。</p>
+  <p><b>兩件重要的新增</b>：3 年級的二維表格新增了列聯表（crosstabs 或 cross-tabulation table 或 contingency table），6 年級新增了可能性。在 3 年級那麼早引進列聯表，是期望這個工具可以隨著學生的算術能力一起成長，例如從整數發展到小數、分數、百分比，並且提早接觸統計或數據議題。而後在國中、高中繼續使用它，一直到 11 年級的條件機率。但是這個理想，在國小階段還有待實踐。實際上，國小畢業生可能只在 3 年級接觸列聯表，所以 7 年級教師不宜以複習的態度來處理列聯表。至於「可能性」則是不確定性（uncertainty）的初次接觸，用語言（形容詞）表達，並沒有將它量化。所以量化的可能性（機率）還是首次出現於 9 年級。</p>
+  <p>此外，在 3 年級新增了基本形體的展開圖（nets），並且在第一、第二、第三學習階段挪移了幾個主題。這些變化，在學生進入國中時的影響不大。特別提醒一下：國小畢業生知道二項比的比值，學過統計圖：長條圖（4 年級）、折線圖（5 年級）、圓形圖（6 年級）。</p>
+
+  <div class="keypoints">
+    <div class="kp-label">重點整理</div>
+    <ul>
+      <li>「正比」與「等量公理」從國小移除，改由 <b>7 年級負責教學</b>。</li>
+      <li>新增<b>列聯表</b>及<b>可能性</b>，分別於 7 年級與 9 年級再複習與處理。</li>
+      <li>兩項比的比值、長條圖、折線圖、圓形圖是國小畢業生學過的。</li>
+    </ul>
+  </div>
+
+  <h3 id="junior">108 數學領綱國中階段的變革</h3>
+  <p>108 數學領綱的國中階段標舉「<b>減法原則</b>」。除了很少數的新增內容或者需要加強以外，皆以刪除或輕量化作為國中數學課程的調整原則。簡略而言，國中課程輕量化了絕對值、等差數列與級數（特別強調不做反求首項與公差這種解題）、多項式四則運算、因式分解，刪除了弦切角、兩圓關係、兩圓的公切線、凸多邊形外角和公式、多邊形外心與內心的意義與相關性質、百分位數。特別需注意的是在 9 年級刪除了二次函數的配方程序（但保留 8 年級二次方程式的配方程序），學生僅處理已配方的二次函數。</p>
+  <p><b>三件重要的遷移</b>：第一，「三連比」。以前二項比與三連比都在 7 年級，考量三連比需要稍高的數學成熟度，所以將三連比拆開放到 9 年級。在教科書的發展過程中，特別注意到：沒有必要的時候──不涉及分母的時候──不要額外規定比的各項數值非零。期望國中階段的「比」可以有效成為高中階段「向量」的前置經驗。其次，「圓弧長與扇形面積的計算」，從 8 年級移到 9 年級，使得關於圓的課題較為集中，也更靠近高中（10 年級）圓方程式的學習。最後，關於「平面上的線對稱基本圖形、簡單立體圖形」，從 8 或 9 年級提前到 7 年級，搭配新增於 7 年級和 9 年級的內容（詳於後），期望學生有較多接觸空間課題的機會，因而能夠更為順利地建立空間概念。</p>
+
+  <h4>需加強的教學提醒</h4>
+  <p>關於需加強的教學，首先是正比與等量公理，以前是國小學過，國中再教一遍，108 課綱之後必須由國中獨自負責這兩個主題的教學。過去，國中教師通常不感覺學生學過這兩個主題，所以此項變革對教學現場的影響不太明顯。另一個希望加強的課題是古典機率（9 年級），希望與生活經驗中的應用多做連結，並希望更有效地運用「機率樹」和列聯表作為解決問題的工具。此項變革還需要教科書更費心的落實。</p>
+  <p>特別需要加強的是<b>計算機（calculator）</b>，在內容上應知它的功能，在表現上應能操作並用於解決問題。其實自從民國六十年代起，「計算機」相關文字就一直寫在課程標準／綱要裡，代代相傳，但是似乎不論教科書還是教室現場都沒有察覺它的存在。108 課綱主張國小學生應該學習並精熟小位數的筆算與心算，自國中階段起應培育「正確使用工具的素養」。這個理念在高中教科書實踐得比國中更明顯，國中教科書也有所改變。可是實際上因為心測中心（國中教育會考）與大考中心（學測與分科測驗）都不准學生攜帶計算機應試，「工具素養」的教育成效相當受到戕害，還有待教師與社會大眾持續關注。</p>
+  <p>兩個小幅的新增是 7 年級的三視圖以及 8 年級的等比數列（當然是有限數列，不涉及求和）。三視圖是為了提供空間概念的學習機會，並且是社會生活中常見的應用；因為它是首度加入數學課程，所以相當保守地限定了教學範圍。等比數列是為了提供另一個數學規律性的學習機會，並且特別強調不做反求首項與公比的謎題式解題。事實上，國中階段將等差、等比併陳，是希望提供一個連結指數律的機會，作為對數概念的動機或前置經驗，可惜教科書並沒有探索這條可能的學習路徑。</p>
+  <p>過去的國中課程僅在 9 年級提供空間概念的學習機會，而且內容與國小階段無異，可謂複習。108 課綱將這部分的空間形體移到 7 年級，搭配三視圖，使得 7 年級有一次空間概念的學習機會，並於 9 年級新增「空間中的線與平面」，指定在長方體的框架內，學習空間中線與線、線與面、面與面的關係，特別強調法線性質的初步接觸：當長方體之一稜 AF 垂直於面 DFGK 時，AF 垂直於面上以 F 為端點的任一線。9 年級的空間技能學習，期望發展為 10 年級的空間中的三角測量，作為空間概念漸進發展的課程。實際上，教科書在前述課程設計上的落實程度，還可望持續改進。</p>
+  <p>國中階段最受矚目的新增是<b>三角比（trigonometric ratios）</b>。課綱在這邊提出從解決問題的素養導向切入三角比。此一主題的內容是在概念上了解直角三角形的任一銳角決定三邊長的比（三連比），因此任兩邊的比值是固定的數，古人已經算出那些數，在解決問題為前提下先利用計算機查詢即可。在表現上，學生需知計算機上 sin、cos、tan 查到的各是哪兩邊的比值，並且直接用那個數據做一步計算（一次乘法或一次除法）而解決問題，杜絕任何推論，也沒有平方關係、商數關係等代數性質。各版教科書都將 tan 連結了坡度，並特別以百分比表示坡度。三角比是綜合幾何（無坐標的古典幾何）連接坐標幾何（解析幾何的中學版本，微積分與線性代數的先備知識）的樞紐，過去國中階段包含六個三角函數的教學內容，且評量目標傾向數學的學科導向而非解決問題的素養導向，因為素養導向為重，且因應時數減少的輕量化，這樞紐將在高中課程更熟悉三角函數相關內容後再行深入。故重新設計的三角比課程內容，跟過去國中三角函數的課程已全然改弦易轍，請教師們於三角比時多著重於素養與連結。</p>
+  <p>如前述，列聯表其實是國小階段新增的課題，但在國中階段也要複習並運用它。對於國中教師而言，這相當於一個新增內容。</p>
+
+  <h4>108 課綱第四學習階段（國中）異動表</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:14%">主題</th><th>學習內容</th><th style="width:12%">年段</th><th style="width:12%">異動</th></tr></thead>
+      <tbody>
+        <tr><td class="rowhead" rowspan="6">數與量</td>
+            <td>N-8-6 等比數列</td><td>八</td><td><span class="pill p-add">新增</span></td></tr>
+        <tr><td>計算機的使用（N-7-8、N-7-9、D-7-1、N-8-2、N-9-1、S-9-5、D-9-1）</td><td>七、八、九</td><td><span class="pill p-strong">強化</span></td></tr>
+        <tr><td>N-9-1 連比</td><td>七→九</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>N-8-5 等差數列求和</td><td>八</td><td><span class="pill p-lite">輕量化</span></td></tr>
+        <tr><td>A-8-3 多項式的四則運算</td><td>八</td><td><span class="pill p-lite">輕量化</span></td></tr>
+        <tr><td>（九年一貫）7-n-05 能認識絕對值，並能利用絕對值比較負數的大小</td><td>七</td><td><span class="pill p-del">刪減</span></td></tr>
+        <tr><td class="rowhead" rowspan="13">空間與形狀<br>坐標幾何</td>
+            <td>S-9-5 直角三角形的三角比</td><td>九</td><td><span class="pill p-add">新增</span></td></tr>
+        <tr><td>S-9-13 空間中的線與平面</td><td>九</td><td><span class="pill p-add">新增</span></td></tr>
+        <tr><td>S-7-2 三視圖</td><td>七</td><td><span class="pill p-add">新增</span></td></tr>
+        <tr><td>S-7-1 簡單圖形與幾何符號</td><td>八→七</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>S-7-3 簡單立體圖形</td><td>九→七</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>S-7-4 垂直</td><td>八→七</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>S-7-5 線對稱</td><td>八→七</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>S-7-6 線對稱基本圖形</td><td>八→七</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>S-9-6 圓弧長與扇形面積</td><td>八→九</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>（九年一貫）圓的弦切角、兩圓的外公切線長與內公切線長</td><td>八</td><td><span class="pill p-del">刪減</span></td></tr>
+        <tr><td>（九年一貫）凸多邊形外角和公式</td><td>八</td><td><span class="pill p-del">刪減</span></td></tr>
+        <tr><td>（九年一貫）兩圓關係</td><td>九</td><td><span class="pill p-del">刪減</span></td></tr>
+        <tr><td>（九年一貫）9-s-08／9-s-09 多邊形外心、內心的意義和相關性質</td><td>九</td><td><span class="pill p-del">刪減</span></td></tr>
+        <tr><td class="rowhead">代數</td><td>無</td><td>—</td><td>—</td></tr>
+        <tr><td class="rowhead" rowspan="3">函數</td>
+            <td>F-8-1 一次函數／F-8-2 一次函數的圖形</td><td>七→八</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>（九年一貫）二次函數的配方</td><td>九</td><td><span class="pill p-del">刪減</span></td></tr>
+        <tr><td colspan="3" style="border-bottom:none"></td></tr>
+        <tr><td class="rowhead" rowspan="3">資料與<br>不確定性</td>
+            <td>D-7-1 統計圖</td><td>九→七</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>D-8-1 統計資料</td><td>九→八</td><td><span class="pill p-move">調移</span></td></tr>
+        <tr><td>（九年一貫）9-d-04 百分位數的概念（第 10、25、50、75、90 百分位數）</td><td>九</td><td><span class="pill p-del">刪減</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="keypoints">
+    <div class="kp-label">重點整理</div>
+    <ul>
+      <li>依年級需注意<b>新增</b>或移動調整之題材：<b>7 年級</b>：正比、等量公理、三視圖；以及統計圖、簡單平面、立體對稱圖形等。<b>8 年級</b>：等比數列；以及一次函數。<b>9 年級</b>：三角比、空間中的線與平面；以及連比、圓弧長、扇形面積等。</li>
+      <li><b>刪減</b>：弦切角、兩圓關係、兩圓公切線、凸多邊形外角和公式、多邊形外心與內心、百分位數、二次函數的配方等。</li>
+      <li><b>輕量化</b>：絕對值、等差數列與級數、多項式四則運算、因式分解。</li>
+      <li>刪減或輕量化之題材<b>部分會在高中階段再學習</b>。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 參 ================= -->
+<section class="block" id="senior">
+  <div class="kicker">參</div>
+  <h2>108 數學領綱高中階段的變革</h2>
+  <p>108 數學領綱最大的變化發生在高中階段，本文僅說明普通型高中。前面已經說明總綱規定數學領域在 10、11 年級為必修，但 11 年級分為 A、B 兩類課程（學分數相等）。12 年級維持甲、乙兩門選修課。</p>
+  <p>為實踐素養導向之最高原則，而且配合以 10 年級作為全體學生共同必修的課程架構，原先安排在 10 年級的複數與方程式論，全都移到了 12 年級選修，而且數甲、數乙的內容有所區隔。有人質疑數學乙既然是為了商管學院設計，何必教複數？簡單說就是為「素養」：就連暢銷小說和舞台劇都涉及虛數了，課綱認為高中畢業生都應該至少知道虛數。但是，在此理念之下，數學 B 沒有足夠的時數安排虛數，這是 108 課綱的遺憾之一。</p>
+  <p>因為國中階段的「減法原則」有些課題就加進了高中。包括絕對值的展開，涉及絕對值的等式與不等式；但是高中課綱也輕量化絕對值的代數操作，不希望做太多的琢磨。其次，科學記號數字的四則運算、數據分析的百分位數、二次函數的配方（從一般式到標準式），都進入了 10 年級課程。</p>
+  <p>相對於更早的高中課程，108 課綱的 10 年級仍有三角與對數，看似差異不大。但是如同前面解釋的國中三角比，新舊課綱對於高一三角和對數的設計理念，跟過去非常不同。108 課綱跟 99 普高課綱相比，則對三角做了較大改編。99 課綱最重大的變革之一，是將三角課題拆成三角比與三角函數兩塊，分別安排在 11、12 年級（選修）。108 課綱對三角做了<b>跨階段的統整設計</b>，將三角次第安排在 9、10、11 年級：9 年級學習銳角的（三個）三角比，已經在前面解釋過；10 年級一般化為單位圓上的三角比（仍僅討論三個），並加入平方關係與各種對稱關係，讓學生有更緩的學習坡度，同時也滿足其他學科對於三角比的需求。至於對數，表面看來仍在 10 年級，但其實將對數拆成 10、11 年級兩段教學，10 年級僅限常用對數（以 10 為底），設計理念是將它視為實數（數線）的進一步學習，教學重點是搭配實數的科學記號以及概數之有效位數溝通（為搭配計算機之使用），及早支援其他學科對於數學語言的需求。真正的對數函數、三角函數都是 11 年級的學習內容。</p>
+  <p>三視圖、列聯表雖沒有直接顯示在高中階段的課綱，教學中可以從國中小延伸過來，並適當地應用它們。以 10 年級的三角測量為例，它是運用三視圖的好機會，來延續 9 年級的空間主題，提供學生多樣化的觀點。</p>
+  <p>如前述，高中教科書比國中更積極地融入計算機，這項變革屬於學習表現，從內容中不太看得出來；雖然目前大考仍未有合適的方式引入，我們仍要以素養導向教育的立場做好數學教育──包括教科書、課堂活動、形成性評量──來培育學生正確使用工具的素養。「如今 AI 工具如此強大，以往完成不了的任務在 AI 中有可能一蹴可及，學生在其中學習了什麼？」故引入計算機作為學習與解決問題的工具，就是希望從使用初等計算機的過程中，培養領略解題的程序及思維的工具素養。</p>
+
+  <h3 id="senior-table">108 課綱第五學習階段（高中）異動簡表</h3>
+
+  <h4><span class="pill p-del">刪除</span>　必修部份（相對於 99 課綱數學 I, II, III, 和 IV-A）</h4>
+  <p class="tbl-note" style="margin-top:0">請注意這裡的刪除主要強調不是所有學生都會修習；後續「搬移」段落另外說明部分項目搬到數 A、B、甲、乙的何處。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:8%">#</th><th>項目</th><th style="width:22%">範圍</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>多項式函數的拉格朗日插值法、有理根判定、勘根定理</td><td>共同</td></tr>
+        <tr><td class="mono">2</td><td>複數系、方程式的虛根、代數基本定理</td><td>共同</td></tr>
+        <tr><td class="mono">3</td><td>重複組合</td><td>共同</td></tr>
+        <tr><td class="mono">4</td><td>連加符號 Σ</td><td>共同</td></tr>
+        <tr><td class="mono">5</td><td>三角比與對數值的查表</td><td>共同</td></tr>
+        <tr><td class="mono">6</td><td>線性規劃</td><td>共同</td></tr>
+        <tr><td class="mono">7</td><td>二次曲線</td><td>A 類必修</td></tr>
+        <tr><td class="mono">7</td><td>三角的和差公式</td><td>B 類必修</td></tr>
+        <tr><td class="mono">8</td><td>三角不等式、柯西不等式</td><td>B 類必修</td></tr>
+        <tr><td class="mono">9</td><td>線性變換、轉移方陣</td><td>B 類必修</td></tr>
+        <tr><td class="mono">10</td><td>空間概念之三垂線定理</td><td>B 類必修</td></tr>
+        <tr><td class="mono">11</td><td>空間中的直線、平面方程式</td><td>B 類必修</td></tr>
+        <tr><td class="mono">12</td><td>三元一次聯立方程式、三階行列式</td><td>B 類必修</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4><span class="pill p-del">刪除</span>　選修部份（相對於 99 課綱數學 IV-B＋選修數學甲、選修數學乙）</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:8%">#</th><th>項目</th><th style="width:22%">範圍</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>抽樣與統計推論</td><td>共同</td></tr>
+        <tr><td class="mono">2</td><td>一般三角函數的性質與圖形</td><td>選修乙</td></tr>
+        <tr><td class="mono">3</td><td>數列及其極限</td><td>選修乙</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4><span class="pill p-lite">輕量化</span></h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:8%">#</th><th>項目</th><th style="width:22%">範圍</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>含絕對值的一次方程式、絕對值不等式</td><td>共同</td></tr>
+        <tr><td class="mono">2</td><td>排列組合：教學目標設定在得到古典機率所需的計數範圍，以及二項式展開</td><td>共同</td></tr>
+        <tr><td class="mono">3</td><td>三角測量：不另立單元，並且以長方體為主要模型</td><td>共同</td></tr>
+        <tr><td class="mono">4</td><td>一般底的對數</td><td>共同</td></tr>
+        <tr><td class="mono">5</td><td>平面向量的幾何表示（不在坐標平面上的平面向量）</td><td>共同</td></tr>
+        <tr><td class="mono">6</td><td>三元一次聯立方程式的三平面關係</td><td>共同</td></tr>
+        <tr><td class="mono">7</td><td>複數系、方程式的虛根</td><td>A 類必修＋選修乙</td></tr>
+        <tr><td class="mono">7</td><td>三角恆等式</td><td>B 類必修</td></tr>
+        <tr><td class="mono">8</td><td>（認識）圓錐曲線</td><td>B 類必修</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4><span class="pill p-move">搬移</span>　（對應前述刪除的必修項目，在數 A、B、甲、乙中的去向）</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:8%">#</th><th>項目與去向</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>複數系、方程式的虛根：10 → 12 年級選修（甲、乙有所區隔）</td></tr>
+        <tr><td class="mono">2</td><td>勘根定理：10 年級 → 選修數學甲（在 10 年級以「十進制小數的估計」呈現）</td></tr>
+        <tr><td class="mono">3</td><td>指數與對數函數：10 → 11 年級，但有理指數與常用對數留在 10 年級（A、B 類有所區隔）</td></tr>
+        <tr><td class="mono">4</td><td>連加符號：10 → 12 年級（選修甲、選修乙）</td></tr>
+        <tr><td class="mono">5</td><td>條件機率與貝氏定理：10 → 11 年級</td></tr>
+        <tr><td class="mono">6</td><td>極坐標、廣義角：11 → 10 年級</td></tr>
+        <tr><td class="mono">7</td><td>直線方程式、圓方程式：11 → 10 年級</td></tr>
+        <tr><td class="mono">8</td><td>廣義角的三角比（正弦定理、餘弦定理）：11 → 10 年級</td></tr>
+        <tr><td class="mono">9</td><td>線性規劃：11 年級 → 選修數學乙</td></tr>
+        <tr><td class="mono">10</td><td>二次曲線：11 年級 → 選修數學甲</td></tr>
+        <tr><td class="mono">11</td><td>弧度量、三角函數：12 年級選修甲、乙 → 11 年級（A、B 類有所區隔）</td></tr>
+        <tr><td class="mono">12</td><td>正餘弦函數的疊合：12 年級選修甲 → 11 年級 A 類</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4><span class="pill p-add">新增</span></h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:8%">#</th><th>項目</th><th style="width:22%">範圍</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>計算機融入教學，附帶科學記號數字與有效數字</td><td>共同</td></tr>
+        <tr><td class="mono">2</td><td>二次、三次函數的局部圖形近似於一條直線</td><td>共同</td></tr>
+        <tr><td class="mono">3</td><td>（數據分布）百分位數</td><td>共同</td></tr>
+        <tr><td class="mono">4</td><td>（10 年級古典機率）期望值</td><td>共同</td></tr>
+        <tr><td class="mono">5</td><td>主觀機率和客觀機率的概念</td><td>共同</td></tr>
+        <tr><td class="mono">6</td><td>認識球面上的經線與緯線</td><td>B 類必修</td></tr>
+        <tr><td class="mono">7</td><td>連續複利與 e 的認識</td><td>B 類必修</td></tr>
+        <tr><td class="mono">8</td><td>列聯表與文氏圖的關聯</td><td>B 類必修</td></tr>
+        <tr><td class="mono">6</td><td>幾何分布</td><td>選修甲</td></tr>
+        <tr><td class="mono">7</td><td>認識指對數函數的標準底 e</td><td>選修甲</td></tr>
+        <tr><td class="mono">8</td><td>牛頓求根法</td><td>選修甲</td></tr>
+        <tr><td class="mono">9</td><td>認識含 xy 項的二元二次方程式圖形</td><td>選修甲</td></tr>
+        <tr><td class="mono">6</td><td>多項式函數的微分及其應用</td><td>選修乙</td></tr>
+        <tr><td class="mono">7</td><td>多項式函數的積分及其應用</td><td>選修乙</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="mathb99">數學乙的態度轉變：99 → 108</h3>
+  <p>在課程規畫上，108 課綱仍有數學乙選修，而且分配的學分數跟數學甲一樣（4 學分）。可是 108 課綱對待數學乙的態度有所改變：以前將數學乙視為文組與社會組的混合，意識上作為文、法、商學系的招生工具。108 課綱將文組學生的數學素養教育設計在高二選擇 B 類課程，在高三可以不選修數學，而且希望分割數學學科與考科的觀念──在編制 108 課綱的時候，另有一組委員試圖修改大學入學考試，當時主張延後考試時間，並且分科考試的範圍限定於高三選修課──所以將數學乙設計為跨領域數學應用所需的數學準備。一個顯著的變革是：過去數學乙有函數的極限內容，卻沒有微積分，使得極限偏向純粹的數學理論。108 課綱的數學乙則有了實際的微積分內容，且強調從經濟學選取微積分的應用範例。</p>
+  <p>108 課綱的數學乙，和前一代 99 課綱數學乙的差異，統整於下表。而 108 課綱數學甲跟前一代相比，主要差異在於複數主題，其他的變革不太大，只是在理念上更重視微積分，就不另外列表比較了。</p>
+
+  <h4>選修數學乙在前後兩代課綱的變革簡表</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:14%">主要課題</th><th style="width:40%">99 課綱</th><th>108 課綱</th></tr></thead>
+      <tbody>
+        <tr><td class="rowhead">基本精神</td>
+            <td>為人文、社會領域之大學階段學習做準備。每學期 3 學分的一學年課程。</td>
+            <td>為社會科學與財務、金融、管理相關領域之大學階段學習做準備。除了教學內容的差異之外，範例與習題皆應依此基本精神而取捨。每學期 4 學分的一學年課程。</td></tr>
+        <tr><td class="rowhead">函數</td>
+            <td>函數的定義、圖形、四則運算，合成函數。</td>
+            <td>圖形的對稱關係（奇偶性），凹凸性的意義。</td></tr>
+        <tr><td class="rowhead">無窮與極限</td>
+            <td>無窮數列的極限概念，無窮等比級數（含循環小數），夾擠定理。函數的連續性與其在實數 a 的極限，極限的運算性質，介值定理。</td>
+            <td>無窮等比級數（含循環小數），多項式、指對數、三角、簡單反比函數的連續性與其在實數 a 的極限，極限的運算性質，介值定理，夾擠定理。</td></tr>
+        <tr><td class="rowhead" rowspan="2">微分</td>
+            <td>無。</td>
+            <td>導數與導函數的極限定義，切線與導數，多項式函數之導函數，微分基本公式及係數積和加減性質。</td></tr>
+        <tr><td>無。</td>
+            <td>二階導數，萊布尼茲符號。函數的單調性與凹凸性判定，基本的最佳化問題，導數的邊際意涵。</td></tr>
+        <tr><td class="rowhead" rowspan="3">積分</td>
+            <td>無。</td>
+            <td>微積分基本定理。</td></tr>
+        <tr><td>無。</td>
+            <td>一次與二次函數的反導函數與定積分。定積分在面積與總變化量的意涵。</td></tr>
+        <tr><td>無。</td>
+            <td>連續函數值的平均，總量與剩餘意涵。</td></tr>
+        <tr><td class="rowhead">線性規劃</td>
+            <td>無。（屬於高二必修課程。）</td>
+            <td>目標函數為一次式的極值問題，平行直線系。</td></tr>
+        <tr><td class="rowhead">機率與統計</td>
+            <td>同右。另有抽樣與統計推論，常態分布，及信賴區間、信心水準的解讀。</td>
+            <td>離散型隨機變數的期望值、變異數、標準差，獨立性，伯努力試驗與重複試驗。二項分布的性質與參數。</td></tr>
+        <tr><td class="rowhead">三角函數</td>
+            <td>弧度量，三角函數的倒數與平方關係，三角函數的圖形。</td>
+            <td>無。（分散在高一和高二 A 類必修課程。）</td></tr>
+        <tr><td class="rowhead">複數</td>
+            <td>無。（屬於高一必修課程。）</td>
+            <td>複數平面，複數的四則運算與絕對值。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="ab11">11 年級 A 類、B 類必修課程差異</h3>
+  <p>108 課綱的數學課程架構，最大的變革是高二（11 年級）分為兩類課程，而且互不包含。這兩種課程對於學生的表現目標是有一般性差異的，從學習內容看不出這種差異。籠統而言，數學 B 對於數學成熟度──如邏輯推理與代數操作的複雜度──的要求較少，對於社會生活所需之數學素養有較多著墨；有些學生可能以數學 B 作為學校裡的最後一門數學課。</p>
+  <p>11 年級 A、B 兩類課程的差異，呈現於下表。<b>著色的欄位表示 B 類比 A 類多出來的內容</b>。對數學 A 學生而言，這些課題有些會在選修數甲或數乙學到，有些則是 A 類課程的特殊化應用，不另立內容條目：例如球面上經緯線，是空間概念與三角比、正射影的應用。</p>
+
+  <h4>108 課綱 11 年級 A 類、B 類必修課程差異簡表</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:14%">主要課題</th><th style="width:44%">A 類必修</th><th>B 類必修</th></tr></thead>
+      <tbody>
+        <tr><td class="rowhead">三角函數</td>
+            <td>弧度量、sin, cos, tan 函數的圖形、定義域、值域、週期性，週期現象的數學模型（cot, sec, csc 之定義與圖形作為延伸，不納入大考範圍）。正餘弦的和角、半角公式，同頻率正餘弦波的疊合。</td>
+            <td>弧度量、sin 函數的圖形、週期性，週期現象的數學模型。</td></tr>
+        <tr><td class="rowhead" rowspan="2">指數函數與對數函數</td>
+            <td rowspan="2">指數函數及其圖形，按比例成長或衰退的數學模型。對數律、指數與對數的換底，常用對數函數的圖形。指對數在科學和金融上的應用。</td>
+            <td>指數函數與對數函數及其生活上的應用。</td></tr>
+        <tr><td class="hl">連續複利與 e、自然對數的認識。</td></tr>
+        <tr><td class="rowhead" rowspan="2">空間概念</td>
+            <td rowspan="2">空間的基本性質，空間中兩直線、兩平面、及直線與平面的位置關係，三垂線定理，空間坐標系。</td>
+            <td>同左，但無「三垂線定理」。</td></tr>
+        <tr><td class="hl">利用長方體的展開圖討論表面上的兩點距離，認識球面上的經線與緯線。</td></tr>
+        <tr><td class="rowhead">向量</td>
+            <td>同右，增加面積與行列式。並增加空間向量的線性組合，內積與外積，三角不等式，柯西不等式。</td>
+            <td>平面向量的線性組合，正射影與內積，兩向量夾角。</td></tr>
+        <tr><td class="rowhead">線性代數</td>
+            <td>二元一次、三元一次聯立方程組的線性組合意涵。矩陣運算，反方陣，平面上的線性變換，轉移方陣。</td>
+            <td>二元一次聯立方程組的線性組合意涵。將矩陣視為資料表，在此意涵之下的矩陣運算。</td></tr>
+        <tr><td class="rowhead" rowspan="2">不確定性</td>
+            <td rowspan="2">主觀機率與客觀機率，獨立性、條件機率與貝氏定理，以及它們的綜合應用。</td>
+            <td>同左，但各種複合事件以兩個事件為原則。</td></tr>
+        <tr><td class="hl">列聯表與文氏圖的關聯。</td></tr>
+        <tr><td class="rowhead">空間中的解析幾何</td>
+            <td>三階行列式、平面方程式、空間中的直線方程式，以及它們的綜合應用。</td>
+            <td>無。</td></tr>
+        <tr><td class="rowhead">幾何與設計</td>
+            <td>無。</td>
+            <td class="hl">圓錐曲線：由平面與圓錐截痕，視覺性地認識圓錐曲線，及其在自然中的呈現。平面上的比例：生活情境與平面幾何的比例問題（在設計和透視上）。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="ab12">12 年級選修數學甲、乙的內容差異</h3>
+  <p>最後，仍以表格呈現 108 課綱 12 年級選修數學甲、乙的內容差異。如前面在總綱那一節的解釋，數學乙的教學與評量內容，需考慮讓數學 B 的學生能夠銜接。</p>
+
+  <h4>108 課綱 12 年級甲、乙選修課程差異簡表</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:14%">主要課題</th><th style="width:44%">數學甲</th><th>數學乙</th></tr></thead>
+      <tbody>
+        <tr><td class="rowhead">基本精神</td>
+            <td>為自然科學與工程技術相關領域之大學階段學習做準備。除了教學內容的差異之外，範例與習題皆應依此基本精神而取捨。</td>
+            <td>為社會科學與財務、金融、管理相關領域之大學階段學習做準備。除了教學內容的差異之外，範例與習題皆應依此基本精神而取捨。</td></tr>
+        <tr><td class="rowhead">函數</td>
+            <td>同右。另有反函數之數式演算與圖形對稱關係，一般性的合成函數。</td>
+            <td>函數的定義、四則運算，並有圖形的對稱關係（奇偶性），凹凸性的意義。認識分段定義函數與基本的合成觀念。</td></tr>
+        <tr><td class="rowhead">無窮與極限</td>
+            <td>同右。另有無窮數列的一般性極限概念，而且函數的範圍增加絕對值函數和分段定義函數。</td>
+            <td>無窮等比級數（含循環小數），多項式函數、簡單有理函數、分段函數的連續性，它們在實數 a 的極限。極限的運算性質，介值定理，夾擠定理。</td></tr>
+        <tr><td class="rowhead" rowspan="2">微分</td>
+            <td>同右。另有簡單代數函數之導函數。</td>
+            <td>導數與導函數的極限定義，切線與導數，多項式函數之導函數，微分基本公式及係數積和加減性質。</td></tr>
+        <tr><td>高階導數，萊布尼茲符號，微分乘法律，除法律，連鎖律。函數的單調性與凹凸性判定，一次估計，基本的最佳化問題。</td>
+            <td>二階導數，萊布尼茲符號。函數的單調性與凹凸性判定，基本的最佳化問題，導數的邊際意涵。</td></tr>
+        <tr><td class="rowhead" rowspan="3">積分</td>
+            <td>黎曼和與定積分的連結，微積分基本定理。</td>
+            <td>微積分基本定理。</td></tr>
+        <tr><td>多項式函數的反導函數與定積分。定積分在面積、位移、總變化量的意涵。</td>
+            <td>一次與二次函數的反導函數與定積分。定積分在面積與總變化量的意涵。</td></tr>
+        <tr><td>連續函數值的平均，圓的面積，球的體積，切片積分法，旋轉體體積。</td>
+            <td>連續函數值的平均，總量與剩餘意涵。</td></tr>
+        <tr><td class="rowhead">線性規劃</td>
+            <td>無。</td>
+            <td>目標函數為一次式的極值問題，平行直線系。</td></tr>
+        <tr><td class="rowhead">機率與統計</td>
+            <td>同右。另有幾何分布。</td>
+            <td>離散型隨機變數的期望值、變異數、標準差，獨立性，伯努力試驗與重複試驗。二項分布的性質與參數。</td></tr>
+        <tr><td class="rowhead">二次曲線</td>
+            <td>拋物線、橢圓、雙曲線的標準式，橢圓的參數式。</td>
+            <td>無。</td></tr>
+        <tr><td class="rowhead">複數</td>
+            <td>同右。另有複數的極式，複數運算的幾何意涵，棣美弗定理，複數的 n 次方根，根與係數關係。</td>
+            <td>複數平面，複數的四則運算與絕對值。方程式的虛根，代數基本定理。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <span>單維彰、舒宇宸・數學領域教學研究中心（中學組）設置計畫・2025 年 12 月 31 日</span>
+  <span><a href="../">回課程資源總覽</a>・<a href="../introduction/">108 課綱主題</a></span>
+</footer>
+
+</main>
+</div>
+</div>
+</body>
+</html>
