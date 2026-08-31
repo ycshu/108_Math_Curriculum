@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三大出版社數學課本比較</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#eeece6;
+  --bg-line:#dcd9cf;
+  --surface:#ffffff;
+  --surface-2:#f6f4ee;
+  --ink:#241f19;
+  --ink-soft:#5a5347;
+  --ink-faint:#8a8272;
+  --border:#ddd9cc;
+  --accent:#a3591e;
+  --accent-soft:#f5e9da;
+  --accent-strong:#6e3c11;
+  --chip-bg:#f6f0e6;
+  --chip-border:#e0d3bc;
+  --chip-text:#8a4d16;
+  --shadow:0 1px 2px rgba(35,25,10,.06), 0 6px 20px -8px rgba(35,25,10,.14);
+  --radius:10px;
+
+  --p-nani:#2f6f4f;    --p-nani-bg:#e9f2ec;
+  --p-knsh:#2454a0;    --p-knsh-bg:#e9eff8;
+  --p-hle:#8a3ba0;     --p-hle-bg:#f3eaf6;
+  --warn-bg:#fbf0dd;   --warn-border:#e7c98a; --warn-text:#6e4a12;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#171410; --bg-line:#25201a; --surface:#1c1813; --surface-2:#221d17;
+    --ink:#ece7de; --ink-soft:#bfb5a3; --ink-faint:#8c8371; --border:#332c22;
+    --accent:#dd9a56; --accent-soft:#2c2013; --accent-strong:#f0c290;
+    --chip-bg:#241d14; --chip-border:#3a2e1c; --chip-text:#e0ac6c;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+    --p-nani:#6fbf94;  --p-nani-bg:#132018;
+    --p-knsh:#7ea6df;  --p-knsh-bg:#131c2b;
+    --p-hle:#cf95df;   --p-hle-bg:#24162a;
+    --warn-bg:#2b2210; --warn-border:#5c4a22; --warn-text:#e7c98a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#171410; --bg-line:#25201a; --surface:#1c1813; --surface-2:#221d17;
+  --ink:#ece7de; --ink-soft:#bfb5a3; --ink-faint:#8c8371; --border:#332c22;
+  --accent:#dd9a56; --accent-soft:#2c2013; --accent-strong:#f0c290;
+  --chip-bg:#241d14; --chip-border:#3a2e1c; --chip-text:#e0ac6c;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+  --p-nani:#6fbf94; --p-nani-bg:#132018;
+  --p-knsh:#7ea6df; --p-knsh-bg:#131c2b;
+  --p-hle:#cf95df;  --p-hle-bg:#24162a;
+  --warn-bg:#2b2210; --warn-border:#5c4a22; --warn-text:#e7c98a;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    linear-gradient(var(--bg-line) 1px, transparent 1px) 0 0/100% 32px,
+    linear-gradient(90deg, var(--bg-line) 1px, transparent 1px) 0 0/32px 100%,
+    var(--bg);
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px; line-height:1.75;
+}
+h1,h2,h3,h4{ font-family:"Noto Serif TC","Noto Sans TC",serif; color:var(--ink); text-wrap:balance; margin:0; }
+a{color:var(--accent);}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
+
+.shell{ max-width:920px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 96px; }
+
+.masthead{ padding:48px 0 28px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+.eyebrow{ font-family:"IBM Plex Mono",monospace; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); display:flex; gap:10px; align-items:center; margin-bottom:16px; }
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.masthead h1{ font-size:clamp(1.8rem,4vw,2.5rem); font-weight:900; line-height:1.2; max-width:16ch; }
+.masthead p.lede{ margin-top:14px; max-width:66ch; color:var(--ink-soft); font-size:1.02rem; }
+
+.callout{
+  background:var(--warn-bg); border:1px solid var(--warn-border); color:var(--warn-text);
+  border-radius:var(--radius); padding:16px 20px; margin:22px 0 8px; font-size:.9rem; line-height:1.7;
+}
+.callout b{ color:inherit; }
+
+section.block{ margin:52px 0; }
+section.block .kicker{ font-family:"IBM Plex Mono",monospace; font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+section.block h2{ font-size:clamp(1.3rem,2.4vw,1.6rem); font-weight:700; margin-bottom:8px; }
+section.block .deck{ color:var(--ink-soft); max-width:68ch; margin-bottom:22px; font-size:.96rem; }
+section.block h3{ font-size:1.05rem; font-weight:700; margin:26px 0 10px; }
+section.block p{ max-width:68ch; }
+
+.pub-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:18px 0; }
+@media (max-width:760px){ .pub-grid{grid-template-columns:1fr;} }
+.pub-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px 20px; box-shadow:var(--shadow); border-top:3px solid var(--pc, var(--accent));
+}
+.pub-card h4{ font-size:1.02rem; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.pub-card h4 .sw{width:9px;height:9px;border-radius:50%;background:var(--pc);}
+.pub-card dl{ margin:0; display:grid; gap:10px; }
+.pub-card dt{ font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:2px; }
+.pub-card dd{ margin:0; font-size:.86rem; color:var(--ink-soft); line-height:1.6; }
+
+.src{ font-size:.72rem; color:var(--ink-faint); }
+.src a{ color:var(--ink-faint); text-decoration:underline; text-decoration-style:dotted; }
+
+.table-wrap{ overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); }
+table{ border-collapse:collapse; width:100%; min-width:520px; background:var(--surface); font-size:.88rem; }
+th,td{ padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
+thead th{ background:var(--surface-2); font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface-2);}
+td.pubname{font-weight:700;}
+
+.quote-card{
+  background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent);
+  border-radius:0 var(--radius) var(--radius) 0; padding:14px 18px; margin:10px 0; font-size:.9rem; color:var(--ink-soft);
+}
+.quote-card b{color:var(--ink);}
+
+.idea-card{
+  background:var(--accent-soft); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px 22px; margin-top:16px;
+}
+.idea-card h4{ font-size:.96rem; font-weight:700; color:var(--accent-strong); margin-bottom:8px; }
+.idea-card p{ font-size:.9rem; color:var(--ink-soft); margin:0; }
+
+ol.sources{ font-size:.84rem; color:var(--ink-soft); padding-left:1.3em; }
+ol.sources li{ margin-bottom:6px; }
+
+footer{ margin-top:56px; padding-top:22px; border-top:1px solid var(--border); color:var(--ink-faint); font-size:.82rem; }
+</style>
+
+<div class="shell">
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span>108 課綱數學課本・國中與高中兩組三強</div>
+    <h1>三大出版社數學課本比較</h1>
+    <p class="lede">國中三強是<b>南一、康軒、翰林</b>；高中三強則換成<b>龍騰、翰林、南一</b>（康軒不出高中教科書）。這份頁面整理兩個學段各自的編寫風格差異，全部以公開網路資訊為據、附來源。</p>
+    <div class="callout">
+      ⚠️ <b>先說清楚資料的性質</b>：教科書全文受著作權保護，網路上找不到可以逐頁比對的課本 PDF。以下內容整理自三家出版社的官方文宣／數位資源平台介紹、公開的教材簡介電子書、以及第一線教師與論壇（PTT、BabyHome）的比較心得——是「公開間接資訊」的整理，不是我逐頁翻閱三本課本比對出來的結果。每一段都附了來源；如果要做真正影響教學的選書判斷，建議直接向三家出版社業務索取樣書（他們通常很樂意送）。
+    </div>
+  </header>
+
+  <!-- ===== 國中 ===== -->
+  <section class="block">
+    <div class="kicker">7–9 年級</div>
+    <h2>國中：三家都在，內容趨同，風格分家</h2>
+    <p class="deck">108 課綱國中數學一開始（108 學年）三家單元順序差異頗大，經過 111 學年一次微調，到 113 學年已經「大致歸一統」——三家涵蓋的重點章節相同，單元也落在同一冊<span class="src">［<a href="https://amathing.world/108-math-contents/" target="_blank" rel="noopener">環遊數界</a>］</span>。真正留下的差異，是「怎麼教」而不是「教什麼」。</p>
+
+    <div class="pub-grid">
+      <div class="pub-card" style="--pc:var(--p-nani)">
+        <h4><span class="sw"></span>南一</h4>
+        <dl>
+          <dt>課文教學流程</dt><dd>固定走「溫故啟思 → 探索活動 → 課文講述 → 例題 → 隨堂練習 → 迷思診療 → 錯誤診療」七步驟，流程感最強。</dd>
+          <dt>編寫哲學</dt><dd>官方文宣明白寫「不精簡基礎概念、不趕課、分量均勻、素養簡單化」——訴求是放慢、降低學習負擔。</dd>
+          <dt>素養／議題欄目</dt><dd>章首生活情境漫畫引動機；章末「數養花路米」對應會考素養題；「數養廣角鏡」補跨領域延伸知識。</dd>
+          <dt>數位與教具</dt><dd>GeoGebra 互動教具、計算機操作示範影片；隨附實體教具如三視圖方塊、畢氏螺線、碎形四面體、歪斜線透明片。</dd>
+          <dt>習作設計</dt><dd>講義式編排，明確分「基礎練習」與「精熟練習」，每題標配分與難度，方便課堂檢討。</dd>
+        </dl>
+        <p class="src" style="margin-top:12px">來源：<a href="https://fliphtml5.com/uygal/nxuq/111%E5%8D%97%E4%B8%80%E5%9C%8B%E4%B8%AD%E6%95%B8%E5%AD%B8%E6%95%99%E6%9D%90%E7%B0%A1%E4%BB%8B%E6%9C%AC/" target="_blank" rel="noopener">南一 111 學年國中數學教材簡介本</a>（出版社官方文宣，可信度較高）</p>
+      </div>
+
+      <div class="pub-card" style="--pc:var(--p-knsh)">
+        <h4><span class="sw"></span>康軒</h4>
+        <dl>
+          <dt>定理呈現</dt><dd>教師反映較重視「證明過程」本身，會把推導步驟展開讓學生看到公式從哪裡來。</dd>
+          <dt>版面手法</dt><dd>常用表格整理教學內容（例如分類、性質對照），而非大段文字敘述。</dd>
+          <dt>習題設計</dt><dd>被形容「靈活、稍具挑戰性」，解完題目學生比較有成就感，但相對也偏難一點。</dd>
+          <dt>對答案動線</dt><dd>練習題答案就印在大題後面，學生可以當下核對，不用翻到書末。</dd>
+          <dt>數位資源</dt><dd>「康軒數位高手」「康軒雲」整合平台，主打單一入口取得備課、影音、題庫資源；具體教學設計理念的公開文字較少，多為平台導覽性質。</dd>
+        </dl>
+        <p class="src" style="margin-top:12px">來源：<a href="https://www.ptt.cc/bbs/tutor/M.1275492378.A.9B1.html" target="_blank" rel="noopener">PTT tutor 板教師比較文</a>（一線教學心得，非官方文宣，僅供參考）</p>
+      </div>
+
+      <div class="pub-card" style="--pc:var(--p-hle)">
+        <h4><span class="sw"></span>翰林</h4>
+        <dl>
+          <dt>定理呈現</dt><dd>被形容較重「描述」而非證明過程，公式有時「突然出現」，推導感比康軒弱。</dd>
+          <dt>文字風格</dt><dd>教師反映文字敘述偏多；部分習題被認為「跳 TONE」——與前面課文的直接關聯較弱，學生解完不一定清楚在練什麼。</dd>
+          <dt>對答案動線</dt><dd>解答印在書本最後面，需要翻頁核對。</dd>
+          <dt>數位資源</dt><dd>近年主打 AI 驅動：課本內建「六大核心作圖」＋分段影片教學、AI 互動類題、「極速搶答」課堂即時評量、雲端速測與雙核心 AI 教案診斷，數位化程度在三家中文宣最顯眼。</dd>
+          <dt>選用地區</dt><dd>傳統上北北基（台北市／新北市／基隆市）多校選用，被評為「扎實但對一般程度學生偏難」。</dd>
+        </dl>
+        <p class="src" style="margin-top:12px">來源：<a href="https://jr.hle.com.tw/jma-teach/" target="_blank" rel="noopener">翰林數學新亮點</a>（官方文宣）＋<a href="https://www.ptt.cc/bbs/tutor/M.1275492378.A.9B1.html" target="_blank" rel="noopener">PTT 教師比較文</a></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <h4>💡 教材教法課可以怎麼用</h4>
+      <p>三家「教什麼」高度重疊，正好可以拿同一個知識節點（例如上一份《國高中數學知識地圖》裡的「相似直角三角形邊長比值」或「二次函數」）當比較單位，讓學生分組找三家課本的對應章節，實際對照「定理先給結論還是先給推導」「例題與習題的落差大不大」「素養情境題放在哪裡」——這比單看文宣描述更貼近真實教學決策。</p>
+    </div>
+  </section>
+
+  <!-- ===== 高中 ===== -->
+  <section class="block">
+    <div class="kicker">10–12 年級</div>
+    <h2>高中三強：龍騰・翰林・南一（康軒缺席）</h2>
+    <p class="deck">康軒的產品線止於國中小，高中數學市場沒有康軒版。從各校公告的教科書選用清單與版本對照表來看，高中數學最常出現的組合是<b>龍騰、翰林、南一</b>三家（三民是有力的第四家，泰宇居次）——所以「國中三強」的康軒，到高中確實換成龍騰。龍騰長期深耕高中教科書市場（高中各科皆有），在數學科的版圖大致相當於康軒在國中的位置。</p>
+
+    <div class="pub-grid" style="grid-template-columns:1fr;">
+      <div class="pub-card" style="--pc:var(--p-knsh)">
+        <h4><span class="sw"></span>龍騰（高中新加入的比較對象）</h4>
+        <dl>
+          <dt>編排哲學</dt><dd>不採傳統章節冊次，改用「單元式／主題式」編排（高一全年 12 個主題逐步推進），官方訴求是給教師更大的進度彈性。</dd>
+          <dt>課程地圖</dt><dd>官方明確畫出六條「學習路線」貫穿十冊：指對數／三角函數／向量與空間／解析幾何／多項式函數／排組機統——與我們知識地圖的「知識節點軸線」思路一致，教材教法課可直接拿來對照。</dd>
+          <dt>銜接設計</dt><dd>刻意把「三角比」放在第二冊最後，無縫接軌高二上開頭的三角函數；高一先教「直線與圓」，讓學生用國中已熟的方程式概念理解圓方程式，之後才正式引入函數概念——明確回應 108 課綱國中把函數概念淡化後的銜接問題。</dd>
+          <dt>單元配套</dt><dd>每單元附教學目標、素養混合題、學習歷程資源（活動手冊、「教科書超展開」、「數B看見數學」）。</dd>
+        </dl>
+        <p class="src" style="margin-top:12px">來源：<a href="https://www.ltedu.com.tw/Web/Sharefile/EDM/curriculum-map/ghs/math/index.html" target="_blank" rel="noopener">龍騰文化高中數學課程地圖</a>（官方）＋<a href="https://family-free-work-learning.com/analysis-of-the-course-and-exam-of-the-108-syllabus-of-mathematics-in-senior-high-school/" target="_blank" rel="noopener">Gim's 數學課綱分析</a></p>
+      </div>
+    </div>
+
+    <h3>高一（10 年級）前幾章順序比較</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:16%">版本</th><th>章序安排</th></tr></thead>
+        <tbody>
+          <tr><td class="pubname">南一</td><td>第一章「實數與指對數」→ 第二章「直線與圓」（坐標幾何提前）</td></tr>
+          <tr><td class="pubname">翰林</td><td>「數與式」→「指數對數」→「多項式函數」，直線與圓延後到第四章</td></tr>
+          <tr><td class="pubname">三民 <span class="src">（參考）</span></td><td>「數與式」→「直線與圓」→「多項式函數」</td></tr>
+          <tr><td class="pubname">龍騰 <span class="src">（參考）</span></td><td>不分傳統冊次，採主題式編排，全年 12 個主題逐步推進</td></tr>
+          <tr><td class="pubname">泰宇 <span class="src">（參考）</span></td><td>「數與式」內直接涵蓋指數對數 →「圓與直線」→「多項式函數及其圖形」</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>高二數學 A 第三冊（11 年級）順序比較</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:16%">版本</th><th>章序安排</th></tr></thead>
+        <tbody>
+          <tr><td class="pubname">南一</td><td>三角函數 → 指數對數函數 → 平面向量</td></tr>
+          <tr><td class="pubname">翰林</td><td>三角函數 → 指數對數函數 → 平面向量（與南一同序）</td></tr>
+          <tr><td class="pubname">三民 <span class="src">（參考）</span></td><td>指數對數函數 → 三角函數 → 平面向量（順序相反）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">來源：<a href="https://family-free-work-learning.com/analysis-of-the-course-and-exam-of-the-108-syllabus-of-mathematics-in-senior-high-school/" target="_blank" rel="noopener">Gim's 數學數位學習教室——高中數學108課綱課程與考試分析</a>（單一部落格整理，建議再核對各家最新版目次，出版社偶爾會依審定意見微調章序）</p>
+
+    <h3>高中三強風格對照（以公開資訊可及的部分為限）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:16%">面向</th><th style="width:28%">龍騰</th><th style="width:28%">翰林</th><th style="width:28%">南一</th></tr></thead>
+        <tbody>
+          <tr><td class="pubname">編排單位</td><td>主題式／單元式，不綁傳統冊次，強調進度彈性</td><td>傳統章節制：數與式→指對數→多項式函數，坐標幾何延後</td><td>傳統章節制：實數與指對數→直線與圓，坐標幾何提前</td></tr>
+          <tr><td class="pubname">知識脈絡呈現</td><td>官方畫出六條跨十冊「學習路線」，脈絡最外顯</td><td>循章節內部鋪陳，另以 AI 數位工具輔助（延續國中版的數位路線）</td><td>循章節內部鋪陳，數位資源整合於 Nani 系列平台</td></tr>
+          <tr><td class="pubname">銜接策略</td><td>三角比置於冊末直通三角函數；先方程式後函數，回應國中函數淡化</td><td>—（公開資訊未見明確論述）</td><td>—（公開資訊未見明確論述）</td></tr>
+          <tr><td class="pubname">高二A第三冊章序</td><td>主題式（不適用比較）</td><td>三角函數→指對數函數→平面向量</td><td>三角函數→指對數函數→平面向量（同翰林）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:26px">
+      高中部分的公開資訊明顯比國中稀薄：龍騰因為有官方課程地圖所以寫得出編排哲學，翰林與南一的高中數學「編輯理念」層級的公開文字很少（多為參考書與數位平台文宣），表格中打「—」的格子就是真的查不到，不是沒有差異。要看到翰林、南一高中版的真實編寫風格，得靠樣書或各校教師的備課資料。
+    </div>
+  </section>
+
+  <!-- ===== 指標高中用書統計 ===== -->
+  <section class="block">
+    <div class="kicker">實際選用調查</div>
+    <h2>十所指標高中的數學用書統計</h2>
+    <p class="deck">直接翻各校教務處公告的教科書版本清單（PDF）整理而成。注意各校資料年度不一（112～115 學年都有，以能查到的最新公告為準），且多校採「同科多版本」——不同班群、甚至逐班由任課教師選不同版本，所以下表寫的是<b>主要版本</b>，括號補充並用情形。</p>
+
+    <h3>各校選用明細</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:15%">學校<br><span style="font-weight:400">（資料學年）</span></th><th>高一 數學</th><th>高二 數A</th><th>高二 數B</th><th>高三 數甲</th><th>高三 數乙</th></tr></thead>
+        <tbody>
+          <tr><td class="pubname">建中<br><span class="src">114-2 逐班</span></td><td>龍騰為主<br><span class="src">龍騰14班／南一8／翰林1／泰宇1</span></td><td>龍騰為主<br><span class="src">龍騰16班／南一6／翰林1</span></td><td class="src">（班群制，未見於該表）</td><td class="src" colspan="2">（高三未取得）</td></tr>
+          <tr><td class="pubname">北一女<br><span class="src">114-1</span></td><td>南一＋翰林＋三民<br><span class="src">同科三版並用</span></td><td>龍騰＋翰林＋南一</td><td>龍騰＋三民＋全華</td><td>翰林＋南一＋龍騰</td><td>南一＋翰林＋龍騰</td></tr>
+          <tr><td class="pubname">師大附中<br><span class="src">113–114</span></td><td>翰林</td><td>南一</td><td>南一</td><td>翰林</td><td>龍騰</td></tr>
+          <tr><td class="pubname">中山女高<br><span class="src">114-1</span></td><td>翰林</td><td>翰林</td><td>龍騰</td><td>龍騰</td><td>泰宇</td></tr>
+          <tr><td class="pubname">成功高中<br><span class="src">115-1</span></td><td>龍騰</td><td>翰林</td><td>翰林</td><td>南一</td><td>南一</td></tr>
+          <tr><td class="pubname">台中一中<br><span class="src">114</span></td><td>三民</td><td>翰林</td><td>泰宇<br><span class="src">（另 1 班南一）</span></td><td>南一</td><td>龍騰</td></tr>
+          <tr><td class="pubname">台中女中<br><span class="src">114</span></td><td>三民</td><td>龍騰</td><td>龍騰</td><td>翰林</td><td>南一</td></tr>
+          <tr><td class="pubname">台南一中<br><span class="src">112-1</span></td><td>南一</td><td>龍騰</td><td>龍騰</td><td>翰林<br><span class="src">數科、生醫學群</span></td><td>翰林<br><span class="src">人文社會學群</span></td></tr>
+          <tr><td class="pubname">台南女中<br><span class="src">113-1</span></td><td>南一</td><td>龍騰</td><td>龍騰</td><td>翰林</td><td>翰林</td></tr>
+          <tr><td class="pubname">高雄中學<br><span class="src">114-1</span></td><td>龍騰<br><span class="src">音樂班翰林／體育班南一</span></td><td>翰林</td><td>龍騰</td><td>泰宇</td><td>龍騰</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>版本出現次數統計（以各校主要版本計）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:18%">科目</th><th>龍騰</th><th>翰林</th><th>南一</th><th>三民</th><th>泰宇</th></tr></thead>
+        <tbody>
+          <tr><td class="pubname">高一數學</td><td><b>3</b>（建中・成功・雄中）</td><td>2（附中・中山）</td><td>2（南一中・南女中）</td><td>2（中一中・中女中）</td><td>0</td></tr>
+          <tr><td class="pubname">高二數A</td><td><b>4</b>（建中・中女中・南一中・南女中）</td><td><b>4</b>（中山・成功・中一中・雄中）</td><td>1（附中）</td><td>0</td><td>0</td></tr>
+          <tr><td class="pubname">高二數B</td><td><b>5</b>（中山・中女中・南一中・南女中・雄中）</td><td>1（成功）</td><td>1（附中）</td><td>0</td><td>1（中一中）</td></tr>
+          <tr><td class="pubname">高三數甲</td><td>1（中山）</td><td><b>4</b>（附中・中女中・南一中・南女中）</td><td>2（成功・中一中）</td><td>0</td><td>1（雄中）</td></tr>
+          <tr><td class="pubname">高三數乙</td><td><b>3</b>（附中・中一中・雄中）</td><td>2（南一中・南女中）</td><td>2（成功・中女中）</td><td>0</td><td>1（中山）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">北一女因同科多版並用，不列入單版統計；建中高一、高二以班數最多的龍騰計。</p>
+
+    <h3>幾個值得注意的型態</h3>
+    <div class="quote-card"><b>沒有一家獨大。</b>五家出版社在十所指標校全都有斬獲：龍騰在高一與數B最強、翰林在數A與數甲最強、南一在南部高一與附中全學程有基本盤、三民靠中部兩所一中一女中進場、泰宇零星但確實存在（雄中數甲、中山數乙、中一中數B）。</div>
+    <div class="quote-card"><b>「一科多版」在頂尖校是常態。</b>北一女同一科同時採三個版本、建中逐班由教師選版（同年級同科目最多四個版本並存）、雄中音樂班／體育班與普通班不同版。「學校用哪一版」在這些學校其實是「這位老師選哪一版」。</div>
+    <div class="quote-card"><b>分軌影響選版策略。</b>好幾所學校數A與數B刻意選不同出版社（中山：數A翰林／數B龍騰；雄中：數A翰林／數B龍騰），數甲數乙亦然——顯示教師群認為不同軌道適合不同家的編寫風格，這本身就是「教材選用」單元絕佳的討論案例。</div>
+    <div class="quote-card"><b>選版每年會變。</b>台南一中 112 學年高一用南一，成功高中 115 學年改的組合也與其前幾年不同；書評會每年開會重議，這份表是快照而非定論。</div>
+  </section>
+
+  <footer>
+    <p><b>參考來源</b></p>
+    <ol class="sources">
+      <li><a href="https://amathing.world/108-math-contents/" target="_blank" rel="noopener">環遊數界－108課綱數學各版本單元對照表（113最終版）</a></li>
+      <li><a href="https://fliphtml5.com/uygal/nxuq/111%E5%8D%97%E4%B8%80%E5%9C%8B%E4%B8%AD%E6%95%B8%E5%AD%B8%E6%95%99%E6%9D%90%E7%B0%A1%E4%BB%8B%E6%9C%AC/" target="_blank" rel="noopener">南一 111 學年國中數學教材簡介本（FlipHTML5）</a></li>
+      <li><a href="https://jr.hle.com.tw/jma-teach/" target="_blank" rel="noopener">翰林數學新亮點 AI 教學工具介紹</a></li>
+      <li><a href="https://digitalmaster.knsh.com.tw/j/math/" target="_blank" rel="noopener">康軒國中數學｜康軒數位高手</a></li>
+      <li><a href="https://nanidigi.nani.com.tw/" target="_blank" rel="noopener">南一數位資源入口網</a></li>
+      <li><a href="https://www.ptt.cc/bbs/tutor/M.1275492378.A.9B1.html" target="_blank" rel="noopener">PTT tutor 板－翰林版 vs 康軒版國中數學比較</a></li>
+      <li><a href="https://family-free-work-learning.com/analysis-of-the-course-and-exam-of-the-108-syllabus-of-mathematics-in-senior-high-school/" target="_blank" rel="noopener">Gim's 數學數位學習教室－高中數學108課綱課程與考試分析</a></li>
+      <li><a href="https://www.go100.com.tw/108_comparison_table.php" target="_blank" rel="noopener">升學王－108課綱國中高中版本對照表</a></li>
+      <li><a href="https://www.ltedu.com.tw/Web/Sharefile/EDM/curriculum-map/ghs/math/index.html" target="_blank" rel="noopener">龍騰文化－高中數學課程地圖</a></li>
+      <li>各校教科書版本公告（用書統計章節的十所學校）：
+        <a href="https://www.ck.tp.edu.tw/uploads/1768439560279c9bifGQC.pdf" target="_blank" rel="noopener">建中 114-2 逐班表</a>、
+        <a href="https://www.fg.tp.edu.tw/wp-content/uploads/doc/equip/114-1%20%E6%95%99%E7%A7%91%E6%9B%B8%E8%A9%95%E9%81%B8%E6%9C%83%E8%AD%B0_%E6%95%99%E7%A7%91%E6%9B%B8%E7%89%88%E6%9C%AC.pdf" target="_blank" rel="noopener">北一女 114-1</a>、
+        <a href="https://www.hs.ntnu.edu.tw/static/webroot/G162269151451663/application/NN171746635326487.pdf" target="_blank" rel="noopener">師大附中 113-1（高一）</a>、
+        <a href="https://www.csghs.tp.edu.tw/wp-content/uploads/doc/zs8112/114-1_%E6%95%99%E7%A7%91%E5%9C%96%E6%9B%B8%E7%89%88%E6%9C%AC%E4%B8%80%E8%A6%BD.pdf" target="_blank" rel="noopener">中山女高 114-1</a>、
+        <a href="https://www.cksh.tp.edu.tw/news/%E3%80%90%E6%95%99%E7%A7%91%E6%9B%B8%E3%80%91115%E5%AD%B8%E5%B9%B4%E5%BA%A6%E7%AC%AC1%E5%AD%B8%E6%9C%9F%E6%95%99%E7%A7%91%E6%9B%B8%E7%89%88%E6%9C%AC/" target="_blank" rel="noopener">成功高中 115-1</a>、
+        <a href="https://acad.tcfsh.tc.edu.tw/zh_tw/Teachinggroup/textbook" target="_blank" rel="noopener">台中一中 114</a>、
+        <a href="https://itcgs.tcgs.tc.edu.tw/ischool/publish_page/10/?cid=3545" target="_blank" rel="noopener">台中女中 114</a>、
+        <a href="https://www.tnfsh.tn.edu.tw/df_ufiles/025/112-1%E6%95%99%E7%A7%91%E6%9B%B8%E7%89%88%E6%9C%AC-%E5%85%AC%E5%91%8A(1).pdf" target="_blank" rel="noopener">台南一中 112-1</a>、
+        <a href="https://www.tngs.tn.edu.tw/wp-content/uploads/sites/54/2024/06/113%E5%AD%B8%E5%B9%B4%E5%BA%A6%E7%AC%AC%E4%B8%80%E5%AD%B8%E6%9C%9F%E6%95%99%E7%A7%91%E6%9B%B8%E7%94%A8%E6%9B%B8%E7%89%88%E6%9C%AC%E5%85%AC%E5%91%8A-2.pdf" target="_blank" rel="noopener">台南女中 113-1</a>、
+        <a href="https://www.kshs.kh.edu.tw/df_ufiles/032/114-1%E6%95%99%E7%A7%91%E6%9B%B8%E8%AA%BF%E6%9F%A5%E5%BD%99%E6%95%B4(%E5%85%AC%E5%91%8A)0605%E6%9B%B4%E6%96%B0.pdf" target="_blank" rel="noopener">高雄中學 114-1</a></li>
+    </ol>
+  </footer>
+</div>
+
+</body>
+</html>

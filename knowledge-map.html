@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>國高中數學知識地圖</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#eef2f0;
+  --bg-line:#d7e0db;
+  --surface:#ffffff;
+  --surface-2:#f5f8f6;
+  --ink:#1a231f;
+  --ink-soft:#4c5a53;
+  --ink-faint:#7c8b83;
+  --border:#d9e2dc;
+  --accent:#1f6f5c;
+  --accent-soft:#e6f2ee;
+  --accent-strong:#12463a;
+  --chip-bg:#f2f6f4;
+  --chip-border:#cddbd4;
+  --chip-text:#1f6f5c;
+  --shadow:0 1px 2px rgba(20,35,30,.06), 0 6px 20px -8px rgba(20,35,30,.14);
+  --radius:10px;
+
+  --s-n:#3b5bb0;   --s-n-bg:#eaeef8;
+  --s-g:#a8621f;   --s-g-bg:#f7eee1;
+  --s-a:#7c4a91;   --s-a-bg:#f2eaf5;
+  --s-f:#1f6f5c;   --s-f-bg:#e6f2ee;
+  --s-d:#a34b5f;   --s-d-bg:#f6eaed;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101815;
+    --bg-line:#1c2823;
+    --surface:#151f1a;
+    --surface-2:#1a251f;
+    --ink:#e6ede9;
+    --ink-soft:#aebeb5;
+    --ink-faint:#7d8f85;
+    --border:#26342d;
+    --accent:#6ecbb0;
+    --accent-soft:#17281f;
+    --accent-strong:#a6e3cd;
+    --chip-bg:#18231d;
+    --chip-border:#2c3d34;
+    --chip-text:#8fd6bc;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+
+    --s-n:#93a9e6;  --s-n-bg:#161d2c;
+    --s-g:#dba05a;  --s-g-bg:#28200f;
+    --s-a:#c497d8;  --s-a-bg:#251c2a;
+    --s-f:#6ecbb0;  --s-f-bg:#132821;
+    --s-d:#e0899b;  --s-d-bg:#2a1a1e;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101815; --bg-line:#1c2823; --surface:#151f1a; --surface-2:#1a251f;
+  --ink:#e6ede9; --ink-soft:#aebeb5; --ink-faint:#7d8f85; --border:#26342d;
+  --accent:#6ecbb0; --accent-soft:#17281f; --accent-strong:#a6e3cd;
+  --chip-bg:#18231d; --chip-border:#2c3d34; --chip-text:#8fd6bc;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+  --s-n:#93a9e6; --s-n-bg:#161d2c; --s-g:#dba05a; --s-g-bg:#28200f;
+  --s-a:#c497d8; --s-a-bg:#251c2a; --s-f:#6ecbb0; --s-f-bg:#132821;
+  --s-d:#e0899b; --s-d-bg:#2a1a1e;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+body{
+  margin:0;
+  background:
+    linear-gradient(var(--bg-line) 1px, transparent 1px) 0 0/100% 32px,
+    linear-gradient(90deg, var(--bg-line) 1px, transparent 1px) 0 0/32px 100%,
+    var(--bg);
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px; line-height:1.75;
+}
+h1,h2,h3,h4{ font-family:"Noto Serif TC","Noto Sans TC",serif; color:var(--ink); text-wrap:balance; margin:0; }
+a{color:var(--accent);}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+
+.shell{ max-width:1180px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 96px; }
+
+.masthead{ padding:48px 0 30px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+.masthead .eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-faint); display:flex; gap:10px; align-items:center; margin-bottom:16px;
+}
+.masthead .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.masthead h1{ font-size:clamp(1.9rem,4.2vw,2.7rem); font-weight:900; line-height:1.18; max-width:18ch; }
+.masthead p.lede{ margin-top:14px; max-width:66ch; color:var(--ink-soft); font-size:1.02rem; }
+.masthead .companion{
+  margin-top:16px; font-size:.86rem; color:var(--ink-faint);
+  display:flex; gap:8px; align-items:center;
+}
+.masthead .companion a{ font-weight:600; }
+
+.legend-strands{ display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+.legend-strands .item{
+  display:flex; align-items:center; gap:7px; font-size:.8rem; padding:5px 12px;
+  border-radius:999px; background:var(--surface); border:1px solid var(--border);
+}
+.legend-strands .sw{width:10px;height:10px;border-radius:3px;flex:none;}
+
+/* Tabs */
+.tabbar{
+  display:flex; gap:4px; flex-wrap:wrap; margin-bottom:34px;
+  border-bottom:1px solid var(--border); padding-bottom:0;
+}
+.tabbar button{
+  font-family:"Noto Sans TC",sans-serif; font-size:.94rem; font-weight:600;
+  color:var(--ink-soft); background:none; border:none; cursor:pointer;
+  padding:12px 18px; border-bottom:2px solid transparent; margin-bottom:-1px;
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  transition:color .15s, border-color .15s;
+}
+.tabbar button .tnum{ font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--ink-faint); }
+.tabbar button:hover{ color:var(--ink); }
+.tabbar button[aria-selected="true"]{ color:var(--accent-strong); border-bottom-color:var(--accent); }
+.tabbar button[aria-selected="true"] .tnum{ color:var(--accent); }
+
+.tabpanel{ display:none; }
+.tabpanel.active{ display:block; }
+
+section.intro{ margin-bottom:30px; }
+section.intro p{ max-width:70ch; color:var(--ink-soft); font-size:.98rem; }
+section.intro h2{ font-size:clamp(1.3rem,2.4vw,1.6rem); font-weight:700; margin-bottom:8px; }
+
+/* grade badge */
+.gbadge{
+  font-family:"IBM Plex Mono",monospace; font-size:.72rem; font-weight:600;
+  padding:2px 8px; border-radius:999px; background:var(--chip-bg); color:var(--chip-text);
+  border:1px solid var(--chip-border); white-space:nowrap;
+}
+.gbadge.tier-junior{ --tb:var(--s-g); }
+.strand-tag{
+  font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+  padding:2px 8px; border-radius:6px; font-weight:700;
+}
+.tag-n{color:var(--s-n); background:var(--s-n-bg);}
+.tag-g{color:var(--s-g); background:var(--s-g-bg);}
+.tag-a{color:var(--s-a); background:var(--s-a-bg);}
+.tag-f{color:var(--s-f); background:var(--s-f-bg);}
+.tag-d{color:var(--s-d); background:var(--s-d-bg);}
+
+/* ===== Tab 1: reference table ===== */
+details.grade-ref{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  margin-bottom:10px; box-shadow:var(--shadow); overflow:hidden;
+}
+details.grade-ref summary{
+  padding:14px 18px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:14px;
+  font-weight:700; font-size:.98rem;
+}
+details.grade-ref summary::-webkit-details-marker{display:none;}
+details.grade-ref summary .gname{flex:none;}
+details.grade-ref summary .gcount{ font-size:.78rem; color:var(--ink-faint); font-weight:400; margin-left:auto; }
+details.grade-ref summary::after{
+  content:"+"; font-family:"IBM Plex Mono",monospace; color:var(--accent); font-size:1.1rem;
+  transition:transform .18s;
+}
+details.grade-ref[open] summary::after{transform:rotate(45deg);}
+.ref-table-wrap{ padding:0 18px 16px; overflow-x:auto; }
+table.ref{ border-collapse:collapse; width:100%; min-width:520px; font-size:.87rem; }
+table.ref th{
+  text-align:left; padding:8px 10px; border-bottom:1px solid var(--border);
+  font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint);
+}
+table.ref td{ padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+table.ref tr:last-child td{border-bottom:none;}
+table.ref td.code{ font-family:"IBM Plex Mono",monospace; white-space:nowrap; color:var(--chip-text); font-weight:600; }
+table.ref tr:hover td{ background:var(--surface-2); }
+
+/* ===== Tab 2: grade timeline ===== */
+.timeline{ position:relative; padding-left:28px; }
+.timeline::before{
+  content:""; position:absolute; left:7px; top:6px; bottom:6px; width:2px; background:var(--border);
+}
+.grade-card{ position:relative; margin-bottom:26px; }
+.grade-card::before{
+  content:""; position:absolute; left:-28px; top:6px; width:14px; height:14px; border-radius:50%;
+  background:var(--surface); border:3px solid var(--accent);
+}
+.grade-card .ghead{ display:flex; align-items:baseline; gap:12px; margin-bottom:8px; flex-wrap:wrap; }
+.grade-card .ghead h3{ font-size:1.15rem; font-weight:700; }
+.grade-card .ghead .gtier{ font-size:.8rem; color:var(--ink-faint); }
+.grade-card .gsummary{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px 20px; box-shadow:var(--shadow);
+}
+.grade-card .gsummary > p.headline{ font-weight:600; color:var(--ink); margin:0 0 12px; font-size:.96rem; }
+.strand-rows{ display:grid; gap:8px; }
+.strand-row{ display:grid; grid-template-columns:64px 1fr; gap:12px; font-size:.87rem; align-items:start; }
+.strand-row .sname{ padding-top:2px; }
+.strand-row .scontent{ color:var(--ink-soft); }
+
+/* ===== Tab 3: knowledge chains ===== */
+.axis-block{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:22px 24px; margin-bottom:22px; box-shadow:var(--shadow);
+  border-top:3px solid var(--axis-color, var(--accent));
+}
+.axis-block .axis-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+.axis-block h3{ font-size:1.15rem; font-weight:700; }
+.axis-block .axis-desc{ color:var(--ink-soft); font-size:.9rem; max-width:70ch; margin-bottom:18px; }
+.chain{ display:flex; align-items:stretch; gap:6px; overflow-x:auto; padding:6px 2px 14px; }
+.chain .node{
+  flex:none; width:172px; background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+  padding:10px 12px; display:flex; flex-direction:column; gap:6px;
+}
+.chain .node .ntitle{ font-weight:700; font-size:.86rem; line-height:1.35; }
+.chain .node .ngloss{ font-size:.76rem; color:var(--ink-soft); line-height:1.4; }
+.chain .arrow{ flex:none; align-self:center; color:var(--ink-faint); font-size:1.1rem; padding:0 2px; }
+.axis-block .crosslinks{ margin-top:6px; font-size:.85rem; color:var(--ink-soft); }
+.axis-block .crosslinks .xl{ display:block; margin-top:6px; }
+.axis-block .crosslinks .xl b{ color:var(--ink); }
+
+/* ===== Tab 4: graph ===== */
+.graph-wrap{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:20px; box-shadow:var(--shadow); overflow-x:auto; margin-bottom:18px;
+}
+.graph-caption{ font-size:.86rem; color:var(--ink-soft); margin-top:4px; }
+.graph-legend{ display:flex; flex-wrap:wrap; gap:14px; margin-bottom:18px; font-size:.84rem; color:var(--ink-soft); }
+.graph-legend .li{ display:flex; align-items:center; gap:6px; }
+.graph-legend .line{ width:22px; height:0; border-top:2px solid var(--ink-faint); }
+.graph-legend .line.dashed{ border-top-style:dashed; }
+
+footer{
+  margin-top:56px; padding-top:22px; border-top:1px solid var(--border);
+  color:var(--ink-faint); font-size:.82rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+}
+</style>
+
+<div class="shell">
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span>108 課綱・數學領域・國中＋高中（7–12 年級）</div>
+    <h1>國高中數學知識地圖</h1>
+    <p class="lede">同一批學習內容條目，換一個切法看：不是照課綱章節走，而是照數學概念的生長脈絡走——一次函數怎麼長成二次函數、指數對數函數、三角函數，又是在哪個年級發生的。</p>
+    <p class="companion">🔗 與《<a href="curriculum-guide.html" target="_blank" rel="noopener">數學領域課綱導讀</a>》為姊妹篇——那份講課綱本身的結構（理念／素養／實施要點），這份講知識本身的結構（節點／年級／脈絡）。</p>
+
+    <div class="legend-strands">
+      <span class="item"><span class="sw" style="background:var(--s-n)"></span>N 數與量</span>
+      <span class="item"><span class="sw" style="background:var(--s-g)"></span>S／G 空間與坐標幾何</span>
+      <span class="item"><span class="sw" style="background:var(--s-a)"></span>A 代數與關係</span>
+      <span class="item"><span class="sw" style="background:var(--s-f)"></span>F 函數</span>
+      <span class="item"><span class="sw" style="background:var(--s-d)"></span>D 資料與不確定性</span>
+    </div>
+  </header>
+
+  <div role="tablist" class="tabbar" aria-label="四種導讀切換">
+    <button role="tab" aria-selected="true" aria-controls="panel-order" id="tab-order"><span class="tnum">01</span>依課綱順序</button>
+    <button role="tab" aria-selected="false" aria-controls="panel-grade" id="tab-grade"><span class="tnum">02</span>依年級</button>
+    <button role="tab" aria-selected="false" aria-controls="panel-node" id="tab-node"><span class="tnum">03</span>依知識節點</button>
+    <button role="tab" aria-selected="false" aria-controls="panel-graph" id="tab-graph"><span class="tnum">04</span>全景關聯圖</button>
+  </div>
+
+  <!-- ============ PANEL 1: 依課綱順序 ============ -->
+  <div class="tabpanel active" id="panel-order" role="tabpanel" aria-labelledby="tab-order">
+    <section class="intro">
+      <h2>依課綱順序：逐年級條目對照表</h2>
+      <p>完全比照課綱本文的編排方式——年級為主、主題類別（N／S／G／A／F／D）為次——列出 7–12 年級全部學習內容條目的代碼與條目名稱，當作查找某個代碼「到底是什麼」的速查表。點開任一年級展開。</p>
+    </section>
+
+    <details class="grade-ref" open>
+      <summary><span class="gname">7 年級（國一）</span><span class="gcount">26 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-7-1</td><td>100 以內的質數</td></tr>
+          <tr><td class="code">N-7-2</td><td>質因數分解的標準分解式</td></tr>
+          <tr><td class="code">N-7-3</td><td>負數與數的四則混合運算</td></tr>
+          <tr><td class="code">N-7-4</td><td>數的運算規律</td></tr>
+          <tr><td class="code">N-7-5</td><td>數線</td></tr>
+          <tr><td class="code">N-7-6</td><td>指數的意義</td></tr>
+          <tr><td class="code">N-7-7</td><td>指數律</td></tr>
+          <tr><td class="code">N-7-8</td><td>科學記號</td></tr>
+          <tr><td class="code">N-7-9</td><td>比與比例式</td></tr>
+          <tr><td class="code">S-7-1</td><td>簡單圖形與幾何符號 ＃</td></tr>
+          <tr><td class="code">S-7-2</td><td>三視圖</td></tr>
+          <tr><td class="code">S-7-3</td><td>垂直</td></tr>
+          <tr><td class="code">S-7-4</td><td>線對稱的性質</td></tr>
+          <tr><td class="code">S-7-5</td><td>線對稱的基本圖形</td></tr>
+          <tr><td class="code">G-7-1</td><td>平面直角坐標系</td></tr>
+          <tr><td class="code">A-7-1</td><td>代數符號</td></tr>
+          <tr><td class="code">A-7-2</td><td>一元一次方程式的意義</td></tr>
+          <tr><td class="code">A-7-3</td><td>一元一次方程式的解法與應用</td></tr>
+          <tr><td class="code">A-7-4</td><td>二元一次聯立方程式的意義</td></tr>
+          <tr><td class="code">A-7-5</td><td>二元一次聯立方程式的解法與應用</td></tr>
+          <tr><td class="code">A-7-6</td><td>二元一次聯立方程式的幾何意義</td></tr>
+          <tr><td class="code">A-7-7</td><td>一元一次不等式的意義</td></tr>
+          <tr><td class="code">A-7-8</td><td>一元一次不等式的解與應用</td></tr>
+          <tr><td class="code">D-7-1</td><td>統計圖表</td></tr>
+          <tr><td class="code">D-7-2</td><td>統計數據</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">8 年級（國二）</span><span class="gcount">28 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-8-1</td><td>二次方根</td></tr>
+          <tr><td class="code">N-8-2</td><td>二次方根的近似值</td></tr>
+          <tr><td class="code">N-8-3</td><td>認識數列</td></tr>
+          <tr><td class="code">N-8-4</td><td>等差數列</td></tr>
+          <tr><td class="code">N-8-5</td><td>等差級數求和</td></tr>
+          <tr><td class="code">N-8-6</td><td>等比數列</td></tr>
+          <tr><td class="code">S-8-1</td><td>角</td></tr>
+          <tr><td class="code">S-8-2</td><td>凸多邊形的內角和</td></tr>
+          <tr><td class="code">S-8-3</td><td>平行</td></tr>
+          <tr><td class="code">S-8-4</td><td>全等圖形</td></tr>
+          <tr><td class="code">S-8-5</td><td>三角形的全等性質</td></tr>
+          <tr><td class="code">S-8-6</td><td>畢氏定理</td></tr>
+          <tr><td class="code">S-8-7</td><td>平面圖形的面積</td></tr>
+          <tr><td class="code">S-8-8</td><td>三角形的基本性質</td></tr>
+          <tr><td class="code">S-8-9</td><td>平行四邊形的基本性質</td></tr>
+          <tr><td class="code">S-8-10</td><td>正方形、長方形、箏形的基本性質</td></tr>
+          <tr><td class="code">S-8-11</td><td>梯形的基本性質</td></tr>
+          <tr><td class="code">S-8-12</td><td>尺規作圖與幾何推理 ＃</td></tr>
+          <tr><td class="code">G-8-1</td><td>直角坐標系上兩點距離公式</td></tr>
+          <tr><td class="code">A-8-1</td><td>二次式的乘法公式</td></tr>
+          <tr><td class="code">A-8-2</td><td>多項式的意義</td></tr>
+          <tr><td class="code">A-8-3</td><td>多項式的四則運算</td></tr>
+          <tr><td class="code">A-8-4</td><td>因式分解</td></tr>
+          <tr><td class="code">A-8-5</td><td>因式分解的方法</td></tr>
+          <tr><td class="code">A-8-6</td><td>一元二次方程式的意義</td></tr>
+          <tr><td class="code">A-8-7</td><td>一元二次方程式的解法與應用</td></tr>
+          <tr><td class="code">F-8-1</td><td>一次函數</td></tr>
+          <tr><td class="code">F-8-2</td><td>一次函數的圖形</td></tr>
+          <tr><td class="code">D-8-1</td><td>統計資料處理</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">9 年級（國三）</span><span class="gcount">19 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-9-1</td><td>連比</td></tr>
+          <tr><td class="code">S-9-1</td><td>相似形</td></tr>
+          <tr><td class="code">S-9-2</td><td>三角形的相似性質</td></tr>
+          <tr><td class="code">S-9-3</td><td>平行線截比例線段</td></tr>
+          <tr><td class="code">S-9-4</td><td>相似直角三角形邊長比值的不變性</td></tr>
+          <tr><td class="code">S-9-5</td><td>圓弧長與扇形面積</td></tr>
+          <tr><td class="code">S-9-6</td><td>圓的幾何性質</td></tr>
+          <tr><td class="code">S-9-7</td><td>點、直線與圓的關係</td></tr>
+          <tr><td class="code">S-9-8</td><td>三角形的外心</td></tr>
+          <tr><td class="code">S-9-9</td><td>三角形的內心</td></tr>
+          <tr><td class="code">S-9-10</td><td>三角形的重心</td></tr>
+          <tr><td class="code">S-9-11</td><td>證明的意義</td></tr>
+          <tr><td class="code">S-9-12</td><td>空間中的線與平面</td></tr>
+          <tr><td class="code">S-9-13</td><td>表面積與體積</td></tr>
+          <tr><td class="code">F-9-1</td><td>二次函數的意義</td></tr>
+          <tr><td class="code">F-9-2</td><td>二次函數的圖形與極值</td></tr>
+          <tr><td class="code">D-9-1</td><td>統計數據的分布</td></tr>
+          <tr><td class="code">D-9-2</td><td>認識機率</td></tr>
+          <tr><td class="code">D-9-3</td><td>古典機率</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">10 年級（高一・全體必修）</span><span class="gcount">23 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-10-1</td><td>實數</td></tr>
+          <tr><td class="code">N-10-2</td><td>絕對值</td></tr>
+          <tr><td class="code">N-10-3</td><td>指數</td></tr>
+          <tr><td class="code">N-10-4</td><td>常用對數</td></tr>
+          <tr><td class="code">N-10-5</td><td>數值計算的誤差 ★＃</td></tr>
+          <tr><td class="code">N-10-6</td><td>數列、級數與遞迴關係</td></tr>
+          <tr><td class="code">N-10-7</td><td>邏輯 ★＃</td></tr>
+          <tr><td class="code">G-10-1</td><td>坐標圖形的對稱性 ＃</td></tr>
+          <tr><td class="code">G-10-2</td><td>直線方程式</td></tr>
+          <tr><td class="code">G-10-3</td><td>圓方程式</td></tr>
+          <tr><td class="code">G-10-4</td><td>直線與圓</td></tr>
+          <tr><td class="code">G-10-5</td><td>廣義角和極坐標</td></tr>
+          <tr><td class="code">G-10-6</td><td>三角比</td></tr>
+          <tr><td class="code">G-10-7</td><td>三角比的性質</td></tr>
+          <tr><td class="code">A-10-1</td><td>式的運算</td></tr>
+          <tr><td class="code">A-10-2</td><td>多項式之除法原理</td></tr>
+          <tr><td class="code">F-10-1</td><td>一次與二次函數</td></tr>
+          <tr><td class="code">F-10-2</td><td>三次函數的圖形特徵</td></tr>
+          <tr><td class="code">F-10-3</td><td>多項式不等式</td></tr>
+          <tr><td class="code">D-10-1</td><td>集合 ★＃</td></tr>
+          <tr><td class="code">D-10-2</td><td>數據分析</td></tr>
+          <tr><td class="code">D-10-3</td><td>有系統的計數</td></tr>
+          <tr><td class="code">D-10-4</td><td>複合事件的古典機率</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">11 年級・數學 A（高二・高數學需求）</span><span class="gcount">23 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-11A-1</td><td>弧度量</td></tr>
+          <tr><td class="code">S-11A-1</td><td>空間概念</td></tr>
+          <tr><td class="code">G-11A-1</td><td>平面向量</td></tr>
+          <tr><td class="code">G-11A-2</td><td>空間坐標系</td></tr>
+          <tr><td class="code">G-11A-3</td><td>空間向量</td></tr>
+          <tr><td class="code">G-11A-4</td><td>三角不等式</td></tr>
+          <tr><td class="code">G-11A-5</td><td>三角的和差角公式</td></tr>
+          <tr><td class="code">G-11A-6</td><td>平面向量的運算</td></tr>
+          <tr><td class="code">G-11A-7</td><td>空間向量的運算 ※部分</td></tr>
+          <tr><td class="code">G-11A-8</td><td>三階行列式</td></tr>
+          <tr><td class="code">G-11A-9</td><td>平面方程式</td></tr>
+          <tr><td class="code">G-11A-10</td><td>空間中的直線方程式</td></tr>
+          <tr><td class="code">A-11A-1</td><td>二元一次方程組的矩陣表達</td></tr>
+          <tr><td class="code">A-11A-2</td><td>三元一次聯立方程式</td></tr>
+          <tr><td class="code">A-11A-3</td><td>矩陣的運算</td></tr>
+          <tr><td class="code">A-11A-4</td><td>對數律</td></tr>
+          <tr><td class="code">F-11A-1</td><td>三角函數的圖形</td></tr>
+          <tr><td class="code">F-11A-2</td><td>正餘弦的疊合</td></tr>
+          <tr><td class="code">F-11A-3</td><td>矩陣的應用</td></tr>
+          <tr><td class="code">F-11A-4</td><td>指數與對數函數</td></tr>
+          <tr><td class="code">D-11A-1</td><td>主觀機率與客觀機率</td></tr>
+          <tr><td class="code">D-11A-2</td><td>條件機率</td></tr>
+          <tr><td class="code">D-11A-3</td><td>貝氏定理</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">11 年級・數學 B（高二・低數學需求）</span><span class="gcount">12 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-11B-1</td><td>弧度量</td></tr>
+          <tr><td class="code">S-11B-1</td><td>空間概念</td></tr>
+          <tr><td class="code">S-11B-2</td><td>圓錐曲線</td></tr>
+          <tr><td class="code">G-11B-1</td><td>平面向量</td></tr>
+          <tr><td class="code">G-11B-2</td><td>平面向量的運算</td></tr>
+          <tr><td class="code">G-11B-3</td><td>平面上的比例</td></tr>
+          <tr><td class="code">G-11B-4</td><td>空間坐標系</td></tr>
+          <tr><td class="code">A-11B-1</td><td>矩陣與資料表格</td></tr>
+          <tr><td class="code">F-11B-1</td><td>週期性數學模型</td></tr>
+          <tr><td class="code">F-11B-2</td><td>按比例成長模型</td></tr>
+          <tr><td class="code">D-11B-1</td><td>主觀機率與客觀機率</td></tr>
+          <tr><td class="code">D-11B-2</td><td>不確定性</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">12 年級・數學甲（高三・理工向加深加廣）</span><span class="gcount">14 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-12甲-1</td><td>數列的極限</td></tr>
+          <tr><td class="code">N-12甲-2</td><td>無窮等比級數</td></tr>
+          <tr><td class="code">N-12甲-3</td><td>複數</td></tr>
+          <tr><td class="code">G-12甲-1</td><td>二次曲線</td></tr>
+          <tr><td class="code">A-12甲-1</td><td>複數與方程式</td></tr>
+          <tr><td class="code">F-12甲-1</td><td>函數 ＃</td></tr>
+          <tr><td class="code">F-12甲-2</td><td>函數的極限</td></tr>
+          <tr><td class="code">F-12甲-3</td><td>微分</td></tr>
+          <tr><td class="code">F-12甲-4</td><td>導函數</td></tr>
+          <tr><td class="code">F-12甲-5</td><td>黎曼和</td></tr>
+          <tr><td class="code">F-12甲-6</td><td>積分</td></tr>
+          <tr><td class="code">F-12甲-7</td><td>積分的應用</td></tr>
+          <tr><td class="code">D-12甲-1</td><td>離散型隨機變數</td></tr>
+          <tr><td class="code">D-12甲-2</td><td>二項分布與幾何分布</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="grade-ref">
+      <summary><span class="gname">12 年級・數學乙（高三・商管社會向加深加廣）</span><span class="gcount">12 條目</span></summary>
+      <div class="ref-table-wrap"><table class="ref">
+        <thead><tr><th style="width:14%">代碼</th><th>條目</th></tr></thead>
+        <tbody>
+          <tr><td class="code">N-12乙-1</td><td>複數</td></tr>
+          <tr><td class="code">N-12乙-2</td><td>無窮等比級數</td></tr>
+          <tr><td class="code">A-12乙-1</td><td>線性規劃</td></tr>
+          <tr><td class="code">A-12乙-2</td><td>方程式的虛根</td></tr>
+          <tr><td class="code">F-12乙-1</td><td>函數 ＃</td></tr>
+          <tr><td class="code">F-12乙-2</td><td>函數的極限</td></tr>
+          <tr><td class="code">F-12乙-3</td><td>微分</td></tr>
+          <tr><td class="code">F-12乙-4</td><td>導函數</td></tr>
+          <tr><td class="code">F-12乙-5</td><td>積分</td></tr>
+          <tr><td class="code">F-12乙-6</td><td>積分的應用</td></tr>
+          <tr><td class="code">D-12乙-1</td><td>離散型隨機變數</td></tr>
+          <tr><td class="code">D-12乙-2</td><td>二項分布</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+  </div>
+
+  <!-- ============ PANEL 2: 依年級 ============ -->
+  <div class="tabpanel" id="panel-grade" role="tabpanel" aria-labelledby="tab-grade" hidden>
+    <section class="intro">
+      <h2>依年級：什麼時候教什麼</h2>
+      <p>把七到十二年級當作一條時間軸，每一格回答同一個問題：「這一年，學生的數學世界新增了什麼？」——用來對照教學進度、判斷某個概念是否超前或落後於課綱時程。</p>
+    </section>
+
+    <div class="timeline">
+
+      <div class="grade-card">
+        <div class="ghead"><h3>7 年級・國一</h3><span class="gtier">符號化的一年</span></div>
+        <div class="gsummary">
+          <p class="headline">從國小的具體操作正式跨入符號代數：學會用代數符號寫方程式、解一元一次方程式與聯立方程式，同時負數、指數第一次登場。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">質數與質因數分解 → 負數四則運算、運算規律 → 數線與絕對值前導 → 指數的意義與指數律 → 科學記號 → 比與比例式（正比反比）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">S/G</span></span><span class="scontent">簡單圖形與幾何符號、三視圖、垂直、線對稱；平面直角坐標系登場</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">代數符號（交換律分配律結合律）→ 一元一次方程式（意義／解法／應用）→ 二元一次聯立方程式（含幾何意義）→ 一元一次不等式</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">統計圖表、統計數據（平均數中位數眾數）</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>8 年級・國二</h3><span class="gtier">幾何推理密集年・函數登場</span></div>
+        <div class="gsummary">
+          <p class="headline">平面幾何的性質大爆發（全等、畢氏定理、四邊形家族），代數同步從一次走向二次（乘法公式、因式分解、一元二次方程式），「函數」一詞第一次正式出現。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">二次方根與其近似值 → 認識數列 → 等差數列與求和 → 等比數列</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">S/G</span></span><span class="scontent">角的關係、凸多邊形內角和、平行、全等圖形與三角形全等判定、畢氏定理、各類四邊形／三角形性質、尺規作圖；兩點距離公式</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">二次式乘法公式 → 多項式定義與四則運算 → 因式分解（十字交乘）→ 一元二次方程式（因式分解／配方／公式解）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent"><b>一次函數及其圖形</b>——課綱中「函數」概念的第一次正式命名</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">統計資料處理（累積次數、相對次數）</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>9 年級・國三</h3><span class="gtier">幾何推理巔峰・機率登場</span></div>
+        <div class="gsummary">
+          <p class="headline">相似形、圓、三心與正式「證明」把國中幾何推向最高難度；「相似直角三角形邊長比值的不變性」是高中三角函數在國中留下的唯一伏筆；二次函數與機率同時登場。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">連比</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">S/G</span></span><span class="scontent">相似形、三角形相似判定、平行線截比例線段 → <b>相似直角三角形邊長比值的不變性</b> → 圓弧長扇形面積、圓的幾何性質、點線圓關係、三角形外心／內心／重心 → 證明的意義；空間中的線與平面、表面積體積</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent">二次函數的意義與圖形（對稱軸、頂點、極值）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">統計數據的分布（盒狀圖）→ 認識機率（樹狀圖）→ 古典機率</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>10 年級・高一</h3><span class="gtier">全體必修・四線並進</span></div>
+        <div class="gsummary">
+          <p class="headline">所有高中生的共同基礎年：代數、坐標幾何、函數、機率統計四條線同時推進，三角比與指數對數符號在此登場，為 11 年級分軌鋪路。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">實數系統（十進位小數、無理數估算）、絕對值方程式不等式、指數推廣至實數次方（含算幾不等式）、常用對數、數值誤差、數列級數遞迴關係（含數學歸納法）、邏輯</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">G</span></span><span class="scontent">坐標對稱、直線方程式、圓方程式、直線與圓 → 廣義角與極坐標 → <b>三角比與三角比性質</b>（正弦定理餘弦定理）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">式的運算（三次乘法公式、根式分式）、多項式除法原理（因式定理餘式定理）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent">一次與二次函數深化（配方標準式）→ 三次函數圖形特徵（大域局部）→ 多項式不等式</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">集合、數據分析（迴歸相關係數）、計數原理（排列組合）、複合事件古典機率與期望值</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>11 年級・數學 A</h3><span class="gtier">高二・高數學需求・工具箱擴充年</span></div>
+        <div class="gsummary">
+          <p class="headline">向量、空間幾何與線性代數（矩陣行列式）同時展開，三角函數與指數對數函數作為完整函數家族正式登場。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">弧度量</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">G</span></span><span class="scontent">空間概念（三垂線定理）、平面／空間向量（線性組合）、三角和差角公式、向量運算（內積外積柯西不等式）、三階行列式、平面與空間直線方程式</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">線性方程組的矩陣表達 → 矩陣運算、對數律</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent"><b>三角函數的圖形</b>（週期性）、正餘弦的疊合、矩陣的應用（線性變換）、<b>指數與對數函數</b></span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">主觀機率與客觀機率、條件機率、貝氏定理</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>11 年級・數學 B</h3><span class="gtier">高二・低數學需求・應用導向</span></div>
+        <div class="gsummary">
+          <p class="headline">內容架構與 A 類同構，但情境更生活化（地理經緯線、金融理財、設計透視），形式化程度較低，並為銜接數學乙保留彈性。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">弧度量</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">G</span></span><span class="scontent">空間概念（球面經緯線）、圓錐曲線（視覺認識）、平面向量與運算、平面上的比例（透視設計）、空間坐標系</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">矩陣與資料表格</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent">週期性數學模型（正弦函數）、按比例成長模型（指數對數函數、e、自然對數、地震規模、金融理財）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">主觀機率與客觀機率、不確定性（條件機率貝氏定理、列聯表）</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>12 年級・數學甲</h3><span class="gtier">高三・理工向加深加廣・微積分主線完成</span></div>
+        <div class="gsummary">
+          <p class="headline">全課綱抽象程度最高的一年：極限 → 微分 → 積分 → 應用一氣呵成，同時收束數列、函數、幾何、機率四條伏筆線（e、複數、二次曲線、分布）。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">數列的極限（含 e）、無窮等比級數、複數（複數平面、極式、棣美弗定理）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-g">G</span></span><span class="scontent">二次曲線（拋物線、橢圓、雙曲線）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">複數與方程式（代數基本定理）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent">一般函數性質（奇偶、凹凸、反函數、合成）→ 函數極限 → <b>微分</b> → 導函數 → 黎曼和 → <b>積分</b> → 積分應用（面積、體積、旋轉體）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">離散型隨機變數、二項分布與幾何分布</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grade-card">
+        <div class="ghead"><h3>12 年級・數學乙</h3><span class="gtier">高三・商管社會向加深加廣</span></div>
+        <div class="gsummary">
+          <p class="headline">與數學甲同步進入微積分，但深度略減（不含棣美弗定理、幾何分布），並加入線性規劃、邊際等商管情境應用，呼應其財經管理準備定位。</p>
+          <div class="strand-rows">
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-n">N</span></span><span class="scontent">複數（平面與四則運算，不含極式）、無窮等比級數</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-a">A</span></span><span class="scontent">線性規劃、方程式的虛根</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-f">F</span></span><span class="scontent">一般函數性質（較簡化）→ 函數極限 → 微分 → 導函數（含邊際意涵）→ 積分 → 積分應用（總量與剩餘）</span></div>
+            <div class="strand-row"><span class="sname"><span class="strand-tag tag-d">D</span></span><span class="scontent">離散型隨機變數、二項分布</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ PANEL 3: 依知識節點 ============ -->
+  <div class="tabpanel" id="panel-node" role="tabpanel" aria-labelledby="tab-node" hidden>
+    <section class="intro">
+      <h2>依知識節點：五條主軸的生長脈絡</h2>
+      <p>把「數與量」「空間與坐標幾何」「代數與關係」「函數」「資料與不確定性」各自拉成一條橫向鏈——同一條鏈內是逐年級疊加的縱向發展；鏈與鏈之間的交會處（見各區塊下方「跨軸銜接」），正是函數家族真正的來源：<b>一次函數</b>接在一元一次方程式之後，<b>二次函數</b>接在一元二次方程式之後，<b>指數對數函數</b>接在指數律與常用對數之後，<b>三角函數</b>接在相似直角三角形邊長比之後——函數這條軸，本質上是其他四條軸在高中的匯流。</p>
+    </section>
+
+    <!-- FUNCTION AXIS FIRST -->
+    <div class="axis-block" style="--axis-color:var(--s-f)">
+      <div class="axis-head"><span class="strand-tag tag-f">F</span><h3>函數 — 全課綱的匯流軸</h3></div>
+      <p class="axis-desc">四大函數家族依序登場，最終在數學甲／乙匯入微積分。每個家族出現的當下，都恰好是它在代數／幾何／數與量三軸的先備知識剛剛備齊的時刻。</p>
+      <div class="chain">
+        <div class="node"><div class="ntitle">一次函數<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">透過對應關係認識函數；常數函數、一次函數圖形</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">二次函數<span class="gbadge" style="margin-left:6px">9</span></div><div class="ngloss">意義、圖形與極值（頂點、對稱軸、開口）</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">一二次函數深化<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">配方、標準式、f(x) 符號、情境應用</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">三次函數<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">大域特徵（最高次項）、局部近似一直線</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">三角函數圖形<span class="gbadge" style="margin-left:6px">11A/B</span></div><div class="ngloss">sin cos tan 圖形、週期性、正餘弦疊合</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">指數與對數函數<span class="gbadge" style="margin-left:6px">11A/B</span></div><div class="ngloss">成長衰退模型、常用對數圖形、金融應用</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">一般函數性質<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">奇偶性、凹凸性、反函數、合成函數</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">函數的極限<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">連續性、介值定理、夾擠定理</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">微分・導函數<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">切線、微分公式、單調凹凸、最佳化</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">積分及其應用<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">黎曼和、面積體積、旋轉體（甲）／總量剩餘（乙）</div></div>
+      </div>
+      <div class="crosslinks">
+        <span class="xl">🔗 <b>一次函數</b> 銜接自 A 軸「一元一次方程式」（7）；<b>二次函數</b> 銜接自 A 軸「一元二次方程式」（8）——函數是方程式的「動態化」。</span>
+        <span class="xl">🔗 <b>三角函數</b> 銜接自 G 軸「相似直角三角形邊長比值」（9）→「三角比」（10）——一路從靜態比值走向動態函數。</span>
+        <span class="xl">🔗 <b>指數對數函數</b> 銜接自 N 軸「指數律」（7）→「指數推廣、常用對數」（10）／A 軸「對數律」（11A）。</span>
+        <span class="xl">🔗 <b>三次函數 → 積分應用</b> 銜接自 A 軸「多項式除法原理」（10）——多項式函數這條副線，最終在積分的「切片積分法」收尾。</span>
+      </div>
+    </div>
+
+    <div class="axis-block" style="--axis-color:var(--s-a)">
+      <div class="axis-head"><span class="strand-tag tag-a">A</span><h3>代數與關係</h3></div>
+      <p class="axis-desc">從一元一次方程式出發，代數式的複雜度逐級升高，最終分岔為「線性代數（矩陣）」與「複數與方程式的根」兩條支線。</p>
+      <div class="chain">
+        <div class="node"><div class="ntitle">代數符號、一次式<span class="gbadge" style="margin-left:6px">7</span></div><div class="ngloss">交換律分配律結合律、同類項化簡</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">一元／二元一次方程式<span class="gbadge" style="margin-left:6px">7</span></div><div class="ngloss">解法、應用、幾何意義、一次不等式</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">乘法公式、多項式<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">多項式定義、四則運算</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">因式分解<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">提公因式、乘法公式、十字交乘</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">一元二次方程式<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">因式分解、配方法、公式解</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">式的運算、除法原理<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">三次乘法公式、因式定理、餘式定理</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">線性方程組→矩陣<span class="gbadge" style="margin-left:6px">11A/B</span></div><div class="ngloss">矩陣表達、克拉瑪公式、矩陣運算、對數律</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">複數與方程式<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">虛根、代數基本定理／線性規劃（乙）</div></div>
+      </div>
+      <div class="crosslinks">
+        <span class="xl">🔗 「線性方程組的矩陣表達」與 G 軸「平面向量的線性組合」（11A/B）同步發展，互為表裡。</span>
+        <span class="xl">🔗 「複數」與 N 軸「複數」條目同時教授（12甲：含棣美弗定理；12乙：僅四則與絕對值）。</span>
+      </div>
+    </div>
+
+    <div class="axis-block" style="--axis-color:var(--s-g)">
+      <div class="axis-head"><span class="strand-tag tag-g">S／G</span><h3>空間與坐標幾何</h3></div>
+      <p class="axis-desc">國中是「歐氏幾何推理」主線（全等、相似、圓、三心、證明），到高中轉為「坐標化」主線（坐標、向量、行列式），兩條主線在「三角比」處交棒給函數軸。</p>
+      <div class="chain">
+        <div class="node"><div class="ntitle">簡單圖形、線對稱<span class="gbadge" style="margin-left:6px">7</span></div><div class="ngloss">幾何符號、三視圖、垂直</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">全等、畢氏定理<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">角的關係、凸多邊形內角和、四邊形性質</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">相似形<span class="gbadge" style="margin-left:6px">9</span></div><div class="ngloss">三角形相似判定、平行線截比例線段</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">相似直角三角形邊長比<span class="gbadge" style="margin-left:6px">9</span></div><div class="ngloss">30-60-90／45-45-90 特殊角比值</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">圓與三心、證明<span class="gbadge" style="margin-left:6px">9</span></div><div class="ngloss">圓幾何性質、外心內心重心、證明的意義</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">坐標對稱、直線圓方程式<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">斜率點斜式、圓標準式、直線與圓</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">廣義角、三角比<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">正弦餘弦正切定義、正餘弦定理</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">向量：平面／空間<span class="gbadge" style="margin-left:6px">11A/B</span></div><div class="ngloss">線性組合、內積外積、和差角公式</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">行列式、空間方程式<span class="gbadge" style="margin-left:6px">11A</span></div><div class="ngloss">三階行列式、平面／空間直線方程式</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">二次曲線<span class="gbadge" style="margin-left:6px">12甲</span></div><div class="ngloss">拋物線、橢圓、雙曲線標準式</div></div>
+      </div>
+      <div class="crosslinks">
+        <span class="xl">🔗 「相似直角三角形邊長比值的不變性」（9）是國中留給三角函數的唯一伏筆，直通「三角比」（10）與「三角函數圖形」（11A/B）。</span>
+        <span class="xl">🔗 「坐標對稱」到「向量」這段是幾何逐步「代數化」的過程，最終在「三階行列式」與 A 軸「矩陣」匯流。</span>
+      </div>
+    </div>
+
+    <div class="axis-block" style="--axis-color:var(--s-n)">
+      <div class="axis-head"><span class="strand-tag tag-n">N</span><h3>數與量</h3></div>
+      <p class="axis-desc">數系一路擴張（負數 → 根式 → 實數 → 複數），同時衍生出兩條重要副線：數列極限（通往微積分）與指數對數（通往指對數函數）。</p>
+      <div class="chain">
+        <div class="node"><div class="ntitle">負數、數線、絕對值<span class="gbadge" style="margin-left:6px">7</span></div><div class="ngloss">四則混合運算、運算規律</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">指數律、科學記號<span class="gbadge" style="margin-left:6px">7</span></div><div class="ngloss">非負整數次方、同底數運算律</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">二次方根<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">化簡、四則運算、十分逼近法</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">數列：等差、等比<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">一般項、等差級數求和</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">實數系統<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">十進位小數、無理數估算、絕對值不等式</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">指數推廣、常用對數<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">實數次方、算幾不等式、log 符號</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">數列極限、無窮級數<span class="gbadge" style="margin-left:6px">10→12甲</span></div><div class="ngloss">遞迴關係、數學歸納法 → 極限、認識 e</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">複數<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">複數平面、四則運算（甲另含極式、棣美弗）</div></div>
+      </div>
+      <div class="crosslinks">
+        <span class="xl">🔗 「指數律」→「指數推廣」→「常用對數」直通 A 軸「對數律」（11A）與 F 軸「指數與對數函數」（11A/B）。</span>
+        <span class="xl">🔗 「數列極限」是唯一直接以「12甲」收尾的支線，為函數軸的「函數極限」鋪墊操作經驗。</span>
+      </div>
+    </div>
+
+    <div class="axis-block" style="--axis-color:var(--s-d)">
+      <div class="axis-head"><span class="strand-tag tag-d">D</span><h3>資料與不確定性</h3></div>
+      <p class="axis-desc">先建立「描述資料」的能力（統計圖表、統計量），再建立「量化不確定性」的能力（機率），高中階段兩者合流為隨機變數與分布。</p>
+      <div class="chain">
+        <div class="node"><div class="ntitle">統計圖表、統計數據<span class="gbadge" style="margin-left:6px">7</span></div><div class="ngloss">平均數、中位數、眾數</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">統計資料處理<span class="gbadge" style="margin-left:6px">8</span></div><div class="ngloss">累積次數、相對次數折線圖</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">數據分布、機率入門<span class="gbadge" style="margin-left:6px">9</span></div><div class="ngloss">盒狀圖、樹狀圖、古典機率</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">集合、數據分析<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">迴歸相關係數、標準化</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">計數原理、古典機率<span class="gbadge" style="margin-left:6px">10</span></div><div class="ngloss">排列組合、複合事件、期望值</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">主客觀機率、條件機率<span class="gbadge" style="margin-left:6px">11A/B</span></div><div class="ngloss">貝氏定理、獨立事件、列聯表</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="ntitle">離散隨機變數、分布<span class="gbadge" style="margin-left:6px">12甲/乙</span></div><div class="ngloss">期望值變異數、二項分布（甲另含幾何分布）</div></div>
+      </div>
+      <div class="crosslinks">
+        <span class="xl">🔗 「計數原理」（10）刻意以「供應古典機率所需」為教學目標，不獨立成組合數學單元——直接服務機率主線。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 4: 全景關聯圖 ============ -->
+  <div class="tabpanel" id="panel-graph" role="tabpanel" aria-labelledby="tab-graph" hidden>
+    <section class="intro">
+      <h2>全景關聯圖：五軸如何匯入函數</h2>
+      <p>把 Tab 03 的五條鏈畫在同一張圖上。每個泳道由左到右代表年級推進（實線＝同一主軸內的縱向發展）；泳道之間的虛線，是跨主軸的先備關係——絕大多數都指向「函數」泳道，直觀呈現函數為什麼是整個國高中數學的匯流軸線。</p>
+    </section>
+
+    <div class="graph-legend">
+      <span class="li"><span class="line"></span>同一主軸內的年級進程</span>
+      <span class="li"><span class="line dashed"></span>跨主軸的先備銜接（多數匯入函數）</span>
+    </div>
+
+    <div class="graph-wrap">
+<pre class="mermaid">
+flowchart TB
+  subgraph NUM["N 數與量"]
+    direction LR
+    n1["負數・數線・絕對值<br/>7"] --> n2["指數律・科學記號<br/>7"]
+    n2 --> n3["二次方根<br/>8"]
+    n3 --> n4["等差・等比數列<br/>8"]
+    n4 --> n5["連比<br/>9"]
+    n5 --> n6["實數系統<br/>10"]
+    n6 --> n7["指數推廣・算幾不等式<br/>10"]
+    n7 --> n8["常用對數<br/>10"]
+    n8 --> n9["數列極限・e<br/>12甲"]
+    n6 --> n10["複數<br/>12甲/乙"]
+  end
+
+  subgraph GEO["S/G 空間・坐標幾何"]
+    direction LR
+    g1["線對稱・三視圖<br/>7"] --> g2["全等・畢氏定理<br/>8"]
+    g2 --> g3["相似形<br/>9"]
+    g3 --> g4["相似直角三角形邊長比<br/>9"]
+    g4 --> g5["圓・三心・證明<br/>9"]
+    gc1["平面直角坐標系<br/>7"] --> gc2["兩點距離公式<br/>8"]
+    gc2 --> g6["坐標對稱・直線圓方程式<br/>10"]
+    g4 --> g7["三角比・三角比性質<br/>10"]
+    g6 --> g8["向量：平面・空間<br/>11"]
+    g8 --> g9["行列式・空間方程式<br/>11A"]
+    g9 --> g10["二次曲線<br/>12甲"]
+  end
+
+  subgraph ALG["A 代數・關係"]
+    direction LR
+    a1["代數符號・一次式<br/>7"] --> a2["一元・二元一次方程式<br/>7"]
+    a2 --> a3["乘法公式・多項式<br/>8"]
+    a3 --> a4["因式分解<br/>8"]
+    a4 --> a5["一元二次方程式<br/>8"]
+    a5 --> a6["式的運算・除法原理<br/>10"]
+    a2 --> a7["線性方程組→矩陣<br/>11A/B"]
+    a7 --> a8["對數律<br/>11A"]
+    a6 --> a9["複數與方程式<br/>12甲/乙"]
+    a2 --> a10["線性規劃<br/>12乙"]
+  end
+
+  subgraph FUN["F 函數 ★ 匯流軸"]
+    direction LR
+    f1["一次函數<br/>8"] --> f2["二次函數<br/>9"]
+    f2 --> f3["一二次函數深化<br/>10"]
+    f3 --> f4["三次函數<br/>10"]
+    f4 --> f6["一般函數性質<br/>12甲/乙"]
+    f6 --> f7["函數的極限<br/>12甲/乙"]
+    f7 --> f8["微分・導函數<br/>12甲/乙"]
+    f8 --> f9["積分及其應用<br/>12甲/乙"]
+    ftri1["三角函數圖形<br/>11A/B"] --> ftri2["正餘弦疊合／週期模型<br/>11"]
+    fexp["指數與對數函數<br/>11A/B"]
+    fmat["矩陣的應用：線性變換<br/>11A"]
+  end
+
+  subgraph DATA["D 資料與不確定性"]
+    direction LR
+    d1["統計圖表・統計量<br/>7"] --> d2["統計資料處理<br/>8"]
+    d2 --> d3["數據分布・機率入門<br/>9"]
+    d3 --> d4["集合・數據分析<br/>10"]
+    d4 --> d5["計數原理・古典機率<br/>10"]
+    d5 --> d6["主客觀・條件機率<br/>11"]
+    d6 --> d7["離散隨機變數・分布<br/>12甲/乙"]
+  end
+
+  a2 -.-> f1
+  a5 -.-> f2
+  a6 -.-> f4
+  g7 -.-> ftri1
+  n8 -.-> fexp
+  a8 -.-> fexp
+  a7 -.-> fmat
+  n9 -.-> f7
+</pre>
+    </div>
+    <p class="graph-caption">圖中每個節點的年級標記，對應 Tab 02「依年級」與 Tab 03「依知識節點」中的同名條目；虛線集中匯入 F 泳道，說明函數在整個知識結構裡扮演的「收斂點」角色。</p>
+  </div>
+
+  <footer>
+    <span>資料來源：十二年國民基本教育課程綱要・數學領域（107.6），學習內容條目 7–12 年級全條目重整</span>
+    <span>依知識節點重組・供教材教法課使用</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  try{
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var panels = {
+      'tab-order':'panel-order', 'tab-grade':'panel-grade',
+      'tab-node':'panel-node', 'tab-graph':'panel-graph'
+    };
+    tabs.forEach(function(tab){
+      tab.addEventListener('click', function(){
+        tabs.forEach(function(t){ t.setAttribute('aria-selected','false'); });
+        Object.values(panels).forEach(function(id){
+          var p = document.getElementById(id);
+          p.hidden = true; p.classList.remove('active');
+        });
+        tab.setAttribute('aria-selected','true');
+        var target = document.getElementById(panels[tab.id]);
+        target.hidden = false; target.classList.add('active');
+      });
+    });
+  }catch(e){}
+})();
+</script>
+
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({startOnLoad:true, theme:'neutral'});
+</script>
+</body>
+</html>

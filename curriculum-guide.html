@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>數學領域課綱導讀</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============ Tokens ============ */
+:root{
+  --bg:#eef1f4;
+  --bg-line:#d7dee6;
+  --surface:#ffffff;
+  --surface-2:#f6f8fa;
+  --ink:#1a2733;
+  --ink-soft:#4b5b6b;
+  --ink-faint:#7c8b99;
+  --border:#d7dee6;
+  --accent:#1f3a5f;
+  --accent-soft:#eaf0f8;
+  --accent-strong:#13253f;
+  --chip-bg:#f3f5f8;
+  --chip-border:#c9d3dc;
+  --chip-text:#1f3a5f;
+
+  --c-add:#1f7a52;      /* 新增 */
+  --c-add-bg:#e6f3ec;
+  --c-strong:#1f3a5f;   /* 強化 */
+  --c-strong-bg:#eaf0f8;
+  --c-move:#96650c;     /* 調移 */
+  --c-move-bg:#f7efdd;
+  --c-simplify:#3f6a86; /* 簡化 */
+  --c-simplify-bg:#e9f0f4;
+  --c-delete:#a13c3c;   /* 刪除／弱化 */
+  --c-delete-bg:#f6e9e9;
+
+  --shadow:0 1px 2px rgba(20,30,45,.06), 0 6px 20px -8px rgba(20,30,45,.12);
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111823;
+    --bg-line:#1e2836;
+    --surface:#161f2b;
+    --surface-2:#1b2531;
+    --ink:#e7edf3;
+    --ink-soft:#aebccb;
+    --ink-faint:#7f8fa0;
+    --border:#28333f;
+    --accent:#8fb2de;
+    --accent-soft:#1c2d42;
+    --accent-strong:#c3d8f0;
+    --chip-bg:#1c2733;
+    --chip-border:#334454;
+    --chip-text:#a9c5e6;
+
+    --c-add:#5cb98b;
+    --c-add-bg:#12291f;
+    --c-strong:#8fb2de;
+    --c-strong-bg:#182739;
+    --c-move:#d9a441;
+    --c-move-bg:#2c2413;
+    --c-simplify:#8bacc4;
+    --c-simplify-bg:#182530;
+    --c-delete:#e08585;
+    --c-delete-bg:#2c1717;
+
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111823;
+  --bg-line:#1e2836;
+  --surface:#161f2b;
+  --surface-2:#1b2531;
+  --ink:#e7edf3;
+  --ink-soft:#aebccb;
+  --ink-faint:#7f8fa0;
+  --border:#28333f;
+  --accent:#8fb2de;
+  --accent-soft:#1c2d42;
+  --accent-strong:#c3d8f0;
+  --chip-bg:#1c2733;
+  --chip-border:#334454;
+  --chip-text:#a9c5e6;
+
+  --c-add:#5cb98b;
+  --c-add-bg:#12291f;
+  --c-strong:#8fb2de;
+  --c-strong-bg:#182739;
+  --c-move:#d9a441;
+  --c-move-bg:#2c2413;
+  --c-simplify:#8bacc4;
+  --c-simplify-bg:#182530;
+  --c-delete:#e08585;
+  --c-delete-bg:#2c1717;
+
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5);
+}
+
+/* ============ Base ============ */
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+body{
+  margin:0;
+  background:
+    linear-gradient(var(--bg-line) 1px, transparent 1px) 0 0/100% 32px,
+    linear-gradient(90deg, var(--bg-line) 1px, transparent 1px) 0 0/32px 100%,
+    var(--bg);
+  background-attachment:local;
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.75;
+}
+h1,h2,h3,h4{
+  font-family:"Noto Serif TC","Noto Sans TC",serif;
+  color:var(--ink);
+  text-wrap:balance;
+  margin:0;
+}
+a{color:var(--accent);}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
+
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+code.code{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.86em;
+  background:var(--chip-bg);
+  border:1px solid var(--chip-border);
+  color:var(--chip-text);
+  padding:.05em .45em;
+  border-radius:6px;
+  white-space:nowrap;
+}
+
+/* ============ Shell layout ============ */
+.shell{
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 clamp(16px,4vw,40px) 96px;
+}
+
+/* -- Masthead -- */
+.masthead{
+  padding:56px 0 36px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:36px;
+}
+.masthead .eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.78rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-bottom:18px;
+}
+.masthead .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.masthead h1{
+  font-size:clamp(2rem,4.4vw,3rem);
+  font-weight:900;
+  line-height:1.15;
+  max-width:16ch;
+}
+.masthead p.lede{
+  margin-top:16px;
+  max-width:62ch;
+  color:var(--ink-soft);
+  font-size:1.06rem;
+}
+.stat-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-top:32px;
+}
+.stat{
+  background:var(--surface);
+  padding:16px 18px;
+}
+.stat .num{
+  font-family:"IBM Plex Mono",monospace;
+  font-weight:600;
+  font-size:1.5rem;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+.stat .label{font-size:.82rem; color:var(--ink-soft); margin-top:2px;}
+
+/* -- Source cards -- */
+.sources{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+  margin-top:28px;
+}
+.source-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+}
+.source-card .tag{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.source-card h3{font-size:1rem; margin-top:6px; font-weight:700; font-family:"Noto Sans TC";}
+.source-card p{font-size:.88rem; color:var(--ink-soft); margin:6px 0 0;}
+
+/* -- Grid: nav + content -- */
+.layout{
+  display:grid;
+  grid-template-columns:220px minmax(0,1fr);
+  gap:48px;
+  align-items:start;
+}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;}
+}
+
+nav.toc{
+  position:sticky;
+  top:20px;
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+  padding-right:8px;
+  border-right:1px solid var(--border);
+}
+@media (max-width:900px){
+  nav.toc{
+    position:static;
+    max-height:none;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+    padding-bottom:14px;
+    margin-bottom:8px;
+  }
+  nav.toc ol{display:flex; flex-wrap:wrap; gap:8px;}
+  nav.toc li{margin:0 !important;}
+}
+nav.toc .toc-label{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  margin-bottom:12px;
+  display:block;
+}
+nav.toc ol{list-style:none; margin:0; padding:0; counter-reset:toc;}
+nav.toc li{counter-increment:toc; margin-bottom:2px;}
+nav.toc a{
+  display:flex;
+  gap:10px;
+  align-items:baseline;
+  text-decoration:none;
+  color:var(--ink-soft);
+  font-size:.88rem;
+  padding:7px 8px;
+  border-radius:7px;
+  transition:background .15s, color .15s;
+}
+nav.toc a::before{
+  content:counter(toc,decimal-leading-zero);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;
+  color:var(--ink-faint);
+  flex:none;
+}
+nav.toc a:hover{background:var(--surface-2); color:var(--ink);}
+nav.toc a.active{background:var(--accent-soft); color:var(--accent-strong); font-weight:600;}
+nav.toc a.active::before{color:var(--accent);}
+
+main{min-width:0;}
+
+section.block{
+  padding-top:8px;
+  margin-bottom:64px;
+  scroll-margin-top:20px;
+}
+section.block .kicker{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.76rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+section.block h2{
+  font-size:clamp(1.4rem,2.6vw,1.85rem);
+  font-weight:700;
+  margin-bottom:6px;
+}
+section.block .deck{
+  color:var(--ink-soft);
+  max-width:66ch;
+  margin-bottom:26px;
+  font-size:.98rem;
+}
+section.block h3{
+  font-size:1.08rem;
+  font-weight:700;
+  margin:28px 0 12px;
+}
+section.block p{max-width:70ch;}
+section.block ul, section.block ol{max-width:70ch; padding-left:1.3em;}
+section.block li{margin-bottom:6px;}
+
+/* -- Cards / grids -- */
+.card-grid{display:grid; gap:16px; margin:18px 0;}
+.card-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.card-grid.cols-2{grid-template-columns:repeat(2,1fr);}
+@media (max-width:760px){ .card-grid.cols-3, .card-grid.cols-2{grid-template-columns:1fr;} }
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  box-shadow:var(--shadow);
+}
+.card h4{font-size:.98rem; font-weight:700; margin-bottom:8px;}
+.card p{font-size:.9rem; color:var(--ink-soft); margin:0; max-width:none;}
+.card .stage-range{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.78rem;
+  color:var(--accent);
+  margin-bottom:4px;
+  display:block;
+}
+
+/* -- Table -- */
+.table-wrap{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);}
+table{border-collapse:collapse; width:100%; min-width:560px; background:var(--surface); font-size:.9rem;}
+th,td{padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top;}
+thead th{
+  background:var(--surface-2);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.74rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  font-weight:600;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--surface-2);}
+td.mono, th.mono{font-variant-numeric:tabular-nums;}
+
+/* -- Code anatomy diagram -- */
+.code-anatomy{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:stretch;
+  margin:20px 0;
+}
+.code-anatomy .seg{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px 16px;
+  flex:1 1 150px;
+  box-shadow:var(--shadow);
+}
+.code-anatomy .seg .ex{
+  font-family:"IBM Plex Mono",monospace;
+  font-weight:600;
+  color:var(--accent);
+  font-size:1.15rem;
+}
+.code-anatomy .seg .desc{font-size:.82rem; color:var(--ink-soft); margin-top:4px;}
+
+/* -- Legend / badges for change-types -- */
+.legend{display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 22px;}
+.legend .item{
+  display:flex; align-items:center; gap:7px;
+  font-size:.82rem;
+  padding:5px 12px 5px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+.legend .dot{width:9px; height:9px; border-radius:50%; flex:none;}
+.tag-add{color:var(--c-add); background:var(--c-add-bg); border-color:transparent;}
+.tag-strong{color:var(--c-strong); background:var(--c-strong-bg); border-color:transparent;}
+.tag-move{color:var(--c-move); background:var(--c-move-bg); border-color:transparent;}
+.tag-simplify{color:var(--c-simplify); background:var(--c-simplify-bg); border-color:transparent;}
+.tag-delete{color:var(--c-delete); background:var(--c-delete-bg); border-color:transparent;}
+
+.pill{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.76rem;
+  padding:2px 10px;
+  border-radius:999px;
+  font-weight:600;
+}
+
+.change-list{list-style:none; padding:0; margin:14px 0; display:grid; gap:8px;}
+.change-list li{
+  display:flex; gap:10px; align-items:flex-start;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  padding:9px 13px; font-size:.9rem;
+}
+.change-list li .pill{flex:none; margin-top:1px;}
+
+/* -- Track diagram (high school 3 tracks) -- */
+.track-diagram{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin:22px 0;
+}
+@media (max-width:700px){ .track-diagram{grid-template-columns:1fr;} }
+.track{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--surface);
+  padding:16px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.track .need{font-size:.78rem; color:var(--ink-faint); font-family:"IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.06em;}
+.track .step{
+  background:var(--accent-soft);
+  color:var(--accent-strong);
+  border-radius:8px;
+  padding:9px 12px;
+  font-size:.88rem;
+  font-weight:600;
+  position:relative;
+}
+.track .arrow{align-self:center; color:var(--ink-faint); font-size:.85rem;}
+
+/* -- details / accordion -- */
+details.principle{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:10px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+details.principle summary{
+  padding:14px 18px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:.96rem;
+  list-style:none;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+details.principle summary::-webkit-details-marker{display:none;}
+details.principle summary::after{
+  content:"+";
+  font-family:"IBM Plex Mono",monospace;
+  color:var(--accent);
+  font-size:1.1rem;
+  flex:none;
+  transition:transform .18s;
+}
+details.principle[open] summary::after{transform:rotate(45deg);}
+details.principle .principle-body{
+  padding:0 18px 16px;
+  color:var(--ink-soft);
+  font-size:.92rem;
+}
+details.principle .principle-body ul{padding-left:1.2em;}
+details.principle .principle-body li{margin-bottom:7px;}
+
+/* -- case study cards -- */
+.case{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  padding:20px 22px;
+  margin-bottom:16px;
+}
+.case .case-head{display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; align-items:baseline; margin-bottom:10px;}
+.case h4{font-size:1.02rem; font-weight:700;}
+.case .stage-tag{font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--ink-faint);}
+.case .codes{margin-bottom:10px; display:flex; flex-wrap:wrap; gap:6px;}
+.case p{font-size:.9rem; color:var(--ink-soft);}
+.case ol{font-size:.88rem; color:var(--ink-soft); padding-left:1.2em;}
+.case ol li{margin-bottom:5px;}
+
+/* -- pillar cards (calculator / differentiation / foundational) -- */
+.pillar{
+  border-left:3px solid var(--accent);
+  background:var(--surface);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:18px 22px;
+  margin-bottom:18px;
+  box-shadow:var(--shadow);
+}
+.pillar h3{margin-top:0;}
+.pillar .sub{font-size:.84rem; color:var(--ink-faint); margin-bottom:10px; font-family:"IBM Plex Mono",monospace;}
+
+/* -- footer -- */
+footer{
+  margin-top:60px;
+  padding-top:24px;
+  border-top:1px solid var(--border);
+  color:var(--ink-faint);
+  font-size:.82rem;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.term-list{display:grid; gap:10px; margin:16px 0;}
+.term-list .term{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:14px;
+  padding:10px 0;
+  border-bottom:1px dashed var(--border);
+  font-size:.9rem;
+}
+.term-list .term:last-child{border-bottom:none;}
+.term-list dt{font-weight:700; color:var(--ink);}
+.term-list dd{margin:0; color:var(--ink-soft);}
+</style>
+
+<div class="shell">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span>十二年國民基本教育課程綱要・數學領域・課前導讀</div>
+    <h1>數學領域課綱導讀</h1>
+    <p class="lede">整理自國家教育研究院發布的三份官方文件——課程綱要本文、課程手冊（114 年 1 月更新版）、課綱公播簡報——為「數學科教材教法」課程備課所用的結構化導讀，聚焦教材編選與教學實施的可操作重點。</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">5</div><div class="label">學習階段（國小三、國中一、高中一）</div></div>
+      <div class="stat"><div class="num">7</div><div class="label">學習重點主題類別 N S G R A F D</div></div>
+      <div class="stat"><div class="num">3</div><div class="label">高中軌道：數學 A／B，甲／乙</div></div>
+      <div class="stat"><div class="num">108</div><div class="label">學年起逐年實施</div></div>
+    </div>
+
+    <div class="sources">
+      <div class="source-card">
+        <span class="tag">法規母文件</span>
+        <h3>數學領域課程綱要</h3>
+        <p>107 年 6 月發布，83 頁。理念、目標、核心素養、學習表現／學習內容全條目、實施要點。一切解釋的依據。</p>
+      </div>
+      <div class="source-card">
+        <span class="tag">解釋＋示例</span>
+        <h3>數學領域課程手冊</h3>
+        <p>114 年 1 月更新版，782 頁。逐年級內容解析、教材編寫原則、教學單元案例、新舊課綱差異、課綱 Q&amp;A。</p>
+      </div>
+      <div class="source-card">
+        <span class="tag">快速導覽</span>
+        <h3>課綱公播版簡報</h3>
+        <p>58 頁。三大特色（素養導向、統整融合、知行合一）搭配新舊課綱對照表，適合當作上課投影片藍本。</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="目錄">
+      <span class="toc-label">目錄</span>
+      <ol>
+        <li><a href="#ideas">理念與課程目標</a></li>
+        <li><a href="#competency">核心素養：三面九項</a></li>
+        <li><a href="#structure">課程架構與五學習階段</a></li>
+        <li><a href="#coding">學習重點編碼系統</a></li>
+        <li><a href="#map">各階段內容地圖</a></li>
+        <li><a href="#diff">新舊課綱差異</a></li>
+        <li><a href="#implement">實施要點五支點</a></li>
+        <li><a href="#materials">素養導向教材編寫</a></li>
+        <li><a href="#pillars">教學現場三支柱</a></li>
+        <li><a href="#issues">議題融入</a></li>
+        <li><a href="#resources">延伸資源</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <!-- 1 理念與目標 -->
+      <section class="block" id="ideas">
+        <div class="kicker">壹・貳</div>
+        <h2>理念與課程目標</h2>
+        <p class="deck">課綱開宗明義把數學定性為三件事——一種語言、一種實用的規律科學、一種人文素養——這個三分法幾乎決定了後面所有教材編寫與教學實施條文的邏輯，值得在課程第一堂就講清楚。</p>
+
+        <div class="card-grid cols-3">
+          <div class="card">
+            <h4>語言</h4>
+            <p>數學融入自然語言的生活經驗，以簡馭繁、以精確彌補自然語言之不足。教學宜由自然語言題材導入，理解概念與算則後再逐步進入抽象。</p>
+          </div>
+          <div class="card">
+            <h4>實用的規律科學</h4>
+            <p>比例、質數加密、指數定律、三角函數描述波動、統計預測——應用是跨領域的，教學也宜重視跨領域統整。</p>
+          </div>
+          <div class="card">
+            <h4>人文素養</h4>
+            <p>數學史能協助教師釐清學習主軸；適時融入數學史可提升教學品質，讓學習從工具性延伸到智識性層次。</p>
+          </div>
+        </div>
+
+        <p>此外另有兩項理念直接指向教學現場：<strong>提供每位學生有感的學習機會</strong>（緩慢者降速、超前者加深加廣、落後者及時補救），以及<strong>培養正確使用工具的素養</strong>（計算機教學從國中開始，高階工具如試算表、數學軟體逐步引導）。</p>
+
+        <h3>六項課程目標</h3>
+        <ol>
+          <li>提供學生適性學習的機會，培育探索數學的信心與正向態度。</li>
+          <li>培養好奇心及觀察規律、演算、抽象、推論、溝通和數學表述等各項能力。</li>
+          <li>培養使用工具，運用於數學程序及解決問題的正確態度。</li>
+          <li>培養運用數學思考問題、分析問題和解決問題的能力。</li>
+          <li>培養日常生活應用與學習其他領域╱科目所需的數學知能。</li>
+          <li>培養學生欣賞數學以簡馭繁的精神與結構嚴謹完美的特質。</li>
+        </ol>
+
+        <h3>時間分配</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>教育階段</th><th>節數／學分</th><th>備註</th></tr></thead>
+            <tbody>
+              <tr><td>國小 1–6 年級</td><td class="mono">每週 4 堂（160 分鐘）</td><td>—</td></tr>
+              <tr><td>國中 7–9 年級</td><td class="mono">每週 4 堂（180 分鐘）</td><td>—</td></tr>
+              <tr><td>高中 10 年級</td><td class="mono">必修 8 學分（200 分鐘／週）</td><td>—</td></tr>
+              <tr><td>高中 11 年級</td><td class="mono">必修 8 學分（200 分鐘／週）</td><td>分 A、B 兩類，擇一修習</td></tr>
+              <tr><td>高中 12 年級</td><td class="mono">加深加廣選修 8 學分（200 分鐘／週）</td><td>分甲、乙兩類，擇一或不修，上限 8 學分</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 2 核心素養 -->
+      <section class="block" id="competency">
+        <div class="kicker">肆</div>
+        <h2>核心素養：三面九項</h2>
+        <p class="deck">核心素養是總綱訂定的、跨領域共通的課程發展主軸，數學領域把九個項目逐一轉譯成國小（E）、國中（J）、高中（S-U）三個教育階段的「具體內涵」——這正是「學習重點」設計的上游依據。</p>
+
+        <div class="card-grid cols-3">
+          <div class="card"><span class="stage-range">A・自主行動</span><h4>A1 身心素質與自我精進 ／ A2 系統思考與解決問題 ／ A3 規劃執行與創新應變</h4></div>
+          <div class="card"><span class="stage-range">B・溝通互動</span><h4>B1 符號運用與溝通表達 ／ B2 科技資訊與媒體素養 ／ B3 藝術涵養與美感素養</h4></div>
+          <div class="card"><span class="stage-range">C・社會參與</span><h4>C1 道德實踐與公民意識 ／ C2 人際關係與團隊合作 ／ C3 多元文化與國際理解</h4></div>
+        </div>
+
+        <h3>看一個項目如何隨階段遞進：A2 系統思考與解決問題</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:8%">階段</th><th>數學領域具體內涵</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">數-E-A2</td><td>具備基本的算術操作能力、並能指認基本的形體與相對關係，在日常生活情境中，用數學表述與解決問題。</td></tr>
+              <tr><td class="mono">數-J-A2</td><td>具備有理數、根式、坐標系之運作能力，並能以符號代表數或幾何物件，執行運算與推論，在生活情境或可理解的想像情境中，分析本質以解決問題。</td></tr>
+              <tr><td class="mono">數S-U-A2</td><td>具備數學模型的基本工具，以數學模型解決典型的現實問題。了解數學在觀察歸納之後還須演繹證明的思維特徵及其價值。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.86rem;color:var(--ink-faint)">同樣的遞進模式適用於全部九項；完整的 E／J／U 三階對照表見課綱本文「附錄一：學習重點與核心素養呼應表參考示例」。</p>
+      </section>
+
+      <!-- 3 課程架構 -->
+      <section class="block" id="structure">
+        <div class="kicker">貳</div>
+        <h2>課程架構與五個學習階段</h2>
+        <p class="deck">十二年一貫的學制切成五個學習階段，國中小四個、高中一個；每個階段有一句話式的「階段學習重點」，是判斷某個教材內容「該不該在這裡教」最快的準繩。</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:16%">學習階段</th><th>年級</th><th>階段學習重點</th></tr></thead>
+            <tbody>
+              <tr><td>第一學習階段</td><td class="mono">國小 1–2</td><td>初步掌握數、量、形的概念，重點在自然數及其運算、長度與簡單圖形的認識。</td></tr>
+              <tr><td>第二學習階段</td><td class="mono">國小 3–4</td><td>確實掌握自然數四則與混合運算，培養數字感；初學分數與小數；以長度為基礎學習量的常用單位；發展角、邊要素認識幾何圖形。</td></tr>
+              <tr><td>第三學習階段</td><td class="mono">國小 5–6</td><td>確實掌握分數與小數四則計算；認識簡單平面與立體形體性質、面積與體積計算；能製作簡單統計圖表。</td></tr>
+              <tr><td>第四學習階段</td><td class="mono">國中 7–9</td><td>認識負數與根式、坐標；熟悉代數式運算、解方程式與簡單函數；依年級學直觀幾何、測量幾何、推理幾何；理解統計與機率意義。</td></tr>
+              <tr><td>第五學習階段</td><td class="mono">高中 10–12</td><td>統整認識實數，發展計數原理；學習基本空間概念、坐標連結幾何與代數；認識三大類函數（多項式、指數對數、三角）；運用統計量與機率推論不確定性。</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>高中：11 年級起分三軌</h3>
+        <p>高中學生因性向逐漸分化，11 年級起數學課程分軌，設計上刻意讓「轉軌」不至於太困難——即便 11 年級修 B 類，12 年級仍有機會補足先備知識而改選數學乙。</p>
+        <div class="track-diagram">
+          <div class="track">
+            <span class="need">高數學需求</span>
+            <div class="step">11 年級・數學 A</div>
+            <div class="arrow">↓</div>
+            <div class="step">12 年級・數學甲</div>
+          </div>
+          <div class="track">
+            <span class="need">不同面向數學需求</span>
+            <div class="step">11 年級・數學 A</div>
+            <div class="arrow">↓</div>
+            <div class="step">12 年級・數學乙</div>
+          </div>
+          <div class="track">
+            <span class="need">低數學需求</span>
+            <div class="step">11 年級・數學 B</div>
+            <div class="arrow">↓</div>
+            <div class="step">12 年級・自行選修或不選</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--ink-soft)">數學乙定位為社會科學、財經、管理領域的大學先修；查驗其學習內容之「先備」需求，幾乎全落在 8、10 年級，故 11B 學生原則上不須額外補充內容，教師需留意的是學生的「數學成熟度」（符號操作與連結能力）而非條目本身。</p>
+      </section>
+
+      <!-- 4 編碼系統 -->
+      <section class="block" id="coding">
+        <div class="kicker">伍</div>
+        <h2>學習重點編碼系統</h2>
+        <p class="deck">「學習重點」＝「學習表現」（非內容向度：認知、情意、應用的展現）＋「學習內容」（內容向度：事實、概念、原理原則、技能）。兩者各自有一套三段式編碼，讀懂編碼，就能直接在教科書、教案裡定位任何一條課程要求。</p>
+
+        <h3>學習表現（小寫字母）— 例：<code class="code">r-II-5</code></h3>
+        <div class="code-anatomy">
+          <div class="seg"><div class="ex">r</div><div class="desc">表現類別：n 數與量／s 空間與形狀／g 坐標幾何／r 關係（國小專用）／a 代數／f 函數／d 資料與不確定性。r 在國中、高中轉為 a 與 f。</div></div>
+          <div class="seg"><div class="ex">II</div><div class="desc">學習階段：I 國小低年級／II 國小中年級／III 國小高年級／IV 國中／V 高中。</div></div>
+          <div class="seg"><div class="ex">5</div><div class="desc">流水號。同一學習階段內，教科書不須依流水號順序編寫。</div></div>
+        </div>
+        <p style="font-size:.88rem;color:var(--ink-soft)"><code class="code">r-II-5</code> 理解以文字表示之數學公式。</p>
+
+        <h3>學習內容（大寫字母＋年級）— 例：<code class="code">N-7-11</code></h3>
+        <div class="code-anatomy">
+          <div class="seg"><div class="ex">N</div><div class="desc">主題類別：N 數與量／S 空間與形狀／G 坐標幾何／R 關係（國小專用）／A 代數／F 函數／D 資料與不確定性。R 在國中、高中轉為 A 與 F。</div></div>
+          <div class="seg"><div class="ex">7</div><div class="desc">年級：1–12 年級；11 年級分 11A／11B；12 年級加深加廣分 12 甲／12 乙。</div></div>
+          <div class="seg"><div class="ex">11</div><div class="desc">流水號。條目含「條目」（粗體大項）與「說明」（細項），部分另有「備註」。</div></div>
+        </div>
+
+        <h3>條目上的三個記號</h3>
+        <div class="change-list">
+          <li><span class="pill" style="background:var(--c-move-bg);color:var(--c-move)">※</span> 進階或延伸教材，教師宜適當補充，建議不納入全國性考試範圍。</li>
+          <li><span class="pill" style="background:var(--c-simplify-bg);color:var(--c-simplify)">★</span> 建議不列為評量的直接命題對象，可融入其他課題的評量之中。</li>
+          <li><span class="pill" style="background:var(--c-strong-bg);color:var(--c-strong)">＃</span> 不必設置獨立教學單元，宜融入適當課題、在合理脈絡中教授。</li>
+        </div>
+        <p style="font-size:.86rem;color:var(--ink-faint)">7–12 年級適用；已從九年一貫或高中 95／99 課綱中刪除、且未列入現有內容的較難題材，不可出現在教科用書正文，必要時僅能列入教師手冊供補充學習超前學生之用。</p>
+
+        <h3>學習表現常用術語</h3>
+        <dl class="term-list">
+          <div class="term"><dt>認識・理解・熟練</dt><dd>認識＝察覺、認識；理解＝辨識、概念連結、理解；熟練＝可應用解題、推理、程序純熟。若某階段只寫「理解」沒寫「認識」，代表「認識」已在更早階段完成。</dd></div>
+          <div class="term"><dt>情境／具體情境</dt><dd>情境泛指經驗脈絡（如生活情境）或核心類型經驗（如平分情境、測量情境）；具體情境對應「認識」與「理解」。國小 1–2 年級不區分生活情境與具體情境，第三階段起具體情境不限於生活情境，第四階段起甚至包含數學或其他領域的局部理論。</dd></div>
+          <div class="term"><dt>解題</dt><dd>了解問題意義、選擇策略、轉換為數學問題、求解、檢驗與詮釋解的意義、判斷是否完成要求；更進一步的反思、推廣、溝通不在課綱必要要求之列。</dd></div>
+          <div class="term"><dt>操作活動</dt><dd>由操作中察覺、形成概念，甚至簡單連結各概念的活動。國小低、中年級因概念基礎未穩、數學經驗不足，許多課題宜先以操作活動進行。</dd></div>
+          <div class="term"><dt>報讀</dt><dd>正確理解資料呈現方式（表格、統計圖），回答直接問題與簡單延伸問題；需要較成熟推理能力的問題不屬於「報讀」範疇。</dd></div>
+        </dl>
+      </section>
+
+      <!-- 5 內容地圖 -->
+      <section class="block" id="map">
+        <div class="kicker">柒（手冊）</div>
+        <h2>各階段內容地圖</h2>
+        <p class="deck">把七大主題類別攤開在三個教育階段上看，會發現一條清楚的敘事線：國小重先備經驗與操作、國中依年級循序展開直觀→測量→推理、高中則因應三軌需求做內容分流。</p>
+
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="stage-range">國小・後續學習的先備經驗</span>
+            <h4>數與量、幾何、關係、資料</h4>
+            <p><strong>N</strong> 數（整數、分數、小數）與量（長度、時間、重量、容量、角度、面積、體積、速度），最基本應用（比）。<strong>S</strong> 視覺動物的直觀知識：常見形體、幾何要素、對稱／全等／縮放。<strong>R</strong> 國中代數的前置經驗：運算規律、模式規律、符號與算式。<strong>D</strong> 蒐集、記錄、報讀常用圖表與可能性。全程重視操作活動。</p>
+          </div>
+          <div class="card">
+            <span class="stage-range">國中・循序漸進、分布於各年級</span>
+            <h4>七年級直觀 → 八年級測量 → 九年級推理</h4>
+            <p><strong>N</strong> 七（整數、指數、比）／八（二次方根、等差數列與級數、等比數列）／九（連比）。<strong>S／G</strong> 七直觀幾何、八測量幾何、九推理幾何（空間幾何提前至九年級）。<strong>A／F</strong> 七（一元一次方程式、二元一次方程組、不等式）／八（多項式、一元二次方程式、一次函數）／九（一元二次函數）。<strong>D</strong> 七統計圖表與數據、八統計資料處理、九數據分布與機率。</p>
+          </div>
+          <div class="card">
+            <span class="stage-range">高中・分三軌而適性揚才</span>
+            <h4>10 年級共同 → 11 年級 A／B → 12 年級甲／乙</h4>
+            <p><strong>N</strong> 計算機、常用對數、複數平面（甲）／虛數（乙）。<strong>S／G</strong> 圓與直線、極坐標與三角比、法線與三垂線（A）／長方體與球面（B）、向量外積與行列式（A）／透視與比例（B）。<strong>A／F</strong> 一二三次函數，三角函數（A）／週期性現象（B），指對函數（A）／按比例成長（B），矩陣運算（A）／資料表格（B），微積分（理工向甲／商管向乙）。<strong>D</strong> 數據素養、有系統的計數、古典／主觀／客觀機率，貝氏定理（A）／列聯表（B），幾何分布（甲）／二項分布（乙）。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 新舊差異 -->
+      <section class="block" id="diff">
+        <div class="kicker">壹・捌（手冊）</div>
+        <h2>新舊課綱差異</h2>
+        <p class="deck">手冊用「發展沿革」講了四個宏觀改變，再用「新增／強化（分拆）／調移／簡化／刪除」五個標記，逐條列出跟九年一貫、高中 95／99 課綱之間的差異——這是教材教法課上「舊教科書 vs 新教科書」比較活動的現成骨架。</p>
+
+        <h3>四項宏觀改變</h3>
+        <ol>
+          <li><strong>十二年一貫架構</strong>——避免以往國、高中課綱各自研修導致的銜接困難，同時回應世界培養數學素養的趨勢。</li>
+          <li><strong>正式落實計算機素養</strong>——歷年課綱只在「實施要點」提及使用計算機卻從未真正落實；這次把計算機使用寫進條文，明確標出何處使用。</li>
+          <li><strong>確實規劃高二起分類教學</strong>——11 年級起分 A、B 兩類必修，取代舊制「雙圈標記、其實只有一份課綱」的做法，讓數學需求較低的學生不必被迫多修。</li>
+          <li><strong>與技高數學整合</strong>——盡量降低綜合高中學生在高一升高二轉軌（學術／專門學程）時的落差。</li>
+        </ol>
+
+        <h3>五種調整標記</h3>
+        <div class="legend">
+          <span class="item"><span class="dot" style="background:var(--c-add)"></span>新增</span>
+          <span class="item"><span class="dot" style="background:var(--c-strong)"></span>強化／分拆</span>
+          <span class="item"><span class="dot" style="background:var(--c-move)"></span>調移</span>
+          <span class="item"><span class="dot" style="background:var(--c-simplify)"></span>簡化</span>
+          <span class="item"><span class="dot" style="background:var(--c-delete)"></span>刪除／弱化</span>
+        </div>
+
+        <h3>高中階段差異舉隅</h3>
+        <p style="font-size:.88rem;color:var(--ink-soft)">相對於 99 課綱數學 I–IV 與選修甲、乙。完整逐條對照見手冊「附錄一」。</p>
+
+        <ul class="change-list">
+          <li><span class="pill" style="background:var(--c-delete-bg);color:var(--c-delete)">刪除</span>拉格朗日插值法、有理根判定、勘根定理；複數系與方程式虛根、代數基本定理；重複組合；連加符號；三角比與對數值查表；線性規劃；（選修）抽樣與統計推論。</li>
+          <li><span class="pill" style="background:var(--c-delete-bg);color:var(--c-delete)">弱化</span>含絕對值的一次方程式／不等式；排列組合聚焦古典機率所需範圍與二項式展開；三角測量以長方體為主要模型；一般底的對數；不在坐標平面上的平面向量幾何表示；三元一次聯立方程式的三平面關係。</li>
+          <li><span class="pill" style="background:var(--c-move-bg);color:var(--c-move)">調移</span>複數系／虛根 10→12 年級選修；勘根定理 10→選修數學甲；指數對數函數 10→11 年級；連加符號 10→12 年級選修；條件機率與貝氏定理 10→11；極坐標、廣義角、直線與圓方程式、正餘弦定理 11→10；線性規劃 11→選修乙；二次曲線 11→選修甲；弧度量與三角函數 12 年級選修→11 年級（A／B 有所區隔）；正餘弦疊合 12 選修甲→11 數學 A。</li>
+          <li><span class="pill" style="background:var(--c-add-bg);color:var(--c-add)">新增</span>計算機融入教學，含科學記號與有效數字；二、三次函數局部圖形近似一條直線；（數據分布）百分位數；（10 年級古典機率）期望值；主觀機率與客觀機率的概念。</li>
+        </ul>
+
+        <h3>國中階段差異舉隅</h3>
+        <ul class="change-list">
+          <li><span class="pill" style="background:var(--c-add-bg);color:var(--c-add)">新增</span>等比數列（N-8-6）；計算機使用融入多條（N-7-9、D-7-1／7-2、N-8-2、D-8-1、N-9-1、D-9-1／9-3）；相似直角三角形邊長比值的不變性（S-9-4）；空間中的線與平面（S-9-12）。</li>
+          <li><span class="pill" style="background:var(--c-move-bg);color:var(--c-move)">調移</span>連比 七→九（N-9-1）；S-7-1〜7-5 多條自八年級移至七年級；圓弧長與扇形面積 八→九（S-9-5）；一次函數與其圖形 七→八（F-8-1／8-2）；統計圖表與數據 九→七（D-7-1／7-2）；統計資料處理 九→八（D-8-1）。</li>
+          <li><span class="pill" style="background:var(--c-delete-bg);color:var(--c-delete)">刪除</span>圓的弦切角、兩圓的公切線長、兩圓關係；凸多邊形外角和公式；多邊形外心、內心的意義與相關性質；二次函數的配方；百分位數的概念（移至他處處理）。</li>
+        </ul>
+      </section>
+
+      <!-- 7 實施要點 -->
+      <section class="block" id="implement">
+        <div class="kicker">陸</div>
+        <h2>實施要點：教材教法的五個支點</h2>
+        <p class="deck">課綱本文「陸、實施要點」是最貼近「數學科教材教法」課程內容的一節，分課程發展、教材編選、教學實施、教學資源、學習評量五項，共數十條具體條文。以下摘要為可展開的要點卡，完整條文序號可對照課綱本文第 53–58 頁。</p>
+
+        <details class="principle" open>
+          <summary>一、課程發展</summary>
+          <div class="principle-body">
+            <ul>
+              <li>提供所有人平等的學習機會，規劃上強調循序漸進，適時發展差異化教學；可結合性別平等、人權、環境、海洋等議題。</li>
+              <li>國中小可在彈性學習課程中規劃「數學奠基與探索活動」，讓學生探索、討論，奠立單元學習的先備基礎。</li>
+              <li>依學生需求調整：學習緩慢者降緩速度；學習超前者設計加深加廣、專題探究課程；學習落後者規劃補救教學。</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="principle">
+          <summary>二、教材編選</summary>
+          <div class="principle-body">
+            <ul>
+              <li>教科用書應包含教師手冊，協助教師照顧不同程度與需求的學生。</li>
+              <li>學習內容並非一條目對應一教學單元，教科書同一年級可不依流水號順序編寫；※★＃記號須在書內清楚標明、解釋。</li>
+              <li>國中初次介紹計算機宜有專門單元，說明特性與易犯錯誤（有效位數限制、鍵入與程序錯誤等）；國中計算機須能處理四則、百分比、平方根、總和平均，高中須能處理指數次方、三角反三角、指數對數、變異數標準差。</li>
+              <li>整體結構應有機結合，兼顧數學概念的內在連結，以及與其他領域、日常生活的外在連結。</li>
+              <li>呈現應循序漸進、具備多重表徵、在直觀與嚴謹之間取得平衡，並兼顧從特例到一般推理；國小升國中階段應安排銜接教材與教法。</li>
+              <li>學習任務與習題應有意義、反映數學思考，避免無意義的人工化難題或不符常理的情境；宜連結生活、其他領域及性別平等、人權、環境、海洋等議題。</li>
+              <li>可適當編入數學史、民族數學及數學家介紹；鼓勵原住民族重點學校教材與在地文化結合，進行文化回應教學。</li>
+              <li>教師可自編教材，但應以課綱為依據，避免過度發展內容徒增一般學生挫折；可為資優學生另編具挑戰性教材。</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="principle">
+          <summary>三、教學實施</summary>
+          <div class="principle-body">
+            <ul>
+              <li>學習重點是離散條目，但教學是連續過程；教師可依經驗做跨階段的前置處理或後續補強。</li>
+              <li>以學生為主體，鼓勵多元解法與溝通；避免把全班當作均值整體，應以差異化教學分析學習準備度。</li>
+              <li>課綱不預設特定教學法，教師依年齡、前置經驗、主題特性因時制宜——如合作解題、探究教學。</li>
+              <li>注重數、量、形的連繫：實作、實測、直覺 → 逐步抽象化、程序化 → 反思、論證、練習、解題。</li>
+              <li>可提供啟發性、關鍵性、現實應用的問題，避免空洞或無意義的開放式問題，也避免預設或過早提出解法與結果。</li>
+              <li>培養學生以數學觀點考察周遭事物、將問題表徵為數學問題的習慣；生活應用與抽象形式能力須來回相互加強，不偏廢任一方。</li>
+              <li>將學生錯誤視為學習歷程，診斷根源（語言未溝通、肆意擴張約定、推理謬誤等），提供充足時間讓學生說明想法。</li>
+              <li>練習應具啟發性而非機械式反覆，讓學生沉澱新概念並與既有知識連結；因材施教，落後者補救、超前者提供進階選修。</li>
+              <li>國中、高中學生應具備標準型計算機；可適當介紹數學史、民族數學及數學家，但不可納入評量。</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="principle">
+          <summary>四、教學資源</summary>
+          <div class="principle-body">
+            <ul>
+              <li>適度使用教學器材協助視覺與思維理解；以自製為優先，複雜器材由學校或主管機關提供，必要時設教具室。</li>
+              <li>常用器材（直尺、量角器、圓規、計算機）可由學生自購長期使用；高階圖形計算機、可寫程式計算機由教師彈性運用。</li>
+              <li>計算機教學應讓學生明白其誤差限制與操作可能發生的錯誤，熟練計算原理後才於學習及評量中使用，以計算統計數據、指數、對數、三角比；電腦繪圖宜在學生有描點繪圖經驗後再使用，加強觀察函數圖形特徵。</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="principle">
+          <summary>五、學習評量</summary>
+          <div class="principle-body">
+            <ul>
+              <li>評量方式多元：紙筆測驗、實作、討論、口頭回答、視察、作業、專題研究、分組報告。</li>
+              <li>除總結性評量外，應運用形成性評量探查學習困難與落差，即時回饋、調整教學。</li>
+              <li>評量標準以教材內容、教學目標與學習重點為依據；不宜出現高難度鑑別題，因評量非常模參照考試。</li>
+              <li>依評量時機分工：起點行為評量擬訂教學計畫、過程評量即時補救、學習後評量作學生回饋。</li>
+              <li>避免容易猜答的是非、選擇題；宜要求寫出作答過程，訂定分段給分標準。</li>
+              <li>學業成績評量、學力檢定及入學測驗宜以課綱為依據，避免死記公式；11 年級分軌，入學測驗宜納入考量。</li>
+              <li>學業評量、學力檢定及入學測驗宜容許使用直尺、三角板、量角器、圓規、計算機等工具，落實工具素養；附圖可用示意圖並註明。</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
+      <!-- 8 素養導向教材編寫 -->
+      <section class="block" id="materials">
+        <div class="kicker">伍（手冊）</div>
+        <h2>素養導向教材編寫：六原則＋三個示例</h2>
+        <p class="deck">手冊把素養導向教材寫作的核心想法濃縮成一句話：「來龍去脈」的建構。以下六原則搭配三個完整教學單元案例（國小、國中、高中各一），可以直接當作教材教法課的教案設計練習範本。</p>
+
+        <ol>
+          <li><strong>透過現實情境、寓言故事或數學史引入教材</strong>，營造數學學習需求，激發學習動機。</li>
+          <li><strong>以任務鋪陳學習脈絡</strong>，引導學生操作、探索、分析、比較，從中歸結原理原則。</li>
+          <li><strong>讓學生運用知識解決問題並與他人溝通</strong>，經由討論、質疑、辯證建構數學知識。</li>
+          <li><strong>教材安排從具體到抽象</strong>，讓數學是活的、有感覺的人類活動，而非公式與反覆解題練習。</li>
+          <li><strong>教材設計具備多重表徵</strong>——表格、圖形、文字、數字，中學可引進計算機與動態幾何工具。</li>
+          <li><strong>學習任務具備形成性評量功能</strong>，教學與評量整合，即時掌握學習落差以規劃後續教學。</li>
+        </ol>
+
+        <h3>三個教學單元案例</h3>
+
+        <div class="case">
+          <div class="case-head"><h4>三角形與四邊形面積公式的應用</h4><span class="stage-tag">國小・第三學習階段・五年級</span></div>
+          <div class="codes"><code class="code">s-III-1</code><code class="code">n-III-11</code><code class="code">S-5-2</code><code class="code">N-5-12</code></div>
+          <p>設計說明：透過面積公式的揭露，利用圖形切割組合，讓學生理解各種面積計算的由來，歸結為面積公式，解決生活中的面積問題；作為「公畝、公頃、平方公里」教學之前置活動。</p>
+          <ol>
+            <li>能夠切割拼合平面圖形，知道面積在此操作下的影響。</li>
+            <li>以切割拼合方式，學習如何計算三角形和四邊形的面積。</li>
+            <li>將面積計算和「公畝」「公頃」「平方公里」的學習結合，計算大區域面積。</li>
+            <li>引入大面積有關之應用問題，讓學生討論與應用。</li>
+          </ol>
+        </div>
+
+        <div class="case">
+          <div class="case-head"><h4>相似直角三角形邊長比值的不變性</h4><span class="stage-tag">國中・九年級・3 節課</span></div>
+          <div class="codes"><code class="code">s-IV-12</code><code class="code">S-9-4</code></div>
+          <p>設計說明：九年一貫實施後三角函數單元曾自國中課程消失，銜接成效不佳。107 課綱參考舊課程標準及他國作法，把「坡度＝直角三角形銳角對邊與鄰邊之比」放回九年級，並在此引入計算機 sin、cos、tan 按鍵，倒數、平方、商數、餘角關係則延後至高中。</p>
+          <ol>
+            <li>認識坡度的計算方式，即直角三角形中某一銳角的對邊與鄰邊的比值。</li>
+            <li>透過製圖、測量發現坡度與對應銳角度數的關係；相同坡度不因三角形大小而改變。</li>
+            <li>認識計算機按鍵上 tan 的符號。</li>
+            <li>計算特殊角的相似直角三角形邊長比值不變性。</li>
+            <li>透過計算機的 tan 按鍵，幫助解決生活中的應用問題。</li>
+          </ol>
+        </div>
+
+        <div class="case">
+          <div class="case-head"><h4>科學記號與 10 的冪次</h4><span class="stage-tag">高中・10 年級上學期・4 節課</span></div>
+          <div class="codes"><code class="code">n-V-1</code><code class="code">N-10-1</code><code class="code">N-10-4</code></div>
+          <p>設計說明：過去「科學記號的運算」排在高一上、卻要等高二學理化才使用，造成學習困難；107 課綱移至高一並建議放在第一章。同時把「10 的冪次與常用對數符號」提前到高一先建立符號表達的基本觀念，指對數函數的形式運思留到高二第二次教學。</p>
+          <ol>
+            <li>理解「取三位小數」「準至千分位」「以兩位有效數字計算」等語言，能將任意數依指令寫成正確概數。</li>
+            <li>能操作科學記號的加減乘除運算。</li>
+            <li>能使用計算機做四則運算、計算 10 的次方與 log 值，並明白其值僅為估計。</li>
+            <li>能轉換科學記號數字與 10 的冪次，建立 10 的冪次與對數的數感（不用計算機也能粗略估計）。</li>
+            <li>理解 log 符號的意義，能用 log 記錄或表達數值。</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 9 三支柱 -->
+      <section class="block" id="pillars">
+        <div class="kicker">玖（手冊）</div>
+        <h2>教學現場三支柱</h2>
+        <p class="deck">手冊「實施要點重點說明」單獨挑出三件事詳細展開，因為它們最直接回答「素養導向到底要怎麼教」——這也是教材教法課最容易延伸成分組演練的三個主題。</p>
+
+        <div class="pillar">
+          <h3>計算機融入教學</h3>
+          <p class="sub">CALCULATOR LITERACY</p>
+          <p>過去二十幾年計算機教學不成功，手冊歸結三個原因，並逐一提出對策：</p>
+          <ul>
+            <li><strong>師怕生依賴</strong>——因此國小定位為奠基階段暫不使用，七年級起才是計算機教學的起點，且須同步教「正確使用計算機的態度」（明白有效位數誤差、可能的鍵入與程序錯誤）。</li>
+            <li><strong>教科書未著墨</strong>——課綱把計算機使用寫入條文本身，並在 34 條學習內容中標明計算機為參考教具。</li>
+            <li><strong>大考不准用，教師便不教</strong>——課綱在「學習評量」中明列學業評量、學力檢定及入學測驗宜容許使用計算機等工具。</li>
+          </ul>
+          <p>可濃縮成四個要點：(M1) 數學學科知識的素養　(M2) 應用到學習、生活與職業生涯的素養　(M3) 正確使用工具的素養　(M4) 有效與他人溝通的素養。</p>
+        </div>
+
+        <div class="pillar">
+          <h3>數學差異化教學</h3>
+          <p class="sub">DIFFERENTIATED INSTRUCTION</p>
+          <p>核心先決條件是透過<strong>形成性評量</strong>識別學生的學習準備度，再依學生背景、興趣、語言、學習條件提供適當支持。可在「課程內容」「實施過程」「學習成果」「情意感受」「學習環境」五要素上設計多層次活動。四種常見作法：</p>
+          <ul>
+            <li>同一教學目標下，提供兩個以上搭配不同程度的類似任務，驅動分組討論。</li>
+            <li>為教學目標設定不同層次的活動，讓一般與低程度學生有精熟機會，避免高成就生浪費時間反覆練習。</li>
+            <li>運用跨學科能力的多中心小組活動，讓數學弱勢學生也能靠其他能力（演說、繪圖）在小組中做出貢獻。</li>
+            <li>設計「低地板、高天花板」的開放性問題，讓低成就生能參與、高成就生覺得有挑戰。</li>
+          </ul>
+        </div>
+
+        <div class="pillar">
+          <h3>數學奠基活動</h3>
+          <p class="sub">FOUNDATIONAL EXPLORATION ACTIVITIES</p>
+          <p>一句話定位：「數學好好玩、好好玩數學」。在正式上課前，讓學生充分參與操作、遊戲或繪本閱讀，啟動思考、建立具象經驗，奠立未來課室內「有感學習」的基礎。</p>
+          <p style="font-size:.9rem"><strong>案例「長方形數」：</strong>學生用圍棋排出不同排列的長方形，排得出來的顆數稱為「長方形數」；在分類、歸納正例／非例的過程中，自然察覺正方形是特殊的長方形，而只能排成一列的數（如 7）沒人可得分，被學生自創稱為「不分數」——正是「質數」概念的具體心像前導。</p>
+          <ul>
+            <li>教師介入應控制在總時間六分之一以內，其餘時間留給學生玩。</li>
+            <li>評量以形成性、當下觀察為主：動作表徵與圖像表徵間的來回操作、符號化後的一般化推理。</li>
+            <li>學生若無法有感地玩，應簡化認知負荷（如八張牌降為四張牌），同一遊戲可依班級調整負荷。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 10 議題融入 -->
+      <section class="block" id="issues">
+        <div class="kicker">陸（手冊）／附錄二（課綱）</div>
+        <h2>議題融入</h2>
+        <p class="deck">課綱附錄二明列性別平等、人權、環境、海洋四項議題的學習主題與實質內涵，學習重點也能呼應品德、法治、家庭、生涯規劃、多元文化、閱讀素養、戶外教育、國際教育等議題——目標是培養學生批判思考及解決問題的能力、提升面對議題的責任感與行動力。</p>
+
+        <div class="card-grid cols-2">
+          <div class="card">
+            <span class="stage-range">性別平等教育・語言文字與符號之性別意涵分析</span>
+            <h4><code class="code" style="white-space:normal">d-III-1</code> <code class="code" style="white-space:normal">d-III-2</code></h4>
+            <p>透過長條圖、折線圖、圓形圖等製作，運用校園空間與資源分配數據（如廁所間數），檢視可能存在的性別資源落差，並提出改善方法。</p>
+          </div>
+          <div class="card">
+            <span class="stage-range">人權教育・人權與責任</span>
+            <h4><code class="code" style="white-space:normal">D-V-1</code></h4>
+            <p>運用統計圖表，針對國內外人權議題數據進行統計量分析與解讀，透過數字理解偏見、貧窮、不公平等現象，擬定社會改進與行動策略。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 資源 -->
+      <section class="block" id="resources">
+        <div class="kicker">拾（手冊）</div>
+        <h2>延伸資源</h2>
+        <p class="deck">手冊「課綱 Q&amp;A」分整體篇、國小篇、國中篇、高中篇四類回應常見疑問（例如：十二年國教和九年一貫的理念差異、計算機引入的疑慮、A／B 兩類課程的區隔等），適合直接整理成課堂 QA 環節。</p>
+        <ul>
+          <li><strong>國家教育研究院「協力同行」網站</strong>——課程手冊、教學模組示例、素養導向紙筆測驗範例試題、教學影片示例（含三個教學單元案例完整教案）。</li>
+          <li><strong>愛學網</strong>——十二年國教課綱實施的教學資源入口。</li>
+          <li><strong>國立臺灣師範大學數學教育中心</strong>——數學奠基活動案例庫。</li>
+          <li><strong>手冊附錄</strong>——附錄一新舊課綱逐條差異對照表、附錄二數學名詞解釋、附錄三計算機規格說明、附錄四必修 A／B 類與選修甲／乙課程差異對照表。</li>
+        </ul>
+      </section>
+
+      <footer>
+        <span>資料來源：國家教育研究院《數學領域課程綱要》（107.6）、《數學領域課程手冊》（114.1 更新版）、《數學領域課綱公播版簡報》</span>
+        <span>整理用於「數學科教材教法」課前備課</span>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  try{
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    if(!('IntersectionObserver' in window) || sections.length === 0) return;
+    var current = null;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id = '#' + entry.target.id;
+          links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === id); });
+        }
+      });
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
