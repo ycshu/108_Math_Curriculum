@@ -3,50 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>108 課綱數學教材教法資源</title>
+<title>數學教材教法課程資源</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#eef1f4; --surface:#ffffff; --ink:#1a2733; --ink-soft:#4b5b6b;
-  --border:#d7dee6; --accent:#1f3a5f;
+  --border:#d7dee6; --accent:#1f3a5f; --accent-soft:#eaf0f8;
 }
 @media (prefers-color-scheme: dark){
   :root{ --bg:#111823; --surface:#161f2b; --ink:#e7edf3; --ink-soft:#aebccb;
-         --border:#28333f; --accent:#8fb2de; }
+         --border:#28333f; --accent:#8fb2de; --accent-soft:#1c2d42; }
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   line-height:1.75;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px;}
-.wrap{max-width:640px;width:100%}
+.wrap{max-width:680px;width:100%}
 h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.2rem);margin:0 0 6px}
-p.sub{color:var(--ink-soft);margin:0 0 28px}
-a.card{display:block;background:var(--surface);border:1px solid var(--border);
-  border-radius:12px;padding:18px 22px;margin-bottom:14px;text-decoration:none;color:var(--ink);
-  transition:transform .12s, box-shadow .12s;}
-a.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px -10px rgba(20,30,45,.25)}
-a.card .t{font-weight:700;font-size:1.05rem;color:var(--accent)}
-a.card .d{font-size:.88rem;color:var(--ink-soft);margin-top:4px}
+p.sub{color:var(--ink-soft);margin:0 0 32px}
+.topic{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px 24px;margin-bottom:18px;}
+.topic .th{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+.topic .num{font-size:.78rem;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
+.topic h2{font-family:"Noto Serif TC",serif;font-size:1.15rem;font-weight:700;margin:0;}
+.topic p{font-size:.88rem;color:var(--ink-soft);margin:0 0 12px;}
+.topic .links{display:flex;flex-wrap:wrap;gap:8px;}
+.topic .links a{font-size:.85rem;text-decoration:none;color:var(--accent);
+  background:var(--accent-soft);border:1px solid var(--border);border-radius:999px;padding:5px 14px;}
+.topic .links a:hover{filter:brightness(.96)}
+.topic.coming{opacity:.55;}
+.topic.coming .badge{font-size:.72rem;color:var(--ink-soft);border:1px dashed var(--border);
+  border-radius:999px;padding:2px 10px;}
 footer{margin-top:28px;font-size:.8rem;color:var(--ink-soft)}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>108 課綱數學教材教法資源</h1>
-  <p class="sub">國立成功大學・數學教材教法課程用參考資料（1151 學年）</p>
+  <h1>數學教材教法課程資源</h1>
+  <p class="sub">國立成功大學・1151 學年・課程參考資料彙整</p>
 
-  <a class="card" href="curriculum-guide.html">
-    <div class="t">📐 數學領域課綱導讀</div>
-    <div class="d">理念、核心素養、課程架構、學習重點編碼、實施要點、素養導向教材編寫原則</div>
-  </a>
-  <a class="card" href="knowledge-map.html">
-    <div class="t">🧭 國高中數學知識地圖</div>
-    <div class="d">7–12 年級學習內容依課綱順序／年級／知識節點三種切法，附全景關聯圖</div>
-  </a>
-  <a class="card" href="textbook-comparison.html">
-    <div class="t">📚 教科書出版社比較</div>
-    <div class="d">國中與高中兩組三強的編寫風格差異，附十所指標高中實際用書統計</div>
-  </a>
+  <div class="topic">
+    <div class="th"><span class="num">主題 01</span><h2>108 課綱與教科書</h2></div>
+    <p>十二年國教數學領域課綱的結構與內涵、國高中知識脈絡、以及教科書市場的實際樣貌。</p>
+    <div class="links">
+      <a href="introduction/">主題總覽</a>
+      <a href="introduction/curriculum-guide.html">📐 課綱導讀</a>
+      <a href="introduction/knowledge-map.html">🧭 知識地圖</a>
+      <a href="introduction/textbook-comparison.html">📚 教科書比較</a>
+    </div>
+  </div>
+
+  <div class="topic coming">
+    <div class="th"><span class="num">主題 02</span><h2>（籌備中）</h2></div>
+    <p>後續主題陸續加入。</p>
+    <div class="links"><span class="badge">Coming soon</span></div>
+  </div>
 
   <footer>資料整理自國家教育研究院公開文件與各校教務處公告・僅供教學參考</footer>
 </div>
