@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" font-family="'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif">
+  <!-- 木框 -->
+  <rect x="0" y="0" width="1200" height="560" fill="#8a6a45"/>
+  <rect x="14" y="14" width="1172" height="532" fill="#2c4f40"/>
+  <!-- 粉筆槽 -->
+  <rect x="0" y="546" width="1200" height="14" fill="#75593a"/>
+
+  <!-- 三等份分隔線（粉筆虛線） -->
+  <line x1="405" y1="30" x2="405" y2="530" stroke="#e8e4d8" stroke-width="2" stroke-dasharray="10 8" opacity=".55"/>
+  <line x1="795" y1="30" x2="795" y2="530" stroke="#e8e4d8" stroke-width="2" stroke-dasharray="10 8" opacity=".55"/>
+
+  <!-- 頂欄：單元與日期 -->
+  <text x="30" y="52" fill="#f5d76e" font-size="24" font-weight="700">相似直角三角形邊長比值的不變性</text>
+  <text x="1170" y="52" fill="#e8e4d8" font-size="17" text-anchor="end">9年級・第1節</text>
+
+  <!-- ================= 左板：問題情境 ================= -->
+  <text x="45" y="102" fill="#f5d76e" font-size="21" font-weight="700">① 今日問題：坡道合格嗎？</text>
+
+  <!-- 坡道直角三角形 -->
+  <g stroke="#e8e4d8" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M70,300 L340,300 L340,255 Z"/>
+  </g>
+  <!-- 直角記號 -->
+  <path d="M322,300 L322,282 L340,282" stroke="#e8e4d8" stroke-width="2" fill="none"/>
+  <!-- 角A弧 -->
+  <path d="M120,300 A50,50 0 0 0 116,290" stroke="#f5d76e" stroke-width="2.5" fill="none"/>
+  <text x="132" y="291" fill="#f5d76e" font-size="18">A</text>
+  <text x="200" y="330" fill="#e8e4d8" font-size="18">水平 12</text>
+  <text x="352" y="285" fill="#e8e4d8" font-size="18">升高 1</text>
+
+  <text x="45" y="382" fill="#e8e4d8" font-size="19">法規：無障礙坡道</text>
+  <text x="45" y="412" fill="#ffffff" font-size="20" font-weight="700">坡度 = 升高 / 水平 ≤ 1/12</text>
+
+  <text x="45" y="468" fill="#8fd6bc" font-size="19">問：學校後門這條坡道，</text>
+  <text x="45" y="496" fill="#8fd6bc" font-size="19">怎麼判斷合不合格？</text>
+
+  <!-- ================= 中板：探索紀錄 ================= -->
+  <text x="435" y="102" fill="#f5d76e" font-size="21" font-weight="700">② 探索：畫畫看、量量看</text>
+
+  <!-- 表格（粉筆線） -->
+  <g stroke="#e8e4d8" stroke-width="1.8" opacity=".85">
+    <line x1="430" y1="130" x2="770" y2="130"/>
+    <line x1="430" y1="168" x2="770" y2="168"/>
+    <line x1="430" y1="206" x2="770" y2="206"/>
+    <line x1="430" y1="244" x2="770" y2="244"/>
+    <line x1="430" y1="282" x2="770" y2="282"/>
+    <line x1="430" y1="130" x2="430" y2="282"/>
+    <line x1="510" y1="130" x2="510" y2="282"/>
+    <line x1="596" y1="130" x2="596" y2="282"/>
+    <line x1="688" y1="130" x2="688" y2="282"/>
+    <line x1="770" y1="130" x2="770" y2="282"/>
+  </g>
+  <g fill="#e8e4d8" font-size="16" text-anchor="middle">
+    <text x="470" y="155">三角形</text><text x="553" y="155">對邊/鄰邊</text><text x="642" y="155">比值</text><text x="729" y="155">∠A</text>
+    <text x="470" y="193">小</text><text x="553" y="193">1 / 12</text><text x="642" y="193">0.083</text><text x="729" y="193">4.8°</text>
+    <text x="470" y="231">中</text><text x="553" y="231">2 / 24</text><text x="642" y="231">0.083</text><text x="729" y="231">4.8°</text>
+    <text x="470" y="269">大</text><text x="553" y="269">3 / 36</text><text x="642" y="269">0.083</text><text x="729" y="269">4.8°</text>
+  </g>
+
+  <!-- 三個相似三角形疊圖 -->
+  <g stroke="#8fd6bc" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <path d="M450,470 L750,470 L750,445 Z"/>
+    <path d="M450,470 L650,470 L650,453.4 Z" opacity=".75"/>
+    <path d="M450,470 L550,470 L550,461.7 Z" opacity=".55"/>
+  </g>
+  <path d="M500,470 A50,50 0 0 0 496,466" stroke="#f5d76e" stroke-width="2" fill="none"/>
+  <text x="508" y="463" fill="#f5d76e" font-size="15">A</text>
+
+  <text x="435" y="330" fill="#ffffff" font-size="19" font-weight="700">發現：三角形變大變小，</text>
+  <text x="435" y="358" fill="#ffffff" font-size="19" font-weight="700">只要 ∠A 不變 → 比值不變！</text>
+  <text x="435" y="392" fill="#8fd6bc" font-size="16">（為什麼？→ 相似三角形對應邊成比例）</text>
+
+  <!-- ================= 右板：歸納與應用 ================= -->
+  <text x="825" y="102" fill="#f5d76e" font-size="21" font-weight="700">③ 歸納：給它一個名字</text>
+
+  <text x="825" y="150" fill="#ffffff" font-size="22" font-weight="700">tan A = 對邊 / 鄰邊</text>
+  <text x="825" y="180" fill="#e8e4d8" font-size="16">「角度決定比值」——古人已算好，</text>
+  <text x="825" y="204" fill="#e8e4d8" font-size="16">用計算機查就好：</text>
+
+  <!-- 計算機示意 -->
+  <rect x="825" y="222" width="170" height="64" rx="8" fill="none" stroke="#e8e4d8" stroke-width="2"/>
+  <text x="910" y="250" fill="#8fd6bc" font-size="16" text-anchor="middle">按  tan  4.8  =</text>
+  <text x="910" y="274" fill="#ffffff" font-size="17" text-anchor="middle" font-weight="700">0.0839…</text>
+
+  <text x="825" y="326" fill="#e8e4d8" font-size="17">特殊角：tan 45° = 1</text>
+  <text x="825" y="352" fill="#e8e4d8" font-size="16">（45°-45°-90° 兩股等長）</text>
+
+  <text x="825" y="404" fill="#f5d76e" font-size="18" font-weight="700">試試看：</text>
+  <text x="825" y="432" fill="#e8e4d8" font-size="17">前進 5 m、升高 0.5 m</text>
+  <text x="825" y="460" fill="#ffffff" font-size="17">比值 = 0.5/5 = 0.1 &gt; 1/12</text>
+  <text x="825" y="490" fill="#ff9d9d" font-size="18" font-weight="700">→ 太陡，不合格！</text>
+  <text x="1020" y="490" fill="#8fd6bc" font-size="15">下節預告：sin、cos</text>
+</svg>
