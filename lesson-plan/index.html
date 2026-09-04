@@ -136,6 +136,23 @@ footer.doc a{ color:var(--ink-faint); }
   background:rgba(20,30,45,.72); color:#fff; border:none; border-radius:6px;
   font-size:.74rem; padding:3px 9px; font-family:"Noto Sans TC",sans-serif;
 }
+.board-item img{ cursor:zoom-in; }
+.lightbox{
+  position:fixed; inset:0; z-index:100; display:none;
+  background:rgba(10,16,24,.88); cursor:zoom-out;
+  align-items:center; justify-content:center; padding:24px;
+}
+.lightbox.open{ display:flex; }
+.lightbox img{
+  max-width:94vw; max-height:92vh; width:auto; height:auto;
+  border-radius:8px; box-shadow:0 12px 48px rgba(0,0,0,.5);
+  background:#fff;
+}
+.lightbox .lb-hint{
+  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+  color:#cfd8e3; font-size:.8rem; background:rgba(10,16,24,.6);
+  padding:4px 14px; border-radius:999px;
+}
 
 /* ===== print ===== */
 @media print{
@@ -157,6 +174,7 @@ footer.doc a{ color:var(--ink-faint); }
   .board-item{ break-inside:avoid; }
   .board-item .del{ display:none; }
   #board-btn{ display:none; }
+  .lightbox{ display:none !important; }
 }
 </style>
 </head>
@@ -332,6 +350,11 @@ footer.doc a{ color:var(--ink-faint); }
 </footer>
 </div>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-label="板書照片放大檢視">
+  <img id="lightbox-img" src="" alt="板書照片放大">
+  <span class="lb-hint">點任意處或按 Esc 關閉</span>
+</div>
+
 <script>
 (function(){
   var KEY='lesson-plan-draft-v1';
@@ -388,7 +411,8 @@ footer.doc a{ color:var(--ink-faint); }
       var d=document.createElement('div'); d.className='board-item';
       var img=document.createElement('img'); img.src=src; img.alt='板書照片 '+(i+1);
       var del=document.createElement('button'); del.type='button'; del.className='del'; del.textContent='移除';
-      del.addEventListener('click',function(){ boards.splice(i,1); bsave(); render(); });
+      del.addEventListener('click',function(ev){ ev.stopPropagation(); boards.splice(i,1); bsave(); render(); });
+      img.addEventListener('click',function(){ openLightbox(src); });
       d.appendChild(img); d.appendChild(del); gallery.appendChild(d);
     });
   }
@@ -405,6 +429,12 @@ footer.doc a{ color:var(--ink-faint); }
     };
     img.src=URL.createObjectURL(file);
   }
+  var lb=document.getElementById('lightbox'), lbimg=document.getElementById('lightbox-img');
+  function openLightbox(src){ lbimg.src=src; lb.classList.add('open'); }
+  function closeLightbox(){ lb.classList.remove('open'); lbimg.src=''; }
+  lb.addEventListener('click',closeLightbox);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeLightbox(); });
+
   var binput=document.getElementById('board-input');
   document.getElementById('board-btn').addEventListener('click',function(){ binput.click(); });
   binput.addEventListener('change',function(){
