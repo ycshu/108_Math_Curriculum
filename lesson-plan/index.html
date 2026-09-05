@@ -59,6 +59,36 @@ body{
   font-size:.86rem; color:var(--ink); cursor:pointer;
 }
 .ex-menu button:hover{ background:var(--accent-soft); }
+.submit-btn{
+  background:#1f7a52 !important; border-color:#1f7a52 !important; color:#fff !important;
+}
+@media (prefers-color-scheme: dark){ .submit-btn{ background:#2e9066 !important; border-color:#2e9066 !important; color:#0e1a14 !important; } }
+.sub-modal{
+  position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
+  background:rgba(10,16,24,.55); padding:20px;
+}
+.sub-modal.open{ display:flex; }
+.sub-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  padding:24px 28px; max-width:420px; width:100%; box-shadow:0 16px 48px rgba(0,0,0,.35);
+}
+.sub-card h3{ font-family:"Noto Serif TC",serif; font-size:1.1rem; margin:0 0 14px; }
+.sub-card label{ display:block; font-size:.84rem; color:var(--ink-soft); margin:10px 0 4px; }
+.sub-card input{
+  width:100%; box-sizing:border-box; font-family:inherit; font-size:.95rem;
+  border:1px solid var(--border); border-radius:8px; padding:8px 12px;
+  background:var(--fill); color:var(--ink);
+}
+.sub-card .row{ display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+.sub-card button{
+  font-family:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
+  border:1px solid var(--border); background:var(--surface-2); color:var(--ink);
+  border-radius:8px; padding:7px 18px;
+}
+.sub-card button.go{ background:#1f7a52; border-color:#1f7a52; color:#fff; }
+.sub-msg{ font-size:.82rem; margin-top:10px; min-height:1.4em; }
+.sub-msg.ok{ color:#1f7a52; } .sub-msg.err{ color:#a13c3c; }
+@media print{ .sub-modal{ display:none !important; } }
 .ex-menu button b{
   flex:none; font-family:"IBM Plex Mono",monospace; font-size:.7rem; font-weight:700;
   color:var(--accent); background:var(--accent-soft); border-radius:6px; padding:2px 8px; min-width:52px; text-align:center;
@@ -212,6 +242,7 @@ footer.doc a{ color:var(--ink-faint); }
   </span>
   <button id="btn-clear" type="button">清空重填</button>
   <button class="primary" type="button" onclick="window.print()">列印／存成 PDF</button>
+  <button class="submit-btn" id="btn-submit" type="button">繳交至課程 ↑</button>
   <span class="hint">可直接在虛線框內打字填寫，內容自動暫存於這台裝置的瀏覽器（換裝置或清除瀏覽資料即消失）；完成後按「列印／存成 PDF」輸出繳交。</span>
 </div>
 
@@ -375,6 +406,21 @@ footer.doc a{ color:var(--ink-faint); }
   <span>數學教材教法課程用・格式參考《數學領域課程手冊》教學單元案例與素養導向教材編寫原則</span>
   <span><a href="../">課程資源總覽</a></span>
 </footer>
+</div>
+
+<div class="sub-modal" id="sub-modal" role="dialog" aria-label="繳交至課程">
+  <div class="sub-card">
+    <h3>繳交至課程</h3>
+    <label>學號</label>
+    <input id="sub-sid" type="text" placeholder="例：A1234567" autocomplete="off">
+    <label>姓名</label>
+    <input id="sub-name" type="text" placeholder="請填真實姓名" autocomplete="off">
+    <div class="sub-msg" id="sub-msg"></div>
+    <div class="row">
+      <button type="button" id="sub-cancel">取消</button>
+      <button type="button" class="go" id="sub-go">送出繳交</button>
+    </div>
+  </div>
 </div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-label="板書照片放大檢視">
@@ -660,6 +706,47 @@ footer.doc a{ color:var(--ink-faint); }
       var hasContent = Object.keys(JSON.parse(localStorage.getItem(KEY)||'{}')).length>0 || boards.length>0;
       if(hasContent && !confirm('載入範例會覆蓋目前已填寫的內容，確定嗎？')) return;
       loadExample(b.dataset.ex);
+    });
+  });
+
+  // ===== 繳交至課程 =====
+  var SUBMIT_URL='https://www.emath.tw/lesson-plan/api/submit';
+  var subModal=document.getElementById('sub-modal');
+  var subMsg=document.getElementById('sub-msg');
+  var sidEl=document.getElementById('sub-sid'), nameEl=document.getElementById('sub-name');
+  document.getElementById('btn-submit').addEventListener('click',function(){
+    try{
+      sidEl.value=localStorage.getItem('lp-sid')||'';
+      nameEl.value=localStorage.getItem('lp-name')||'';
+    }catch(e){}
+    subMsg.textContent=''; subMsg.className='sub-msg';
+    subModal.classList.add('open');
+  });
+  document.getElementById('sub-cancel').addEventListener('click',function(){ subModal.classList.remove('open'); });
+  document.getElementById('sub-go').addEventListener('click',function(){
+    var sid=sidEl.value.trim(), name=nameEl.value.trim();
+    if(!sid||!name){ subMsg.textContent='請填寫學號與姓名'; subMsg.className='sub-msg err'; return; }
+    try{ localStorage.setItem('lp-sid',sid); localStorage.setItem('lp-name',name); }catch(e){}
+    var fields={};
+    document.querySelectorAll('[data-key]').forEach(function(el){
+      if(el.type==='checkbox') return;
+      if(el.textContent.trim()!=='') fields[el.dataset.key]=el.innerHTML;
+    });
+    fields.sid=sid;
+    subMsg.textContent='傳送中⋯'; subMsg.className='sub-msg';
+    fetch(SUBMIT_URL,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sid:sid,name:name,fields:fields,boards:boards})
+    }).then(function(r){ return r.json(); }).then(function(d){
+      if(d.ok){
+        subMsg.textContent='✓ 已繳交（'+d.time+'）。可重複繳交，以最後一次為準。';
+        subMsg.className='sub-msg ok';
+        setTimeout(function(){ subModal.classList.remove('open'); }, 2500);
+      }else{
+        subMsg.textContent='繳交失敗：'+(d.error||'未知錯誤'); subMsg.className='sub-msg err';
+      }
+    }).catch(function(){
+      subMsg.textContent='無法連線到繳交伺服器，請檢查網路後再試。'; subMsg.className='sub-msg err';
     });
   });
 
