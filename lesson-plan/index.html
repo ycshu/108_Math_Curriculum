@@ -59,6 +59,17 @@ body{
   font-size:.86rem; color:var(--ink); cursor:pointer;
 }
 .ex-menu button:hover{ background:var(--accent-soft); }
+.plan-banner{
+  display:none; position:sticky; top:0; z-index:11;
+  background:#1f3a5f; color:#fff; padding:8px clamp(16px,4vw,40px);
+  font-size:.86rem;
+}
+.plan-banner.show{ display:block; }
+.plan-banner b{ color:#f5d76e; }
+@media print{ .plan-banner{ display:none !important; } }
+.share-box{ margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.share-box input{ flex:1; min-width:200px; font-size:.8rem; font-family:"IBM Plex Mono",monospace;
+  border:1px solid var(--border); border-radius:6px; padding:5px 8px; background:var(--fill); color:var(--ink); }
 .submit-btn{
   background:#1f7a52 !important; border-color:#1f7a52 !important; color:#fff !important;
 }
@@ -245,6 +256,7 @@ footer.doc a{ color:var(--ink-faint); }
   <button class="submit-btn" id="btn-submit" type="button">繳交至課程 ↑</button>
   <span class="hint">可直接在虛線框內打字填寫，內容自動暫存於這台裝置的瀏覽器（換裝置或清除瀏覽資料即消失）；完成後按「列印／存成 PDF」輸出繳交。</span>
 </div>
+<div class="plan-banner" id="plan-banner"></div>
 
 <div class="sheet">
 <header class="doc">
@@ -442,7 +454,9 @@ footer.doc a{ color:var(--ink-faint); }
       });
     }catch(e){}
   }
+  var PLAN_VIEW=false;
   function save(){
+    if(PLAN_VIEW) return;
     try{
       var d={};
       document.querySelectorAll('[data-key]').forEach(function(el){
@@ -464,7 +478,8 @@ footer.doc a{ color:var(--ink-faint); }
     try{localStorage.removeItem(BKEY);}catch(e){}
     boards=[]; render();
   });
-  load();
+  var PLAN_TOKEN = new URLSearchParams(location.search).get('plan');
+  if(PLAN_TOKEN && /^[0-9a-f]{10}$/.test(PLAN_TOKEN)){ PLAN_VIEW = true; } else { PLAN_TOKEN = null; load(); }
 
   // ===== 板書照片 =====
   var BKEY='lesson-plan-boards-v1';
@@ -475,6 +490,7 @@ footer.doc a{ color:var(--ink-faint); }
     render();
   }
   function bsave(){
+    if(PLAN_VIEW) return;
     try{ localStorage.setItem(BKEY,JSON.stringify(boards)); }
     catch(e){ alert('照片總量超過瀏覽器可暫存的上限，最後一張未能保存；仍會顯示在頁面上，請儘快列印輸出。'); }
   }
@@ -709,6 +725,30 @@ footer.doc a{ color:var(--ink-faint); }
     });
   });
 
+  // ===== 以網址載入已繳交教案 =====
+  if(PLAN_TOKEN){
+    fetch('https://www.emath.tw/lesson-plan/api/plan/'+PLAN_TOKEN)
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(!d.ok){ throw new Error(d.error||'load failed'); }
+        document.querySelectorAll('[data-key]').forEach(function(el){
+          if(el.type==='checkbox'){ el.checked=false; return; }
+          var v=d.fields[el.dataset.key];
+          el.innerHTML=(v===undefined?'':v);
+        });
+        boards=(d.boards||[]).slice(); render();
+        var b=document.getElementById('plan-banner');
+        b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）';
+        b.classList.add('show');
+        document.title=d.name+'－'+((d.fields.unit||'教案').replace(/<[^>]*>/g,''));
+      })
+      .catch(function(){
+        var b=document.getElementById('plan-banner');
+        b.innerHTML='⚠️ 找不到這份教案，網址可能有誤或已被移除。';
+        b.classList.add('show');
+      });
+  }
+
   // ===== 繳交至課程 =====
   var SUBMIT_URL='https://www.emath.tw/lesson-plan/api/submit';
   var subModal=document.getElementById('sub-modal');
@@ -739,9 +779,16 @@ footer.doc a{ color:var(--ink-faint); }
       body:JSON.stringify({sid:sid,name:name,fields:fields,boards:boards})
     }).then(function(r){ return r.json(); }).then(function(d){
       if(d.ok){
-        subMsg.textContent='✓ 已繳交（'+d.time+'）。可重複繳交，以最後一次為準。';
         subMsg.className='sub-msg ok';
-        setTimeout(function(){ subModal.classList.remove('open'); }, 2500);
+        subMsg.innerHTML='✓ 已繳交（'+d.time+'）。可重複繳交，以最後一次為準。<br>你的<b>教案網址</b>（請複製後貼到 Moodle 繳交）：'
+          +'<span class="share-box"><input id="share-url" readonly value="'+d.share+'">'
+          +'<button type="button" id="share-copy">複製</button></span>';
+        document.getElementById('share-copy').addEventListener('click',function(){
+          var inp=document.getElementById('share-url');
+          inp.select(); inp.setSelectionRange(0,200);
+          try{ navigator.clipboard.writeText(inp.value); }catch(e){ try{ document.execCommand('copy'); }catch(e2){} }
+          this.textContent='已複製 ✓';
+        });
       }else{
         subMsg.textContent='繳交失敗：'+(d.error||'未知錯誤'); subMsg.className='sub-msg err';
       }
