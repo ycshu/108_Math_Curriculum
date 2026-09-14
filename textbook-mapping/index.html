@@ -12,7 +12,6 @@
   --bg:#eef1f4; --bg-line:#d7dee6; --surface:#ffffff; --surface-2:#f6f8fa;
   --ink:#1a2733; --ink-soft:#4b5b6b; --ink-faint:#7c8b99; --border:#d7dee6;
   --accent:#1f3a5f; --accent-soft:#eaf0f8; --accent-strong:#13253f;
-  --chip-bg:#f3f5f8; --chip-border:#c9d3dc; --chip-text:#1f3a5f;
   --prev:#96650c; --prev-bg:#f7efdd;
   --next:#1f7a52; --next-bg:#e6f3ec;
   --now:#1f3a5f;  --now-bg:#eaf0f8;
@@ -24,7 +23,6 @@
     --bg:#111823; --bg-line:#1e2836; --surface:#161f2b; --surface-2:#1b2531;
     --ink:#e7edf3; --ink-soft:#aebccb; --ink-faint:#7f8fa0; --border:#28333f;
     --accent:#8fb2de; --accent-soft:#1c2d42; --accent-strong:#c3d8f0;
-    --chip-bg:#1c2733; --chip-border:#334454; --chip-text:#a9c5e6;
     --prev:#d9a441; --prev-bg:#2c2413;
     --next:#5cb98b; --next-bg:#12291f;
     --now:#8fb2de;  --now-bg:#182739;
@@ -45,65 +43,55 @@ body{
 }
 h1,h2,h3{ font-family:"Noto Serif TC","Noto Sans TC",serif; color:var(--ink); text-wrap:balance; margin:0; }
 a{color:var(--accent);}
-.shell{ max-width:1180px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 96px; }
-
-.masthead{ padding:52px 0 30px; border-bottom:1px solid var(--border); margin-bottom:30px; }
+.shell{ max-width:1220px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 96px; }
+.masthead{ padding:52px 0 30px; border-bottom:1px solid var(--border); margin-bottom:26px; }
 .eyebrow{ font-family:"IBM Plex Mono",monospace; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase;
   color:var(--ink-faint); display:flex; gap:10px; align-items:center; margin-bottom:16px; }
 .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
 .masthead h1{ font-size:clamp(1.8rem,4vw,2.6rem); font-weight:900; line-height:1.2; }
 .masthead p.lede{ margin-top:14px; max-width:68ch; color:var(--ink-soft); font-size:1.02rem; }
-
 .legend{ display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; font-size:.84rem; }
 .legend .item{ display:flex; align-items:center; gap:7px; padding:5px 13px; border-radius:999px;
   background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); }
 .legend .sw{ width:10px; height:10px; border-radius:3px; }
-
-.tabbar{ display:flex; gap:4px; margin:26px 0 30px; border-bottom:1px solid var(--border); }
+.tabbar{ display:flex; flex-wrap:wrap; gap:2px; margin:24px 0 28px; border-bottom:1px solid var(--border); }
 .tabbar button{
-  font-family:"Noto Sans TC",sans-serif; font-size:.98rem; font-weight:700; color:var(--ink-soft);
-  background:none; border:none; cursor:pointer; padding:12px 20px;
+  font-family:"Noto Sans TC",sans-serif; font-size:.95rem; font-weight:700; color:var(--ink-soft);
+  background:none; border:none; cursor:pointer; padding:11px 16px;
   border-bottom:2px solid transparent; margin-bottom:-1px;
 }
 .tabbar button[aria-selected="true"]{ color:var(--accent-strong); border-bottom-color:var(--accent); }
 .tabpanel{ display:none; }
 .tabpanel.active{ display:block; }
-
-section.chap{ margin-bottom:40px; }
-section.chap h2{
-  font-size:1.25rem; font-weight:700; margin-bottom:4px;
-  display:flex; align-items:baseline; gap:12px;
-}
-section.chap h2 .chno{ font-family:"IBM Plex Mono",monospace; font-size:.8rem; color:var(--accent); }
-section.chap .chnote{ font-size:.85rem; color:var(--ink-faint); margin:0 0 14px; }
-
+section.chap{ margin-bottom:38px; }
+section.chap h2{ font-size:1.2rem; font-weight:700; margin-bottom:4px; }
+section.chap .chnote{ font-size:.85rem; color:var(--ink-faint); margin:0 0 12px; }
 .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); }
-table{ border-collapse:collapse; width:100%; min-width:900px; background:var(--surface); font-size:.88rem; }
+table{ border-collapse:collapse; width:100%; min-width:960px; background:var(--surface); font-size:.87rem; }
 th,td{ padding:11px 14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
 thead th{ background:var(--surface-2); font-family:"IBM Plex Mono",monospace; font-size:.72rem;
   letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
 tbody tr:last-child td{ border-bottom:none; }
 tbody tr:hover td{ background:var(--surface-2); }
-td.sec{ font-weight:700; white-space:nowrap; width:15%; }
-td.map{ width:31%; }
-td.prev-col{ width:26%; }
-td.next-col{ width:28%; }
-
+td.sec{ font-weight:700; width:17%; min-width:170px; }
+td.sec .secs{ display:block; font-weight:400; font-size:.78rem; color:var(--ink-faint); margin-top:4px; line-height:1.5; }
+td.map{ width:32%; }
+td.prev-col{ width:24%; }
+td.next-col{ width:27%; }
 code.cc{
-  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.84em; white-space:nowrap;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.83em; white-space:nowrap;
   padding:.05em .45em; border-radius:6px; font-weight:600;
 }
 .c-now{ color:var(--now); background:var(--now-bg); }
 .c-prev{ color:var(--prev); background:var(--prev-bg); }
 .c-next{ color:var(--next); background:var(--next-bg); }
 .gr{ font-size:.8em; color:var(--ink-faint); }
-.note{ display:block; font-size:.8rem; color:var(--ink-faint); margin-top:3px; }
+.note{ display:block; font-size:.8rem; color:var(--ink-faint); margin-top:5px; }
 td div{ margin-bottom:6px; } td div:last-child{ margin-bottom:0; }
-
 .callout{
   background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent);
   border-radius:0 var(--radius) var(--radius) 0; padding:14px 20px; margin:24px 0;
-  font-size:.9rem; color:var(--ink-soft); max-width:78ch;
+  font-size:.88rem; color:var(--ink-soft); max-width:80ch;
 }
 footer{ margin-top:56px; padding-top:22px; border-top:1px solid var(--border);
   color:var(--ink-faint); font-size:.82rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
@@ -114,385 +102,760 @@ footer a{ color:var(--ink-faint); }
 <div class="shell">
 
 <header class="masthead">
-  <div class="eyebrow"><span class="dot"></span>翰林版・課本章節 × 108 課綱條目</div>
+  <div class="eyebrow"><span class="dot"></span>翰林版・課本章節 × 108 課綱條目・七年級～高三甲乙</div>
   <h1>教材章節與課綱對照</h1>
-  <p class="lede">按課本的目次逐節對照：這一節在教哪些課綱條目？學生的先備條目是哪個年級教的？這裡種下的種子，之後會在哪個年級長出來？——備課時一眼掌握「學生帶著什麼來、我要送他們去哪裡」。</p>
+  <p class="lede">按課本目次逐章對照：這一章在教哪些課綱條目？學生的先備條目是哪個年級教的？這裡種下的種子，之後會在哪個年級長出來？——備課時一眼掌握「學生帶著什麼來、我要送他們去哪裡」。</p>
   <div class="legend">
     <span class="item"><span class="sw" style="background:var(--prev)"></span>⬅ 先備條目（已學）</span>
-    <span class="item"><span class="sw" style="background:var(--now)"></span>本節對應條目</span>
+    <span class="item"><span class="sw" style="background:var(--now)"></span>本章對應條目</span>
     <span class="item"><span class="sw" style="background:var(--next)"></span>➡ 後續條目（將學）</span>
+    <span class="item">⚠ 標記＝新舊課綱調移造成的「假複習」警示</span>
   </div>
 </header>
 
 <div role="tablist" class="tabbar">
-  <button role="tab" aria-selected="true" id="tab-j8">國中八上（第三冊）</button>
-  <button role="tab" aria-selected="false" id="tab-h10">高中數學（一）（十上）</button>
+  <button role="tab" aria-selected="true" id="tab-j7">七年級</button>
+  <button role="tab" aria-selected="false" id="tab-j8">八年級</button>
+  <button role="tab" aria-selected="false" id="tab-j9">九年級</button>
+  <button role="tab" aria-selected="false" id="tab-h10">十年級</button>
+  <button role="tab" aria-selected="false" id="tab-h11a">11A</button>
+  <button role="tab" aria-selected="false" id="tab-h11b">11B</button>
+  <button role="tab" aria-selected="false" id="tab-h12a">數學甲</button>
+  <button role="tab" aria-selected="false" id="tab-h12b">數學乙</button>
 </div>
 
-<!-- ================= 八上 ================= -->
-<div class="tabpanel active" id="panel-j8">
-
+<div class="tabpanel active" id="panel-j7">
 <section class="chap">
-  <h2><span class="chno">CH 1</span>乘法公式與多項式</h2>
-  <p class="chnote">代數主軸從「一次」升級到「二次」的起點；本章所有工具都會在第 3、4 章立即用到。</p>
+  <h2>七上（第一冊）</h2>
+  <p class="chnote">官方樣書目次；指數記法與科學記號併入第 1 章、指數律併入第 2 章是 113 後統一的編排。</p>
   <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
     <tbody>
       <tr>
-        <td class="sec">1-1 乘法公式</td>
-        <td class="map"><div><code class="cc c-now">A-8-1</code> 二次式的乘法公式：(a±b)²、(a+b)(a−b)、(a+b)(c+d)</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-7-1</code> 代數符號、一次式化簡 <span class="gr">（七上）</span></div>
-          <div><code class="cc c-prev">N-7-6/7</code> 指數的意義與指數律 <span class="gr">（七上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-8-5</code> 利用乘法公式因式分解 <span class="gr">（八上・本冊第3章）</span></div>
+        <td class="sec">1 數與數線<br><span class='secs'>1-1 正數與負數・1-2 加減・1-3 乘除・1-4 指數記法與科學記號</span></td>
+        <td class="map"><div><code class="cc c-now">N-7-3</code> 負數與數的四則混合運算（含分數、小數）</div>
+          <div><code class="cc c-now">N-7-4</code> 數的運算規律</div>
+          <div><code class="cc c-now">N-7-5</code> 數線：絕對值 |a−b| 為兩點距離</div>
+          <div><code class="cc c-now">N-7-6</code> 指數的意義</div>
+          <div><code class="cc c-now">N-7-8</code> 科學記號</div><span class="note">備註：絕對值只用於記錄距離，不處理絕對值方程式與不等式（那是高一 N-10-2）</span></td>
+        <td class="prev-col"><div>整數、分數、小數的四則運算 <span class="gr">（國小）</span></div>
+          <div>數線上標記數並比較 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">N-8-1</code> 二次方根 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-next">N-10-1</code> 實數、科學記號運算 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">N-10-2</code> 絕對值方程式與不等式 <span class="gr">（高一）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">2 標準分解式<br><span class='secs'>2-1 質因數分解・2-2 最大公因數與最小公倍數・2-3 分數加減・2-4 分數乘除與指數律</span></td>
+        <td class="map"><div><code class="cc c-now">N-7-1</code> 100 以內的質數：質數與合數、篩法</div>
+          <div><code class="cc c-now">N-7-2</code> 質因數分解的標準分解式</div>
+          <div><code class="cc c-now">N-7-7</code> 指數律（同底數乘除、次方）</div></td>
+        <td class="prev-col"><div>因數、倍數、質數、最大公因數、最小公倍數 <span class="gr">（國小）</span></div>
+          <div>分數四則運算 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-8-4</code> 因式「分解」的概念遷移 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-next">N-10-3</code> 指數推廣至實數次方 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">A-11A-4</code> 對數律（指數律的鏡像） <span class="gr">（高二A）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">3 一元一次方程式<br><span class='secs'>3-1 式子的運算・3-2 解一元一次方程式・3-3 應用問題</span></td>
+        <td class="map"><div><code class="cc c-now">A-7-1</code> 代數符號、一次式化簡與同類項</div>
+          <div><code class="cc c-now">A-7-2</code> 一元一次方程式的意義</div>
+          <div><code class="cc c-now">A-7-3</code> 解法與應用：等量公理、移項法則</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">R-6</code> 以文字符號列式的前置經驗（國小 R 主題） <span class="gr">（國小）</span></div>
+          <div>等量公理：課綱已自國小移除——七年級是第一次教，不是複習 <span class="gr">（⚠）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-7-4/5</code> 二元一次聯立方程式 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-next">A-8-6/7</code> 一元二次方程式 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-next">F-8-1</code> 一次函數 <span class="gr">（八下）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+<section class="chap">
+  <h2>七下（第二冊）</h2>
+  <p class="chnote">第 6 章幾何依均一（類翰林）版補列；官方樣書目次此章文字無法擷取。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">1 二元一次聯立方程式<br><span class='secs'>1-1 二元一次方程式・1-2 解聯立・1-3 應用問題</span></td>
+        <td class="map"><div><code class="cc c-now">A-7-4</code> 二元一次（聯立）方程式的意義</div>
+          <div><code class="cc c-now">A-7-5</code> 解法與應用：代入消去、加減消去</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-2/3</code> 一元一次方程式 <span class="gr">（七上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-7-6</code> 聯立方程式的幾何意義 <span class="gr">（七下・本冊第2章）</span></div>
+          <div><code class="cc c-next">A-11A-1</code> 方程組的矩陣表達 <span class="gr">（高二A）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">2 直角坐標與二元一次方程式的圖形<br><span class='secs'>2-1 直角坐標平面・2-2 二元一次方程式的圖形</span></td>
+        <td class="map"><div><code class="cc c-now">G-7-1</code> 平面直角坐標系（象限、方位距離）</div>
+          <div><code class="cc c-now">A-7-6</code> 二元一次聯立方程式的幾何意義：ax+by=c 的圖形、水平線與鉛垂線</div><span class="note">備註：聯立方程式圖形只處理相交於一點的情況</span></td>
+        <td class="prev-col"><div>數線（一維定位） <span class="gr">（七上）</span></div>
+          <div>國小的方位與位置經驗 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-8-1</code> 兩點距離公式 <span class="gr">（八下）</span></div>
+          <div><code class="cc c-next">F-8-2</code> 一次函數的圖形 <span class="gr">（八下）</span></div>
+          <div><code class="cc c-next">G-10-2</code> 直線方程式（斜率） <span class="gr">（高一）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">3 比例<br><span class='secs'>3-1 比例式・3-2 正比與反比</span></td>
+        <td class="map"><div><code class="cc c-now">N-7-9</code> 比與比例式：比、比例式、正比、反比</div><span class="note">教學情境應以有意義之比值為例；不使用繁分數</span></td>
+        <td class="prev-col"><div>比與比值 <span class="gr">（國小）</span></div>
+          <div>正比：課綱已自國小移除——七年級第一次正式教 <span class="gr">（⚠）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">N-9-1</code> 連比 <span class="gr">（九上）</span></div>
+          <div><code class="cc c-next">S-9-1/2</code> 相似形（比例的幾何化） <span class="gr">（九上）</span></div>
+          <div><code class="cc c-next">G-11B-3</code> 平面上的比例（設計與透視） <span class="gr">（高二B）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">4 一元一次不等式<br><span class='secs'>4-1 解及圖示・4-2 解不等式及其應用</span></td>
+        <td class="map"><div><code class="cc c-now">A-7-7</code> 一元一次不等式的意義</div>
+          <div><code class="cc c-now">A-7-8</code> 解與應用：數線上標示解的範圍</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-3</code> 等量公理與移項 <span class="gr">（七上）</span></div>
+          <div><code class="cc c-prev">N-7-5</code> 數線 <span class="gr">（七上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-10-3</code> 多項式不等式（解區間） <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">N-10-2</code> 絕對值不等式 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">A-12乙-1</code> 線性規劃 <span class="gr">（高三乙）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">5 統計圖表與統計數據<br><span class='secs'>5-1 統計圖表・5-2 平均數、中位數與眾數</span></td>
+        <td class="map"><div><code class="cc c-now">D-7-1</code> 統計圖表：直方圖、長條圖、圓形圖、折線圖、列聯表（可用計算機）</div>
+          <div><code class="cc c-now">D-7-2</code> 統計數據：平均數、中位數、眾數（計算機 M+／Σ 鍵）</div></td>
+        <td class="prev-col"><div>長條圖（4年級）、折線圖（5年級）、圓形圖（6年級） <span class="gr">（國小）</span></div>
+          <div>列聯表：國小 3 年級初次接觸——課程手冊提醒勿以複習態度處理 <span class="gr">（⚠）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-8-1</code> 累積次數、相對次數 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-next">D-9-1</code> 四分位數與盒狀圖 <span class="gr">（九下）</span></div>
+          <div><code class="cc c-next">D-10-2</code> 平均數、標準差（一維數據） <span class="gr">（高一）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">6 線對稱與三視圖<br><span class='secs'>簡單圖形與符號・垂直與平分・線對稱・三視圖</span></td>
+        <td class="map"><div><code class="cc c-now">S-7-1</code> 簡單圖形與幾何符號 ＃</div>
+          <div><code class="cc c-now">S-7-2</code> 三視圖（新增：內嵌於 3×3×3 正方體）</div>
+          <div><code class="cc c-now">S-7-3</code> 垂直、中垂線、點到直線距離</div>
+          <div><code class="cc c-now">S-7-4/5</code> 線對稱的性質與基本圖形</div><span class="note">空間概念的第一次學習機會：課綱刻意把線對稱、立體圖形自八九年級提前至七年級</span></td>
+        <td class="prev-col"><div>常見形體、對稱直觀 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">S-8-12</code> 尺規作圖 <span class="gr">（八下）</span></div>
+          <div><code class="cc c-next">S-9-12</code> 空間中的線與平面 <span class="gr">（九下）</span></div>
+          <div><code class="cc c-next">G-10-7</code> 三角測量（三視圖的運用時機） <span class="gr">（高一）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+<div class="tabpanel" id="panel-j8">
+<section class="chap">
+  <h2>八上（第三冊）</h2>
+  
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">1 乘法公式與多項式<br><span class='secs'>1-1 乘法公式・1-2 多項式加減・1-3 多項式乘除</span></td>
+        <td class="map"><div><code class="cc c-now">A-8-1</code> 二次式的乘法公式</div>
+          <div><code class="cc c-now">A-8-2</code> 多項式的意義</div>
+          <div><code class="cc c-now">A-8-3</code> 多項式的四則運算</div><span class="note">備註：乘積最高至三次、除式限被除式為二次、不使用分離係數法</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-1</code> 代數符號、一次式化簡 <span class="gr">（七上）</span></div>
+          <div><code class="cc c-prev">N-7-6/7</code> 指數的意義與指數律 <span class="gr">（七上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-8-5</code> 乘法公式因式分解 <span class="gr">（八上・第3章）</span></div>
           <div><code class="cc c-next">A-10-1</code> 三次乘法公式 <span class="gr">（高一）</span></div>
-        </td>
+          <div><code class="cc c-next">A-10-2</code> 多項式除法原理 <span class="gr">（高一）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">1-2 多項式的加減<br>1-3 多項式的乘除</td>
-        <td class="map">
-          <div><code class="cc c-now">A-8-2</code> 多項式的意義（項數、係數、升冪降冪）</div>
-          <div><code class="cc c-now">A-8-3</code> 多項式的四則運算<span class="note">備註：課綱輕量化——乘積最高至三次、除式限被除式為二次、不使用分離係數法</span></div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-7-1</code> 一次式的化簡及同類項 <span class="gr">（七上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-10-2</code> 多項式之除法原理、因式與餘式定理 <span class="gr">（高一）</span></div>
-          <div><code class="cc c-next">F-10-1/2</code> 多項式函數及其圖形 <span class="gr">（高一）</span></div>
-          <div><code class="cc c-next">F-12甲/乙</code> 微積分以多項式函數為主要操作對象 <span class="gr">（高三選修）</span></div>
-        </td>
-      </tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section class="chap">
-  <h2><span class="chno">CH 2</span>平方根與畢氏定理</h2>
-  <p class="chnote">數系第一次走出有理數；畢氏定理是整個坐標幾何「距離」概念的源頭。</p>
-  <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
-    <tbody>
-      <tr>
-        <td class="sec">2-1 平方根的意義</td>
-        <td class="map">
-          <div><code class="cc c-now">N-8-1</code> 二次方根的意義</div>
-          <div><code class="cc c-now">N-8-2</code> 二次方根的近似值：十分逼近法、計算機 √ 鍵</div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">N-7-6</code> 指數的意義（平方） <span class="gr">（七上）</span></div>
-          <div>面積與正方形邊長經驗 <span class="gr">（國小）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">N-10-1</code> 實數：無理數之十進制小數估算 <span class="gr">（高一）</span></div>
-        </td>
+        <td class="sec">2 平方根與畢氏定理<br><span class='secs'>2-1 二次方根的意義・2-2 根式的運算・2-3 畢氏定理</span></td>
+        <td class="map"><div><code class="cc c-now">N-8-1</code> 二次方根：意義、化簡、四則運算</div>
+          <div><code class="cc c-now">N-8-2</code> 近似值：十分逼近法、計算機 √ 鍵</div>
+          <div><code class="cc c-now">S-8-6</code> 畢氏定理（含數學史）與逆敘述</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-7-6</code> 指數（平方） <span class="gr">（七上）</span></div>
+          <div>面積與正方形邊長 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-8-1</code> 兩點距離公式 <span class="gr">（八下）</span></div>
+          <div><code class="cc c-next">N-10-1</code> 無理數的十進位估算 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">S-9-4</code> 三角比（直角三角形邊長比） <span class="gr">（九上）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">2-2 根式的運算</td>
-        <td class="map"><div><code class="cc c-now">N-8-1</code> 根式的化簡及四則運算<span class="note">備註：可用乘法公式化簡的根式，待乘法公式後再處理（本冊已學，可整合）</span></div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-8-1</code> 乘法公式 <span class="gr">（八上・本冊第1章）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-10-1</code> 根式與分式的運算（含雙重根式） <span class="gr">（高一）</span></div>
-        </td>
+        <td class="sec">3 因式分解<br><span class='secs'>3-1 提公因式與乘法公式・3-2 十字交乘法</span></td>
+        <td class="map"><div><code class="cc c-now">A-8-4</code> 因式分解（限二次式的一次因式）</div>
+          <div><code class="cc c-now">A-8-5</code> 方法：提公因式、乘法公式、十字交乘</div><span class="note">備註：只處理整係數 ax²+bx+c——課綱輕量化的典型例</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-8-1</code> 乘法公式 <span class="gr">（八上・第1章）</span></div>
+          <div><code class="cc c-prev">N-7-2</code> 質因數分解（「分解」心像） <span class="gr">（七上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-8-7</code> 因式分解解一元二次方程式 <span class="gr">（八上・第4章）</span></div>
+          <div><code class="cc c-next">A-10-2</code> 因式定理 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">F-10-3</code> 已分解不等式 <span class="gr">（高一）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">2-3 畢氏定理</td>
-        <td class="map"><div><code class="cc c-now">S-8-6</code> 畢氏定理（勾股弦）的意義及其數學史；生活應用；逆敘述</div></td>
-        <td class="prev-col">
-          <div>三角形、面積的切割重組經驗 <span class="gr">（國小）</span></div>
-          <div><code class="cc c-prev">N-8-1</code> 二次方根 <span class="gr">（八上・本冊2-1）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">G-8-1</code> 直角坐標系上兩點距離公式 <span class="gr">（八下）</span></div>
-          <div><code class="cc c-next">S-9-4</code> 相似直角三角形邊長比值（三角比前身） <span class="gr">（九年級）</span></div>
-          <div><code class="cc c-next">G-11A-4</code> 向量的長度 <span class="gr">（高二A）</span></div>
-        </td>
+        <td class="sec">4 一元二次方程式<br><span class='secs'>4-1 因式分解法・4-2 配方法與公式解・4-3 應用問題</span></td>
+        <td class="map"><div><code class="cc c-now">A-8-6</code> 一元二次方程式的意義</div>
+          <div><code class="cc c-now">A-8-7</code> 解法與應用（含計算機求根近似值）</div><span class="note">「方程式的配方」在此完成；「函數的配方」課綱移到高一——九年級刻意留白</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-3</code> 等量公理 <span class="gr">（七上）</span></div>
+          <div><code class="cc c-prev">A-8-4/5</code> 因式分解 <span class="gr">（八上・第3章）</span></div>
+          <div><code class="cc c-prev">N-8-1</code> 二次方根 <span class="gr">（八上・第2章）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-9-1/2</code> 二次函數（僅處理已配方式） <span class="gr">（九下）</span></div>
+          <div><code class="cc c-next">F-10-1</code> 二次函數的配方 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">A-12甲-1/乙-2</code> 方程式的虛根 <span class="gr">（高三選修）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">5 統計資料處理<br><span class='secs'>5-1 統計資料處理</span></td>
+        <td class="map"><div><code class="cc c-now">D-8-1</code> 累積次數、相對次數、累積相對次數折線圖（計算機）</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-7-1/2</code> 統計圖表與統計量 <span class="gr">（七下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-9-1</code> 全距、四分位距、盒狀圖 <span class="gr">（九下）</span></div>
+          <div><code class="cc c-next">D-10-2</code> 標準差、散布圖 <span class="gr">（高一）</span></div></td>
       </tr>
     </tbody>
   </table></div>
 </section>
-
 <section class="chap">
-  <h2><span class="chno">CH 3</span>因式分解</h2>
-  <p class="chnote">乘法公式的「反向操作」；課綱在此明確輕量化，只處理整係數 ax²+bx+c。</p>
+  <h2>八下（第四冊）</h2>
+  
   <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
     <tbody>
       <tr>
-        <td class="sec">3-1 提公因式與<br>乘法公式因式分解<br>3-2 十字交乘法</td>
-        <td class="map">
-          <div><code class="cc c-now">A-8-4</code> 因式分解（因式的意義，限二次多項式的一次因式）</div>
-          <div><code class="cc c-now">A-8-5</code> 因式分解的方法：提公因式、乘法公式、十字交乘<span class="note">備註：只處理整係數 ax²+bx+c 或與乘法公式直接相關者</span></div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-8-1</code> 乘法公式 <span class="gr">（八上・本冊第1章）</span></div>
-          <div><code class="cc c-prev">N-7-2</code> 質因數分解（「分解」的前置心像） <span class="gr">（七上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-8-7</code> 因式分解解一元二次方程式 <span class="gr">（八上・本冊第4章）</span></div>
-          <div><code class="cc c-next">A-10-2</code> 因式定理、餘式定理 <span class="gr">（高一）</span></div>
-          <div><code class="cc c-next">F-10-3</code> 已分解多項式不等式的解區間 <span class="gr">（高一）</span></div>
-        </td>
-      </tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section class="chap">
-  <h2><span class="chno">CH 4</span>一元二次方程式</h2>
-  <p class="chnote">本冊代數線的收束點：前三章的工具在此全部派上用場。</p>
-  <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
-    <tbody>
-      <tr>
-        <td class="sec">4-1 因式分解法<br>4-2 配方法與公式解<br>4-3 應用問題</td>
-        <td class="map">
-          <div><code class="cc c-now">A-8-6</code> 一元二次方程式的意義</div>
-          <div><code class="cc c-now">A-8-7</code> 解法與應用：因式分解、配方法、公式解；使用計算機求根的近似值</div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-7-3</code> 等量公理與移項法則 <span class="gr">（七上）</span></div>
-          <div><code class="cc c-prev">A-8-4/5</code> 因式分解 <span class="gr">（八上・本冊第3章）</span></div>
-          <div><code class="cc c-prev">N-8-1</code> 二次方根 <span class="gr">（八上・本冊第2章）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">F-9-1/2</code> 二次函數及其圖形 <span class="gr">（九年級）</span><span class="note">注意：9 年級刪除「二次函數的配方」，僅處理已配方式——方程式的配方在本章完成後，函數的配方要等高一</span></div>
-          <div><code class="cc c-next">F-10-1</code> 用配方將二次函數化為標準式 <span class="gr">（高一）</span></div>
-          <div><code class="cc c-next">A-12甲-1／A-12乙-2</code> 方程式的虛根、代數基本定理 <span class="gr">（高三選修）</span></div>
-        </td>
-      </tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section class="chap">
-  <h2><span class="chno">CH 5</span>統計資料處理</h2>
-  <p class="chnote">108 課綱把統計「循序分散」到各年級的中段：七年級圖表、八年級累積次數、九年級分布。</p>
-  <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
-    <tbody>
-      <tr>
-        <td class="sec">5-1 統計資料處理</td>
-        <td class="map"><div><code class="cc c-now">D-8-1</code> 統計資料處理：累積次數、相對次數、累積相對次數折線圖（可用計算機）</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">D-7-1</code> 統計圖表（直方圖、長條圖、圓形圖、折線圖、列聯表） <span class="gr">（七年級）</span></div>
-          <div><code class="cc c-prev">D-7-2</code> 平均數、中位數、眾數 <span class="gr">（七年級）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">D-9-1</code> 統計數據的分布：全距、四分位距、盒狀圖 <span class="gr">（九年級）</span></div>
-          <div><code class="cc c-next">D-10-2</code> 數據分析：標準差、散布圖、相關係數 <span class="gr">（高一）</span></div>
-        </td>
-      </tr>
-    </tbody>
-  </table></div>
-</section>
-
-</div>
-
-<!-- ================= 高一冊一 ================= -->
-<div class="tabpanel" id="panel-h10">
-
-<section class="chap">
-  <h2><span class="chno">CH 1</span>數與式</h2>
-  <p class="chnote">把國中零散的數系經驗統整成「實數」；絕對值方程式與不等式是從國中「減法原則」搬上來的內容。</p>
-  <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
-    <tbody>
-      <tr>
-        <td class="sec">1-1 數與數線</td>
-        <td class="map">
-          <div><code class="cc c-now">N-10-1</code> 實數：十進制小數、三一律、有理/無理數特徵、科學記號運算</div>
-          <div><code class="cc c-now">N-10-2</code> 絕對值方程式與不等式（連結誤差範圍）、區間符號</div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">N-7-3/5</code> 負數、數線、|a−b| 距離 <span class="gr">（七上）</span><span class="note">國中已刪絕對值方程式——高一是第一次教，不是複習</span></div>
-          <div><code class="cc c-prev">N-7-8</code> 科學記號 <span class="gr">（七上）</span></div>
-          <div><code class="cc c-prev">N-8-2</code> 二次方根的近似值 <span class="gr">（八上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">F-10-3</code> 不等式解區間（區間符號沿用） <span class="gr">（高一・本冊第3章）</span></div>
+        <td class="sec">1 數列與級數<br><span class='secs'>1-1 數列・1-2 等差級數</span></td>
+        <td class="map"><div><code class="cc c-now">N-8-3</code> 認識數列（生活中的規律）</div>
+          <div><code class="cc c-now">N-8-4</code> 等差數列</div>
+          <div><code class="cc c-now">N-8-5</code> 等差級數求和</div>
+          <div><code class="cc c-now">N-8-6</code> 等比數列（新增；不做求和）</div><span class="note">備註：不做「反求首項、公差／公比」的謎題式解題；等差等比併陳是連結指數律、鋪墊對數的機會</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">R-模式</code> 國小數量模式觀察 <span class="gr">（國小）</span></div>
+          <div><code class="cc c-prev">N-7-6/7</code> 指數律（等比的前置） <span class="gr">（七上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">N-10-6</code> 數列、級數與遞迴、數學歸納法 <span class="gr">（高一）</span></div>
           <div><code class="cc c-next">N-12甲-1</code> 數列的極限 <span class="gr">（高三甲）</span></div>
-          <div><code class="cc c-next">N-12甲-3／N-12乙-1</code> 數系再擴充：複數 <span class="gr">（高三選修）</span></div>
-        </td>
+          <div><code class="cc c-next">N-12甲/乙-2</code> 無窮等比級數 <span class="gr">（高三選修）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">1-2 式的運算</td>
-        <td class="map"><div><code class="cc c-now">A-10-1</code> 式的運算：三次乘法公式、根式與分式的運算</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-8-1</code> 二次乘法公式 <span class="gr">（八上）</span></div>
-          <div><code class="cc c-prev">N-8-1</code> 根式的化簡與四則 <span class="gr">（八上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-10-2</code> 多項式除法原理 <span class="gr">（高一・本冊第3章）</span></div>
-          <div><code class="cc c-next">F-12甲-3／F-12乙-3</code> 導函數的代數操作基礎 <span class="gr">（高三選修）</span></div>
-        </td>
-      </tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section class="chap">
-  <h2><span class="chno">CH 2</span>指數、對數</h2>
-  <p class="chnote">課綱刻意把對數「拆兩段」：高一只教常用對數（以 10 為底、搭配科學記號與計算機），真正的指對數「函數」在高二。</p>
-  <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
-    <tbody>
-      <tr>
-        <td class="sec">2-1 指數</td>
-        <td class="map"><div><code class="cc c-now">N-10-3</code> 指數：分數次方的意義、算幾不等式、實數指數、計算機 x^y 鍵</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">N-7-6/7</code> 指數的意義與指數律 <span class="gr">（七上）</span></div>
-          <div><code class="cc c-prev">N-8-6</code> 等比數列 <span class="gr">（八上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">F-11A-4／F-11B-2</code> 指數函數與成長衰退模型 <span class="gr">（高二）</span></div>
-          <div><code class="cc c-next">N-12甲-1</code> 連續複利與 e <span class="gr">（高三甲；B 類在 F-11B-2）</span></div>
-        </td>
+        <td class="sec">2 函數<br><span class='secs'>2-1 變數與函數・2-2 線型函數與圖形</span></td>
+        <td class="map"><div><code class="cc c-now">F-8-1</code> 一次函數（透過對應認識；不出現 f(x) 抽象記號）</div>
+          <div><code class="cc c-now">F-8-2</code> 一次函數的圖形</div><span class="note">「函數」概念全課綱第一次正式命名——課綱把它從七年級調移至八年級</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-6</code> 二元一次方程式的圖形 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">N-7-9</code> 正比 <span class="gr">（七下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-9-1/2</code> 二次函數 <span class="gr">（九下）</span></div>
+          <div><code class="cc c-next">F-10-1</code> f(x) 符號正式登場、一次二次函數 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">F-12乙-4</code> 導數的邊際意涵（線性近似） <span class="gr">（高三乙）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">2-2 常用對數</td>
-        <td class="map"><div><code class="cc c-now">N-10-4</code> 常用對數：log 的意義、與科學記號連結、計算機 10^x 與 log 鍵<span class="note">備註：不談其他底的對數（一般底輕量化，換底在高二A 對數律）</span></div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">N-7-8</code> 科學記號 <span class="gr">（七上）</span></div>
-          <div><code class="cc c-prev">N-10-1</code> 科學記號數字的運算 <span class="gr">（高一・本冊1-1）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-11A-4</code> 對數律、換底、解指數方程式 <span class="gr">（高二A）</span></div>
-          <div><code class="cc c-next">F-11A-4／F-11B-2</code> 對數函數及其應用（地震規模、金融） <span class="gr">（高二）</span></div>
-        </td>
+        <td class="sec">3 三角形的性質與尺規作圖<br><span class='secs'>3-1 內角與外角・3-2 尺規作圖與全等・3-3 全等的應用・3-4 邊角關係</span></td>
+        <td class="map"><div><code class="cc c-now">S-8-1</code> 角的種類與關係</div>
+          <div><code class="cc c-now">S-8-2</code> 凸多邊形內角和</div>
+          <div><code class="cc c-now">S-8-4/5</code> 全等圖形、三角形全等判定（SAS 等五種）</div>
+          <div><code class="cc c-now">S-8-8</code> 三角形基本性質</div>
+          <div><code class="cc c-now">S-8-12</code> 尺規作圖與幾何推理 ＃</div><span class="note">備註：不處理多邊形外角和公式（課綱刪除）</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-7-3/4/5</code> 垂直、線對稱 <span class="gr">（七下）</span></div>
+          <div>三角形、角的認識 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">S-9-1/2</code> 相似形（判定的平行結構） <span class="gr">（九上）</span></div>
+          <div><code class="cc c-next">S-9-11</code> 推理證明 <span class="gr">（九上）</span></div>
+          <div><code class="cc c-next">G-10-7</code> 正弦餘弦定理（邊角關係定量化） <span class="gr">（高一）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">4 平行與四邊形<br><span class='secs'>4-1 平行線與截角・4-2 平行四邊形・4-3 特殊四邊形與梯形</span></td>
+        <td class="map"><div><code class="cc c-now">S-8-3</code> 平行的意義與截角性質</div>
+          <div><code class="cc c-now">S-8-9</code> 平行四邊形的性質</div>
+          <div><code class="cc c-now">S-8-10/11</code> 長方形菱形箏形、梯形的性質</div>
+          <div><code class="cc c-now">G-8-1</code> 兩點距離公式</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-7-4/5</code> 線對稱基本圖形（等腰、菱形、箏形） <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">S-8-6</code> 畢氏定理（距離公式的依據） <span class="gr">（八上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">S-9-3</code> 平行線截比例線段 <span class="gr">（九上）</span></div>
+          <div><code class="cc c-next">G-10-2</code> 平行線、垂直線的方程式 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">G-11A-1</code> 向量（平行四邊形法則） <span class="gr">（高二）</span></div></td>
       </tr>
     </tbody>
   </table></div>
 </section>
-
+</div>
+<div class="tabpanel" id="panel-j9">
 <section class="chap">
-  <h2><span class="chno">CH 3</span>多項式函數</h2>
-  <p class="chnote">「函數」正式接管代數：國中的方程式視角在此轉為函數視角，並第一次出現 f(x) 符號。</p>
+  <h2>九上（第五冊）</h2>
+  
   <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
     <tbody>
       <tr>
-        <td class="sec">3-1 多項式的運算<br>與應用</td>
-        <td class="map"><div><code class="cc c-now">A-10-2</code> 多項式之除法原理：因式定理、餘式定理、除以 (x−a) 的表示</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-8-3</code> 多項式四則運算 <span class="gr">（八上）</span></div>
-          <div><code class="cc c-prev">A-8-4/5</code> 因式分解 <span class="gr">（八上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">F-12甲-2／F-12乙-2</code> 函數的極限（以多項式相除為基礎） <span class="gr">（高三選修）</span></div>
-          <div><code class="cc c-next">N-12甲-1</code> 牛頓求根法（勘根觀點） <span class="gr">（高三甲）</span></div>
-        </td>
+        <td class="sec">1 相似形與三角比<br><span class='secs'>1-1 連比・1-2 比例線段・1-3 相似多邊形・1-4 相似三角形的應用與三角比</span></td>
+        <td class="map"><div><code class="cc c-now">N-9-1</code> 連比（七→九調移；計算機）</div>
+          <div><code class="cc c-now">S-9-1</code> 相似形（縮放）</div>
+          <div><code class="cc c-now">S-9-2</code> 三角形相似判定 AA/SAS/SSS</div>
+          <div><code class="cc c-now">S-9-3</code> 平行線截比例線段</div>
+          <div><code class="cc c-now">S-9-4</code> 相似直角三角形邊長比值的不變性（三角比・新增）</div><span class="note">三角比＝素養導向新設計：只認識 sin/cos/tan 按鍵與一步計算，杜絕推論與恆等式——與舊課程國中三角「全然改弦易轍」</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-7-9</code> 比與比例式 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">S-8-4/5</code> 全等（判定的對照） <span class="gr">（八下）</span></div>
+          <div><code class="cc c-prev">S-8-6</code> 畢氏定理 <span class="gr">（八上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-10-5/6</code> 廣義角、單位圓三角比 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">F-11A-1</code> 三角函數 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">F-11B-1</code> 週期性模型 <span class="gr">（高二B）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">3-2 簡單多項式函數<br>及其圖形</td>
-        <td class="map"><div><code class="cc c-now">F-10-1</code> 一次與二次函數：f(x) 符號、配方化標準式、分點公式與內插</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">F-8-1/2</code> 一次函數及其圖形 <span class="gr">（八下）</span></div>
-          <div><code class="cc c-prev">F-9-1/2</code> 二次函數的圖形與極值（僅已配方式） <span class="gr">（九年級）</span><span class="note">「由一般式配方」是本節第一次教——九年級刻意留白的部分</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">F-11A-1/4</code> 三角、指對數函數（函數家族擴充） <span class="gr">（高二）</span></div>
-          <div><code class="cc c-next">F-12甲-3／F-12乙-3</code> 切線與導數 <span class="gr">（高三選修）</span></div>
-        </td>
+        <td class="sec">2 圓形<br><span class='secs'>2-1 點、線、圓・2-2 圓心角、圓周角與弧長</span></td>
+        <td class="map"><div><code class="cc c-now">S-9-5</code> 圓弧長與扇形面積（八→九調移）</div>
+          <div><code class="cc c-now">S-9-6</code> 圓的幾何性質（圓心角圓周角、內接四邊形）</div>
+          <div><code class="cc c-now">S-9-7</code> 點、直線與圓的關係（切線）</div><span class="note">備註：課綱已刪弦切角、兩圓關係、兩圓公切線——教科書不得出現</span></td>
+        <td class="prev-col"><div>圓的初步認識、圓周率 <span class="gr">（國小）</span></div>
+          <div><code class="cc c-prev">S-8-3</code> 平行、垂直 <span class="gr">（八下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-10-3/4</code> 圓方程式、直線與圓 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">N-11A-1/11B-1</code> 弧度量（弧長的推廣） <span class="gr">（高二）</span></div>
+          <div><code class="cc c-next">G-10-5</code> 極坐標 <span class="gr">（高一）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">3-3 多項式函數的圖形<br>與多項式不等式</td>
-        <td class="map">
-          <div><code class="cc c-now">F-10-2</code> 三次函數的圖形特徵：大域由最高次項決定、局部近似一條直線</div>
-          <div><code class="cc c-now">F-10-3</code> 多項式不等式的解區間</div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">A-7-7/8</code> 一元一次不等式 <span class="gr">（七上）</span></div>
-          <div><code class="cc c-prev">F-9-2</code> 二次函數圖形 <span class="gr">（九年級）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">F-12甲-4／F-12乙-4</code> 單調性與凹凸性判定 <span class="gr">（高三選修）</span><span class="note">「局部近似一條直線」正是導數（切線）的伏筆</span></div>
-          <div><code class="cc c-next">A-12乙-1</code> 線性規劃 <span class="gr">（高三乙）</span></div>
-        </td>
+        <td class="sec">3 推理證明與三角形的心<br><span class='secs'>3-1 推理證明・3-2 三角形的外心、內心與重心</span></td>
+        <td class="map"><div><code class="cc c-now">S-9-11</code> 證明的意義：幾何推理與代數推理</div>
+          <div><code class="cc c-now">S-9-8/9/10</code> 外心、內心、重心</div><span class="note">備註：課綱已刪多邊形外心內心——只教三角形的三心</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-8-5</code> 全等判定（證明的工具） <span class="gr">（八下）</span></div>
+          <div><code class="cc c-prev">S-9-2</code> 相似判定 <span class="gr">（九上・第1章）</span></div></td>
+        <td class="next-col"><div>高中證明素養（數S-U-A2：觀察歸納後還須演繹證明） <span class="gr">（高中）</span></div>
+          <div><code class="cc c-next">G-11A-6</code> 向量法處理幾何（重心座標） <span class="gr">（高二A）</span></div></td>
       </tr>
     </tbody>
   </table></div>
 </section>
-
 <section class="chap">
-  <h2><span class="chno">CH 4</span>直線與圓</h2>
-  <p class="chnote">99 課綱在高二的內容，108 移到高一——用國中已熟的方程式概念理解坐標幾何，函數概念稍後才正式引入（龍騰對此的設計論述見教科書比較頁）。</p>
+  <h2>九下（第六冊）</h2>
+  
   <div class="table-wrap"><table>
-    <thead><tr><th>課本節次</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
     <tbody>
       <tr>
-        <td class="sec">4-1 直線方程式<br>及其圖形</td>
-        <td class="map"><div><code class="cc c-now">G-10-2</code> 直線方程式：斜率及其絕對值的意義、點斜式、平行與垂直線</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">G-7-1</code> 平面直角坐標系 <span class="gr">（七年級）</span></div>
-          <div><code class="cc c-prev">A-7-6</code> 二元一次方程式的圖形 <span class="gr">（七年級）</span></div>
-          <div><code class="cc c-prev">G-8-1</code> 兩點距離公式 <span class="gr">（八下）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">G-10-5/6</code> 斜率連結斜角與正切 <span class="gr">（十下）</span></div>
-          <div><code class="cc c-next">G-11A-1</code> 平面向量 <span class="gr">（高二）</span></div>
-          <div><code class="cc c-next">F-12甲-3／F-12乙-3</code> 切線斜率＝導數 <span class="gr">（高三選修）</span></div>
-        </td>
+        <td class="sec">1 二次函數<br><span class='secs'>1-1 簡易二次函數圖形・1-2 圖形與最大值、最小值</span></td>
+        <td class="map"><div><code class="cc c-now">F-9-1</code> 二次函數的意義</div>
+          <div><code class="cc c-now">F-9-2</code> 圖形與極值：頂點、對稱軸、開口；僅處理已配方好之二次函數</div><span class="note">備註：「二次函數的配方法」與「應用問題」課綱明定為 10 年級（F-10-1）——本章聚焦圖形特性</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-8-1/2</code> 一次函數及其圖形 <span class="gr">（八下）</span></div>
+          <div><code class="cc c-prev">A-8-6/7</code> 一元二次方程式（含方程式的配方） <span class="gr">（八上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-10-1</code> 由一般式配方化標準式＋應用問題 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">F-10-2</code> 三次函數圖形 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">F-12甲/乙-3</code> 切線與導數 <span class="gr">（高三選修）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">4-2 直線方程式<br>的應用</td>
-        <td class="map"><div><code class="cc c-now">G-10-2</code>（後段）點到直線的距離、平行線距離、二元一次不等式</div></td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">S-7-3</code> 垂直、點到直線距離的意義 <span class="gr">（七年級）</span></div>
-          <div><code class="cc c-prev">A-7-7</code> 一元一次不等式 <span class="gr">（七上）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">A-12乙-1</code> 線性規劃（平行直線系） <span class="gr">（高三乙）</span></div>
-          <div><code class="cc c-next">G-11A-9</code> 平面方程式與點面距離 <span class="gr">（高二A）</span></div>
-        </td>
+        <td class="sec">2 統計與機率<br><span class='secs'>2-1 四分位數與盒狀圖・2-2 機率</span></td>
+        <td class="map"><div><code class="cc c-now">D-9-1</code> 統計數據的分布：全距、四分位距、盒狀圖（計算機）</div>
+          <div><code class="cc c-now">D-9-2</code> 認識機率：樹狀圖（兩層為限）</div>
+          <div><code class="cc c-now">D-9-3</code> 古典機率；不對稱物體（圖釘爻杯）的機率探究</div><span class="note">備註：課綱已刪百分位數（移至高一）；機率的量化首次出現在此</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-8-1</code> 累積次數分布 <span class="gr">（八上）</span></div>
+          <div>可能性（質性語言，6年級新增） <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-10-2</code> 標準差、百分位數 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">D-10-3/4</code> 計數原理與複合事件機率 <span class="gr">（高一）</span></div>
+          <div><code class="cc c-next">D-11A/B</code> 條件機率與貝氏定理 <span class="gr">（高二）</span></div></td>
       </tr>
       <tr>
-        <td class="sec">4-3 圓與直線<br>的關係</td>
-        <td class="map">
+        <td class="sec">3 立體圖形<br><span class='secs'>3-1 角柱與圓柱・3-2 角錐與圓錐</span></td>
+        <td class="map"><div><code class="cc c-now">S-9-12</code> 空間中的線與平面（新增：長方體框架內的線線、線面關係）</div>
+          <div><code class="cc c-now">S-9-13</code> 表面積與體積：柱、錐的展開圖與計算</div><span class="note">空間概念 7→9→10 漸進設計的第二站；法線性質的初步接觸</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-7-2</code> 三視圖 <span class="gr">（七下）</span></div>
+          <div>柱體體積、展開圖 <span class="gr">（國小）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">S-11A-1</code> 空間概念、三垂線定理 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">S-11B-1</code> 長方體展開圖、球面經緯線 <span class="gr">（高二B）</span></div>
+          <div><code class="cc c-next">G-11A-2</code> 空間坐標系 <span class="gr">（高二A）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+<div class="tabpanel" id="panel-h10">
+<section class="chap">
+  <h2>十上（第一冊）</h2>
+  <p class="chnote">章節結構採翰林版（均一適配版）。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">1 數與式<br><span class='secs'>1-1 數與數線・1-2 式的運算</span></td>
+        <td class="map"><div><code class="cc c-now">N-10-1</code> 實數：十進制小數、三一律、科學記號運算</div>
+          <div><code class="cc c-now">N-10-2</code> 絕對值方程式與不等式、區間符號</div>
+          <div><code class="cc c-now">A-10-1</code> 式的運算：三次乘法公式、根式與分式</div><span class="note">絕對值方程式／不等式：國中已刪——第一次教，不是複習</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-7-3/5</code> 負數、數線、|a−b| <span class="gr">（七上）</span></div>
+          <div><code class="cc c-prev">N-8-1/2</code> 二次方根與近似值 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-prev">A-8-1</code> 二次乘法公式 <span class="gr">（八上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-10-3</code> 不等式解區間 <span class="gr">（十上・第3章）</span></div>
+          <div><code class="cc c-next">N-12甲-1</code> 數列極限 <span class="gr">（高三甲）</span></div>
+          <div><code class="cc c-next">N-12甲-3/乙-1</code> 複數（數系再擴充） <span class="gr">（高三選修）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">2 指數、對數<br><span class='secs'>2-1 指數・2-2 常用對數</span></td>
+        <td class="map"><div><code class="cc c-now">N-10-3</code> 指數：分數次方、算幾不等式、計算機 x^y 鍵</div>
+          <div><code class="cc c-now">N-10-4</code> 常用對數：log 意義、科學記號連結、10^x 與 log 鍵</div><span class="note">對數拆兩段的第一段：只教以 10 為底、搭配計算機與有效位數溝通</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-7-6/7/8</code> 指數律、科學記號 <span class="gr">（七上）</span></div>
+          <div><code class="cc c-prev">N-8-6</code> 等比數列 <span class="gr">（八下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-11A-4</code> 對數律與換底 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">F-11A-4/11B-2</code> 指對數函數 <span class="gr">（高二）</span></div>
+          <div><code class="cc c-next">N-12甲-1</code> 連續複利與 e <span class="gr">（高三甲）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">3 多項式函數<br><span class='secs'>3-1 多項式的運算與應用・3-2 簡單多項式函數及其圖形・3-3 圖形與多項式不等式</span></td>
+        <td class="map"><div><code class="cc c-now">A-10-2</code> 除法原理：因式定理、餘式定理</div>
+          <div><code class="cc c-now">F-10-1</code> 一次與二次函數：f(x) 符號、配方、分點公式</div>
+          <div><code class="cc c-now">F-10-2</code> 三次函數：大域特徵、局部近似直線</div>
+          <div><code class="cc c-now">F-10-3</code> 多項式不等式</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-8-3/4/5</code> 多項式四則、因式分解 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-prev">F-9-1/2</code> 二次函數（已配方式） <span class="gr">（九下）</span></div>
+          <div><code class="cc c-prev">A-7-7/8</code> 一元一次不等式 <span class="gr">（七下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-11</code> 三角、指對函數（函數家族擴充） <span class="gr">（高二）</span></div>
+          <div><code class="cc c-next">F-12甲/乙-2</code> 函數的極限 <span class="gr">（高三選修）</span></div>
+          <div><code class="cc c-next">F-12甲/乙-3</code> 切線與導數（局部近似的兌現） <span class="gr">（高三選修）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">4 直線與圓<br><span class='secs'>4-1 直線方程式及其圖形・4-2 應用・4-3 圓與直線</span></td>
+        <td class="map"><div><code class="cc c-now">G-10-1</code> 坐標圖形的對稱性 ＃</div>
+          <div><code class="cc c-now">G-10-2</code> 直線方程式：斜率、點斜式、點到直線距離、二元一次不等式</div>
           <div><code class="cc c-now">G-10-3</code> 圓方程式（標準式）</div>
-          <div><code class="cc c-now">G-10-4</code> 直線與圓：切線、代數與幾何判定<span class="note">備註：不含兩圓關係（國中已刪，高中也不撿回）</span></div>
-        </td>
-        <td class="prev-col">
-          <div><code class="cc c-prev">S-9-6/7</code> 圓的幾何性質、點直線圓的位置關係 <span class="gr">（九年級）</span></div>
-          <div><code class="cc c-prev">S-9-5</code> 圓弧長與扇形面積 <span class="gr">（九年級）</span></div>
-        </td>
-        <td class="next-col">
-          <div><code class="cc c-next">G-10-5</code> 廣義角與極坐標（單位圓） <span class="gr">（十下）</span></div>
-          <div><code class="cc c-next">G-12甲-1</code> 二次曲線 <span class="gr">（高三甲）</span></div>
-          <div><code class="cc c-next">S-11B-2</code> 圓錐曲線（視覺性認識） <span class="gr">（高二B）</span></div>
-        </td>
+          <div><code class="cc c-now">G-10-4</code> 直線與圓：切線、代數與幾何判定</div><span class="note">99→108 自高二移下來：先用方程式概念理解坐標幾何，函數概念隨後正式化</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">G-7-1</code> 直角坐標 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">G-8-1</code> 兩點距離 <span class="gr">（八下）</span></div>
+          <div><code class="cc c-prev">S-9-6/7</code> 圓的幾何性質、切線 <span class="gr">（九上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-10-5/6</code> 極坐標、三角比（斜率＝tan） <span class="gr">（十下）</span></div>
+          <div><code class="cc c-next">G-11A-9/10</code> 平面與空間直線方程式 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">G-12甲-1</code> 二次曲線 <span class="gr">（高三甲）</span></div></td>
       </tr>
     </tbody>
   </table></div>
 </section>
-
+<section class="chap">
+  <h2>十下（第二冊）</h2>
+  
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">1 數列與級數<br><span class='secs'>1-1 數列・1-2 級數</span></td>
+        <td class="map"><div><code class="cc c-now">N-10-6</code> 有限項遞迴數列、等比級數求和、數學歸納法</div><span class="note">備註：連加符號 Σ 課綱移至 12 年級選修——十年級不教</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-8-3~6</code> 等差等比數列 <span class="gr">（八下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">N-12甲-1</code> 數列的極限、牛頓法 <span class="gr">（高三甲）</span></div>
+          <div><code class="cc c-next">N-12甲/乙-2</code> 無窮等比級數、Σ 符號 <span class="gr">（高三選修）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">2 數據分析<br><span class='secs'>2-1 一維數據・2-2 二維數據</span></td>
+        <td class="map"><div><code class="cc c-now">D-10-2</code> 平均數、標準差；散布圖、最適直線、相關係數、標準化</div>
+          <div><code class="cc c-now">D-10-1</code> 集合 ★＃</div><span class="note">百分位數自國中調移至此；新增最適直線與相關係數</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-7-2</code> 平均數中位數眾數 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">D-9-1</code> 四分位數盒狀圖 <span class="gr">（九下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-11A/B-1</code> 主觀與客觀機率 <span class="gr">（高二）</span></div>
+          <div>大學統計（迴歸的完整理論） <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">3 排列組合與機率<br><span class='secs'>3-1 計數原理・3-2 排列・3-3 組合・3-4 機率</span></td>
+        <td class="map"><div><code class="cc c-now">D-10-3</code> 有系統的計數：加法乘法取捨原理、直線排列與組合</div>
+          <div><code class="cc c-now">D-10-4</code> 複合事件的古典機率、期望值（新增）</div><span class="note">課綱輕量化：排列組合以供應古典機率所需為目標，附二項式展開；重複組合已刪</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-9-2/3</code> 樹狀圖、古典機率 <span class="gr">（九下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-11A-2/3</code> 條件機率、貝氏定理 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">D-12甲/乙-1</code> 隨機變數與期望值深化 <span class="gr">（高三選修）</span></div>
+          <div><code class="cc c-next">D-12甲/乙-2</code> 二項分布 <span class="gr">（高三選修）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">4 三角比<br><span class='secs'>4-1 直角三角形的邊角關係・4-2 廣義角與極坐標・4-3 正餘弦定理</span></td>
+        <td class="map"><div><code class="cc c-now">G-10-5</code> 廣義角和極坐標（11→10 調移）</div>
+          <div><code class="cc c-now">G-10-6</code> 三角比推廣至廣義角；計算機 sin/cos/tan 鍵</div>
+          <div><code class="cc c-now">G-10-7</code> 正弦定理、餘弦定理、正射影；（三角測量＃）</div><span class="note">三角 9→10→11 跨階段統整的第二站：單位圓上仍只談三個比</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-9-4</code> 三角比（特殊角） <span class="gr">（九上）</span></div>
+          <div><code class="cc c-prev">S-8-6</code> 畢氏定理 <span class="gr">（八上）</span></div>
+          <div><code class="cc c-prev">S-9-12</code> 長方體空間概念（測量模型） <span class="gr">（九下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">N-11A/B-1</code> 弧度量 <span class="gr">（高二）</span></div>
+          <div><code class="cc c-next">F-11A-1</code> 三角函數圖形 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">G-11A-5</code> 和差角公式 <span class="gr">（高二A）</span></div>
+          <div><code class="cc c-next">F-11B-1</code> 週期性模型 <span class="gr">（高二B）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+<div class="tabpanel" id="panel-h11a">
+<section class="chap">
+  <h2>11A 上（第三冊）</h2>
+  <p class="chnote">翰林章序：三角函數 → 指對數函數 → 平面向量。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">1 三角函數<br><span class='secs'>弧度量・圖形與週期・疊合・和差角</span></td>
+        <td class="map"><div><code class="cc c-now">N-11A-1</code> 弧度量（計算機 rad 鍵）</div>
+          <div><code class="cc c-now">F-11A-1</code> sin/cos/tan 函數圖形、定義域值域週期</div>
+          <div><code class="cc c-now">F-11A-2</code> 正餘弦的疊合</div>
+          <div><code class="cc c-now">G-11A-5</code> 正弦餘弦的和差角、倍角半角公式</div><span class="note">cot/sec/csc 為延伸（※不入大考）；12年級選修才回頭深化</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-9-4</code> 三角比（九） <span class="gr">（九上）</span></div>
+          <div><code class="cc c-prev">G-10-5/6/7</code> 廣義角、正餘弦定理 <span class="gr">（十下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-12甲</code> 三角函數的微分（延伸例） <span class="gr">（高三甲）</span></div>
+          <div>物理的波動與訊號 <span class="gr">（跨領域）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">2 指數與對數函數<br><span class='secs'>對數律・指對數函數與應用</span></td>
+        <td class="map"><div><code class="cc c-now">A-11A-4</code> 對數律、換底、解指數方程式</div>
+          <div><code class="cc c-now">F-11A-4</code> 指數與對數函數：圖形、成長衰退模型、科學金融應用</div><span class="note">對數拆兩段的第二段：函數觀點在此完成</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-10-3/4</code> 指數推廣、常用對數 <span class="gr">（十上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">N-12甲-1</code> e 與自然對數 <span class="gr">（高三甲）</span></div>
+          <div><code class="cc c-next">F-12甲</code> 指對函數微分（延伸例） <span class="gr">（高三甲）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">3 平面向量<br><span class='secs'>向量與線性組合・內積・面積與行列式</span></td>
+        <td class="map"><div><code class="cc c-now">G-11A-1</code> 平面向量：係數積、加減、線性組合</div>
+          <div><code class="cc c-now">G-11A-4</code> 向量長度、三角不等式</div>
+          <div><code class="cc c-now">G-11A-6</code> 正射影與內積、二階行列式面積、柯西不等式</div>
+          <div><code class="cc c-now">A-11A-1</code> 二元一次方程組的矩陣表達、克拉瑪公式</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-7-9</code> 比（向量前置經驗——課程手冊明言） <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">G-10-2</code> 直線方程式、斜率 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">S-8-9</code> 平行四邊形 <span class="gr">（八下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-11A-3/7</code> 空間向量與外積 <span class="gr">（11A下）</span></div>
+          <div><code class="cc c-next">A-11A-3</code> 矩陣運算 <span class="gr">（11A下）</span></div>
+          <div><code class="cc c-next">G-12甲-1</code> 二次曲線（參數式） <span class="gr">（高三甲）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+<section class="chap">
+  <h2>11A 下（第四冊）</h2>
+  <p class="chnote">章名依課綱主題整理；節碼以當年課本為準。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">4 空間向量<br><span class='secs'>空間概念・空間坐標系・空間向量運算</span></td>
+        <td class="map"><div><code class="cc c-now">S-11A-1</code> 空間概念：線面關係、三垂線定理</div>
+          <div><code class="cc c-now">G-11A-2</code> 空間坐標系</div>
+          <div><code class="cc c-now">G-11A-3</code> 空間向量的線性組合</div>
+          <div><code class="cc c-now">G-11A-7</code> 內積、外積、柯西不等式</div>
+          <div><code class="cc c-now">G-11A-8</code> 三階行列式（平行六面體體積）</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-9-12</code> 空間中的線與平面（長方體） <span class="gr">（九下）</span></div>
+          <div><code class="cc c-prev">G-11A-1/6</code> 平面向量 <span class="gr">（11A上）</span></div></td>
+        <td class="next-col"><div>大學線性代數、向量微積分 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">5 空間中的平面與直線<br><span class='secs'>平面方程式・空間直線</span></td>
+        <td class="map"><div><code class="cc c-now">G-11A-9</code> 平面方程式：法向量、點面距離</div>
+          <div><code class="cc c-now">G-11A-10</code> 空間直線：參數式比例式、點線距離、歪斜線距離</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">G-10-2</code> 平面上的直線方程式 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">S-11A-1</code> 三垂線定理 <span class="gr">（11A下）</span></div></td>
+        <td class="next-col"><div>多變數函數的切平面（大學微積分） <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">6 矩陣<br><span class='secs'>三元一次方程組・矩陣運算・線性變換</span></td>
+        <td class="map"><div><code class="cc c-now">A-11A-2</code> 三元一次聯立方程式（消去法、方陣表達；電腦求解觀念）</div>
+          <div><code class="cc c-now">A-11A-3</code> 矩陣運算、反方陣（2階）</div>
+          <div><code class="cc c-now">F-11A-3</code> 矩陣的應用：平面線性變換、二階轉移方陣</div><span class="note">備註：高斯消去不延伸 rank；反方陣具體計算限二階</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-5</code> 二元一次聯立（代入加減消去） <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">A-11A-1</code> 矩陣表達與克拉瑪 <span class="gr">（11A上）</span></div></td>
+        <td class="next-col"><div>大學線性代數 <span class="gr">（大學）</span></div>
+          <div><code class="cc c-next">G-12甲-1</code> 旋轉橢圓（線性變換的運用） <span class="gr">（高三甲）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">7 條件機率與貝氏定理<br><span class='secs'>主客觀機率・條件機率・貝氏定理</span></td>
+        <td class="map"><div><code class="cc c-now">D-11A-1</code> 主觀機率與客觀機率</div>
+          <div><code class="cc c-now">D-11A-2</code> 條件機率與獨立性</div>
+          <div><code class="cc c-now">D-11A-3</code> 乘法公式、貝氏定理及其應用</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-10-3/4</code> 計數原理、古典機率與期望值 <span class="gr">（十下）</span></div>
+          <div><code class="cc c-prev">D-7-1</code> 列聯表（一路從國小三年級長上來） <span class="gr">（國小/七下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-12甲-1/2</code> 隨機變數、二項與幾何分布 <span class="gr">（高三甲）</span></div>
+          <div>大學機率統計、機器學習中的貝氏方法 <span class="gr">（大學）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+<div class="tabpanel" id="panel-h11b">
+<section class="chap">
+  <h2>11B 上（第三冊B）</h2>
+  
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">1 正弦函數與週期性現象<br><span class='secs'>週期性模型・弧度量</span></td>
+        <td class="map"><div><code class="cc c-now">N-11B-1</code> 弧度量</div>
+          <div><code class="cc c-now">F-11B-1</code> 正弦函數的圖形、振幅週期頻率、週期性現象範例</div><span class="note">B 類只以 sin 為核心；無和差角與疊合（課綱 B 類刪除）</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-9-4</code> 三角比 <span class="gr">（九上）</span></div>
+          <div><code class="cc c-prev">G-10-5/6</code> 廣義角三角比 <span class="gr">（十下）</span></div></td>
+        <td class="next-col"><div>自然與音樂中的波（跨領域連結） <span class="gr">（跨領域）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">2 按比例成長模型<br><span class='secs'>指數與對數函數的生活應用</span></td>
+        <td class="map"><div><code class="cc c-now">F-11B-2</code> 指數與對數函數：地震規模、金融理財、平均成長率、連續複利與 e、自然對數</div><span class="note">e 在 B 類此處初識（A 類要到選修甲）——B 類的獨有內容之一</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-10-3/4</code> 指數、常用對數 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">N-8-6</code> 等比數列 <span class="gr">（八下）</span></div></td>
+        <td class="next-col"><div>大學商管的財務數學 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">3 平面向量與應用<br><span class='secs'>向量・內積・平面上的比例</span></td>
+        <td class="map"><div><code class="cc c-now">G-11B-1</code> 平面向量與線性組合</div>
+          <div><code class="cc c-now">G-11B-2</code> 正射影與內積、夾角</div>
+          <div><code class="cc c-now">G-11B-3</code> 平面上的比例：設計與透視</div><span class="note">設計與透視是 B 類特有的素養場景</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-7-9</code> 比與比例 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">G-10-2</code> 直線方程式 <span class="gr">（十上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">A-11B-1</code> 矩陣（線性組合的延伸） <span class="gr">（11B下）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+<section class="chap">
+  <h2>11B 下（第四冊B）</h2>
+  <p class="chnote">章名依課綱主題整理；節碼以當年課本為準。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">4 空間概念<br><span class='secs'>線面關係・長方體展開圖・球面經緯線・空間坐標</span></td>
+        <td class="map"><div><code class="cc c-now">S-11B-1</code> 空間概念：長方體展開圖上的兩點距離、球面經緯線（留意地理課需求）</div>
+          <div><code class="cc c-now">G-11B-4</code> 空間坐標系：由經緯度計算坐標</div><span class="note">無三垂線定理（B 類刪除）；經緯線為 B 類新增</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">S-9-12/13</code> 空間中的線與平面、展開圖 <span class="gr">（九下）</span></div></td>
+        <td class="next-col"><div>地理（經緯度）、地球科學 <span class="gr">（跨領域）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">5 矩陣與資料表格<br><span class='secs'>矩陣運算與資料表意涵</span></td>
+        <td class="map"><div><code class="cc c-now">A-11B-1</code> 矩陣視為資料表：加減乘、二階反方陣、電腦示範</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">A-7-5</code> 二元一次聯立方程式 <span class="gr">（七下）</span></div>
+          <div><code class="cc c-prev">G-11B-1</code> 線性組合 <span class="gr">（11B上）</span></div></td>
+        <td class="next-col"><div>資料科學的表格思維 <span class="gr">（大學/跨領域）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">6 不確定性<br><span class='secs'>主客觀機率・條件機率・列聯表與文氏圖</span></td>
+        <td class="map"><div><code class="cc c-now">D-11B-1</code> 主觀機率與客觀機率</div>
+          <div><code class="cc c-now">D-11B-2</code> 條件機率、貝氏定理、獨立事件；列聯表與文氏圖的關聯</div><span class="note">列聯表與文氏圖的關聯為 B 類新增——列聯表軸線的高中終點</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-10-3/4</code> 計數與古典機率 <span class="gr">（十下）</span></div>
+          <div><code class="cc c-prev">D-7-1</code> 列聯表 <span class="gr">（七下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">D-12乙-1/2</code> 隨機變數與二項分布（若選數乙） <span class="gr">（高三乙）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">7 圓錐曲線<br><span class='secs'>平面與圓錐截痕的視覺認識</span></td>
+        <td class="map"><div><code class="cc c-now">S-11B-2</code> 圓錐曲線：由截痕視覺性認識，及其在自然中的呈現</div><span class="note">B 類以「認識」為目標，不做代數操作（課綱輕量化）</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">G-10-3/4</code> 圓方程式 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">S-9-6</code> 圓的性質 <span class="gr">（九上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">G-12甲-1</code> 二次曲線標準式（若轉數甲軌） <span class="gr">（高三甲）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+<div class="tabpanel" id="panel-h12a">
+<section class="chap">
+  <h2>選修數學甲（上、下）</h2>
+  <p class="chnote">章名依課綱主題整理；上下冊分界以當年課本為準。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">上 1 數列的極限<br><span class='secs'>極限與運算・夾擠定理・e</span></td>
+        <td class="map"><div><code class="cc c-now">N-12甲-1</code> 數列極限、夾擠定理、牛頓求根法、連續複利認識 e</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-10-6</code> 遞迴數列、數學歸納法 <span class="gr">（十下）</span></div>
+          <div><code class="cc c-prev">N-8-4/6</code> 等差等比數列 <span class="gr">（八下）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-12甲-2</code> 函數的極限 <span class="gr">（數甲）</span></div>
+          <div>大學微積分的 ε-δ 嚴格化 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">上 2 函數與函數的極限<br><span class='secs'>函數性質・連續與極限</span></td>
+        <td class="map"><div><code class="cc c-now">F-12甲-1</code> 函數：奇偶性、凹凸性、反函數、合成函數 ＃</div>
+          <div><code class="cc c-now">F-12甲-2</code> 函數極限：連續性、介值定理、夾擠定理</div>
+          <div><code class="cc c-now">N-12甲-2</code> 無窮等比級數、Σ 符號</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-10-1/2/3</code> 多項式函數與圖形 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">A-10-2</code> 多項式相除 <span class="gr">（十上）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-12甲-3</code> 微分 <span class="gr">（數甲）</span></div>
+          <div>大學微積分 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">上 3 微分<br><span class='secs'>導數與導函數・微分公式</span></td>
+        <td class="map"><div><code class="cc c-now">F-12甲-3</code> 導數與導函數的極限定義、切線、多項式導函數</div>
+          <div><code class="cc c-now">F-12甲-4</code> 乘除連鎖律、高階導數、單調凹凸、一次估計、最佳化</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-10-2</code> 三次函數局部近似直線（伏筆兌現） <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">F-12甲-2</code> 極限 <span class="gr">（數甲）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-12甲-5/6</code> 積分 <span class="gr">（數甲）</span></div>
+          <div>大學微積分、微分方程 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">下 4 積分<br><span class='secs'>黎曼和・定積分・微積分基本定理・應用</span></td>
+        <td class="map"><div><code class="cc c-now">F-12甲-5</code> 黎曼和與定積分</div>
+          <div><code class="cc c-now">F-12甲-6</code> 反導函數、不定積分、微積分基本定理</div>
+          <div><code class="cc c-now">F-12甲-7</code> 應用：函數平均、切片積分、旋轉體體積</div><span class="note">不涉及分部積分與變數變換</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-12甲-3/4</code> 微分 <span class="gr">（數甲）</span></div>
+          <div><code class="cc c-prev">N-12甲-1</code> 極限 <span class="gr">（數甲）</span></div></td>
+        <td class="next-col"><div>大學微積分（技巧與多變數） <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">下 5 複數與二次曲線<br><span class='secs'>複數平面・棣美弗・拋物線橢圓雙曲線</span></td>
+        <td class="map"><div><code class="cc c-now">N-12甲-3</code> 複數平面、極式、棣美弗定理、n 次方根</div>
+          <div><code class="cc c-now">A-12甲-1</code> 方程式的虛根、代數基本定理</div>
+          <div><code class="cc c-now">G-12甲-1</code> 二次曲線標準式、橢圓參數式</div><span class="note">10 年級的複數與方程式論調移至此——高中數系的終點</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-10-1</code> 實數系 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">A-8-7</code> 一元二次方程式（判別式＜0 的懸念） <span class="gr">（八上）</span></div>
+          <div><code class="cc c-prev">G-10-3/4</code> 圓與直線 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">G-11A-5</code> 和差角（棣美弗的引擎） <span class="gr">（11A上）</span></div></td>
+        <td class="next-col"><div>大學複變、線性代數 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">下 6 機率與統計<br><span class='secs'>離散型隨機變數・二項與幾何分布</span></td>
+        <td class="map"><div><code class="cc c-now">D-12甲-1</code> 隨機變數：期望值、變異數、標準差、獨立性、重複試驗</div>
+          <div><code class="cc c-now">D-12甲-2</code> 二項分布與幾何分布（用於合理性檢定）</div><span class="note">幾何分布為數甲獨有（數乙只到二項分布）</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-11A-1~3</code> 條件機率與貝氏 <span class="gr">（11A下）</span></div>
+          <div><code class="cc c-prev">D-10-4</code> 期望值 <span class="gr">（十下）</span></div></td>
+        <td class="next-col"><div>大學機率論、數理統計 <span class="gr">（大學）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+<div class="tabpanel" id="panel-h12b">
+<section class="chap">
+  <h2>選修數學乙（上、下）</h2>
+  <p class="chnote">課綱定位：為社會科學與財金管理領域做準備；範例與習題皆應依此取捨。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>課本章節</th><th>對應課綱條目</th><th>⬅ 先備（年級）</th><th>➡ 後續（年級）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="sec">上 1 函數與極限<br><span class='secs'>函數性質・連續與極限・無窮等比級數</span></td>
+        <td class="map"><div><code class="cc c-now">F-12乙-1</code> 函數：奇偶性、凹凸性 ＃</div>
+          <div><code class="cc c-now">F-12乙-2</code> 函數極限：連續、介值、夾擠</div>
+          <div><code class="cc c-now">N-12乙-2</code> 無窮等比級數、認識 Σ</div><span class="note">課程手冊明示：11B 學生可直接選修數乙，重點在數學成熟度而非缺內容</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-10-1/2/3</code> 多項式函數 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">F-11B-2 或 F-11A-4</code> 指對數函數（A、B 皆可銜接） <span class="gr">（高二）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-12乙-3</code> 微分 <span class="gr">（數乙）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">上 2 微分<br><span class='secs'>導數・導函數・邊際意涵</span></td>
+        <td class="map"><div><code class="cc c-now">F-12乙-3</code> 導數與導函數、切線、多項式導函數</div>
+          <div><code class="cc c-now">F-12乙-4</code> 二階導數、單調凹凸、最佳化、導數的邊際意涵</div><span class="note">99 數乙有極限無微積分；108 補上實際的微積分並從經濟學取例——本世代最大變革</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-10-2</code> 局部近似直線 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">F-12乙-2</code> 極限 <span class="gr">（數乙）</span></div></td>
+        <td class="next-col"><div><code class="cc c-next">F-12乙-5</code> 積分 <span class="gr">（數乙）</span></div>
+          <div>大學經濟學（邊際分析）、商用微積分 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">上 3 積分<br><span class='secs'>反導函數・定積分・總量與剩餘</span></td>
+        <td class="map"><div><code class="cc c-now">F-12乙-5</code> 一次二次函數的反導函數與定積分、微積分基本定理</div>
+          <div><code class="cc c-now">F-12乙-6</code> 應用：函數平均、總量與剩餘意涵</div></td>
+        <td class="prev-col"><div><code class="cc c-prev">F-12乙-3/4</code> 微分 <span class="gr">（數乙）</span></div></td>
+        <td class="next-col"><div>大學經濟學（消費者剩餘）、統計 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">下 4 複數與方程式<br><span class='secs'>複數平面・虛根・代數基本定理</span></td>
+        <td class="map"><div><code class="cc c-now">N-12乙-1</code> 複數平面、四則運算與絕對值</div>
+          <div><code class="cc c-now">A-12乙-2</code> 方程式的虛根、代數基本定理</div><span class="note">數乙教複數的理由是「素養」——比數甲少了極式與棣美弗</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">N-10-1</code> 實數 <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">A-8-7</code> 一元二次方程式 <span class="gr">（八上）</span></div></td>
+        <td class="next-col"><div>人文素養：連小說與舞台劇都談虛數（課綱手冊語） <span class="gr">（—）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">下 5 線性規劃<br><span class='secs'>目標函數極值・平行直線系</span></td>
+        <td class="map"><div><code class="cc c-now">A-12乙-1</code> 線性規劃：一次式目標函數的極值、平行直線系</div><span class="note">自 11 年級必修調移至數乙——商管定位的招牌單元</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">G-10-2</code> 二元一次不等式（解區域） <span class="gr">（十上）</span></div>
+          <div><code class="cc c-prev">A-7-7/8</code> 一元一次不等式 <span class="gr">（七下）</span></div></td>
+        <td class="next-col"><div>作業研究、管理科學 <span class="gr">（大學）</span></div></td>
+      </tr>
+      <tr>
+        <td class="sec">下 6 機率與統計<br><span class='secs'>離散型隨機變數・二項分布</span></td>
+        <td class="map"><div><code class="cc c-now">D-12乙-1</code> 隨機變數：期望值、變異數、標準差、獨立性</div>
+          <div><code class="cc c-now">D-12乙-2</code> 二項分布的性質與參數</div><span class="note">99 數乙的抽樣與統計推論、信賴區間已刪——留給大學</span></td>
+        <td class="prev-col"><div><code class="cc c-prev">D-11B-2 或 D-11A-2/3</code> 條件機率（A、B 皆可銜接） <span class="gr">（高二）</span></div>
+          <div><code class="cc c-prev">D-10-4</code> 古典機率與期望值 <span class="gr">（十下）</span></div></td>
+        <td class="next-col"><div>大學統計學（商管必修） <span class="gr">（大學）</span></div></td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
 </div>
 
 <div class="callout">
-  <b>資料說明</b>：課本目次採自均一教育平台的（類）翰林版課程架構（八上為 113 學年後三版趨同的目次；十年級為翰林版適配課程），實際課本節名可能因年度改版微調。課綱條目內容均逐字核對《數學領域課程綱要》（107.6）本文；「先備／後續」的年級以課綱學習內容之年級碼為準，「八下」等學期歸屬依常見教材編排推定。
+  <b>資料說明</b>：國中六冊目次取自翰林官方樣書（習作）之目次頁；七下第 6 章之節名輔以均一（類翰林版）課程架構。十年級與 11A 上採翰林版適配課程架構；11A 下、11B 下與高三甲乙之章名依課綱主題與翰林慣用編排整理，<b>卷冊分界與節碼請以當年課本為準</b>。課綱條目均逐字核對《數學領域課程綱要》（107.6）本文；※★＃記號意義見課綱導讀頁。
 </div>
 
 <footer>
   <span>翰林版課本章節 × 108 課綱學習內容對照・數學教材教法課程用</span>
-  <span><a href="../">課程資源總覽</a>・<a href="../introduction/knowledge-map.html">知識地圖</a></span>
+  <span><a href="../">課程資源總覽</a>・<a href="../introduction/knowledge-map.html">知識地圖</a>・<a href="../lesson-plan/">教案設計單</a></span>
 </footer>
 </div>
 
 <script>
 (function(){
-  var t1=document.getElementById('tab-j8'), t2=document.getElementById('tab-h10');
-  var p1=document.getElementById('panel-j8'), p2=document.getElementById('panel-h10');
-  function sel(a){
-    t1.setAttribute('aria-selected', a? 'true':'false');
-    t2.setAttribute('aria-selected', a? 'false':'true');
-    p1.classList.toggle('active', a); p2.classList.toggle('active', !a);
-  }
-  t1.addEventListener('click', function(){ sel(true); });
-  t2.addEventListener('click', function(){ sel(false); });
+  var ids=['j7','j8','j9','h10','h11a','h11b','h12a','h12b'];
+  ids.forEach(function(id){
+    document.getElementById('tab-'+id).addEventListener('click',function(){
+      ids.forEach(function(j){
+        document.getElementById('tab-'+j).setAttribute('aria-selected', j===id?'true':'false');
+        document.getElementById('panel-'+j).classList.toggle('active', j===id);
+      });
+    });
+  });
 })();
 </script>
 </body>
