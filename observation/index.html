@@ -32,8 +32,8 @@ input[type=checkbox],input[type=radio]{transform:scale(1.15);accent-color:var(--
 .rubric{margin-top:16px}
 .rubric th{border:1px solid var(--line);background:var(--pale);padding:6px 4px;font-weight:700}
 .rubric td{border:1px solid var(--line);padding:5px 6px;vertical-align:middle}
-.rubric td.dim{background:var(--pale);text-align:center;width:34px;font-weight:700;letter-spacing:2px}
 .rubric tr.group td.g{background:#e8eef0;font-weight:700}
+.rubric td.sec{background:var(--accent);color:#fff;font-weight:700;padding:6px 8px}
 .rubric td.ind{line-height:1.35}
 .rubric td.lv{text-align:center;width:44px}
 .rubric td.sg{width:170px}
@@ -105,7 +105,6 @@ textarea:focus{outline:none;border-color:var(--accent)}
   <table class="rubric">
     <thead>
       <tr>
-        <th rowspan="2" style="width:34px">層面</th>
         <th rowspan="2">檢核指標</th>
         <th colspan="4">表現水準</th>
         <th rowspan="2" style="width:170px">精進建議</th>
@@ -179,18 +178,13 @@ const SECTIONS = [
 const LV = ['優異','良好','普通','未呈現'];
 const tbody = document.getElementById('rubricBody');
 for (const [secName, groups] of SECTIONS) {
-  const nRows = groups.reduce((a,[,items]) => a + 1 + items.length, 0);
-  let dimCellDone = false;
+  const sec = document.createElement('tr');
+  sec.innerHTML = `<td class="sec" colspan="6">${secName}</td>`;
+  tbody.appendChild(sec);
   for (const [gname, items] of groups) {
     const gr = document.createElement('tr');
     gr.className = 'group';
-    let html = '';
-    if (!dimCellDone) {
-      html += `<td class="dim" rowspan="${nRows}">${[...secName].join('<br>')}</td>`;
-      dimCellDone = true;
-    }
-    html += `<td class="g" colspan="6">${gname}</td>`;
-    gr.innerHTML = html;
+    gr.innerHTML = `<td class="g" colspan="6">${gname}</td>`;
     tbody.appendChild(gr);
     for (const [code, text] of items) {
       const tr = document.createElement('tr');
