@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教學觀摩回饋表｜數學教材教法</title>
+<style>
+:root{
+  --ink:#1f2937; --soft:#6b7280; --accent:#155e75; --line:#d1d5db;
+  --pale:#f0f7f9; --warn:#b45309;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Iansui","LXGW WenKai TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:#f5f5f4}
+.wrap{max-width:900px;margin:0 auto;padding:18px 16px 60px}
+header.tool{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+header.tool h1{font-size:1.35rem;margin:0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.toolbar button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 14px;font-size:.95rem;cursor:pointer;font-family:inherit}
+.toolbar button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.hint{font-size:.85rem;color:var(--soft);margin:0 0 16px}
+.sheet{background:#fff;border:1px solid var(--line);border-radius:10px;padding:28px 30px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.sheet h2{text-align:center;font-size:1.25rem;margin:0 0 2px}
+.sheet .sub{text-align:center;font-size:.85rem;color:var(--soft);margin:0 0 18px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+.meta td{border:1px solid var(--line);padding:6px 8px;vertical-align:middle}
+.meta td.lab{background:var(--pale);width:96px;text-align:center;white-space:nowrap}
+.meta input[type=text]{width:100%;border:none;border-bottom:1px dashed var(--line);padding:4px 2px;font-size:.95rem;font-family:inherit;background:transparent}
+.meta input[type=text]:focus{outline:none;border-bottom-color:var(--accent)}
+.cat{margin:6px 0 0}
+label.chk{margin-right:22px;white-space:nowrap}
+input[type=checkbox],input[type=radio]{transform:scale(1.15);accent-color:var(--accent)}
+.rubric{margin-top:16px}
+.rubric th{border:1px solid var(--line);background:var(--pale);padding:6px 4px;font-weight:700}
+.rubric td{border:1px solid var(--line);padding:5px 6px;vertical-align:middle}
+.rubric td.dim{background:var(--pale);text-align:center;width:34px;font-weight:700;letter-spacing:2px}
+.rubric tr.group td.g{background:#e8eef0;font-weight:700}
+.rubric td.ind{line-height:1.35}
+.rubric td.lv{text-align:center;width:44px}
+.rubric td.sg{width:170px}
+.rubric td.sg input{width:100%;border:none;border-bottom:1px dashed var(--line);font-family:inherit;font-size:.85rem;padding:2px}
+.rubric td.sg input:focus{outline:none;border-bottom-color:var(--accent)}
+.overall{margin-top:16px}
+.overall .lab{font-weight:700;margin-bottom:6px}
+textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:6px;padding:8px;font-family:inherit;font-size:.95rem;resize:vertical}
+textarea:focus{outline:none;border-color:var(--accent)}
+.signrow{display:flex;justify-content:flex-end;gap:8px;align-items:baseline;margin-top:26px;font-size:.95rem}
+.signline{display:inline-block;width:220px;border-bottom:1px solid var(--ink);height:1.4em}
+.savenote{position:fixed;right:14px;bottom:14px;background:#065f46;color:#fff;padding:6px 12px;border-radius:8px;font-size:.8rem;opacity:0;transition:opacity .3s;pointer-events:none}
+.savenote.show{opacity:.92}
+
+@media print{
+  @page{size:A4 portrait;margin:12mm}
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  header.tool,.hint,.savenote{display:none!important}
+  .sheet{border:none;box-shadow:none;border-radius:0;padding:0}
+  table{font-size:8.4pt}
+  .rubric td,.rubric th{padding:2.5px 4px}
+  textarea{border:1px solid #999;min-height:80px}
+  input[type=text]{border-bottom:1px solid #999!important}
+  .rubric tr,.meta tr{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="tool">
+  <h1>教學觀摩回饋表（學生用）</h1>
+  <div class="toolbar">
+    <button id="btnClear">清空重填</button>
+    <button id="btnPrint" class="primary">列印／輸出 PDF</button>
+  </div>
+</header>
+<p class="hint">線上填寫會自動暫存在你的瀏覽器（換電腦不會帶著走）。填完按「列印」，印出紙本後在右下角<strong>親筆簽名</strong>，於課堂繳交給老師彙整送師培中心。</p>
+
+<div class="sheet" id="sheet">
+  <h2>國立成功大學教學觀摩回饋表</h2>
+  <p class="sub">（觀摩者填具，實地教學及微型教學適用）</p>
+
+  <table class="meta">
+    <tr>
+      <td class="lab">教學者</td><td><input type="text" data-k="teacher"></td>
+      <td class="lab">觀察時間</td><td><input type="text" data-k="time" placeholder="　年　月　日　__:__ 至 __:__"></td>
+    </tr>
+    <tr>
+      <td class="lab">科目</td><td><input type="text" data-k="subject" placeholder="數學"></td>
+      <td class="lab">教學單元</td><td><input type="text" data-k="unit"></td>
+    </tr>
+    <tr>
+      <td class="lab">觀摩地點</td><td colspan="3"><input type="text" data-k="place"></td>
+    </tr>
+    <tr>
+      <td class="lab">觀摩類別</td>
+      <td colspan="3" class="cat">
+        <label class="chk"><input type="checkbox" data-k="cat_field"> 實地教學</label>
+        <label class="chk"><input type="checkbox" data-k="cat_micro"> 微型教學</label>
+      </td>
+    </tr>
+    <tr>
+      <td class="lab">觀摩者</td><td><input type="text" data-k="observer" placeholder="系級・姓名"></td>
+      <td class="lab">學號</td><td><input type="text" data-k="sid"></td>
+    </tr>
+  </table>
+
+  <table class="rubric">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width:34px">層面</th>
+        <th rowspan="2">檢核指標</th>
+        <th colspan="4">表現水準</th>
+        <th rowspan="2" style="width:170px">精進建議</th>
+      </tr>
+      <tr>
+        <th style="width:44px">優異</th><th style="width:44px">良好</th>
+        <th style="width:44px">普通</th><th style="width:44px">未呈現</th>
+      </tr>
+    </thead>
+    <tbody id="rubricBody"></tbody>
+  </table>
+
+  <div class="overall">
+    <div class="lab">綜合改進建議或意見：</div>
+    <textarea data-k="overall"></textarea>
+  </div>
+
+  <div class="signrow">觀摩者簽名：<span class="signline"></span></div>
+</div>
+</div>
+<div class="savenote" id="saveNote">已暫存 ✓</div>
+
+<script>
+const SECTIONS = [
+ ['一、課程設計與教學', [
+   ['A. 熟悉任教學科領域目標與內容知識', [
+     ['A1','事先規劃適切的教學目標'],
+     ['A2','掌握所教授教材的概念及內容'],
+     ['A3','了解學生的認知程度和起點行為']]],
+   ['B. 清楚呈現教材內容', [
+     ['B1','具體說明學習的目標及重點'],
+     ['B2','有系統、有組織，由簡而繁呈現教材內容'],
+     ['B3','根據學生學習表現，適時調整教材內容'],
+     ['B4','以深入淺出的方式說明抽象、困難的概念'],
+     ['B5','正確且清楚講解重要概念、原則或技能'],
+     ['B6','上課內容不會脫離原有的主題或重點'],
+     ['B7','能澄清迷思並引導價值觀'],
+     ['B8','提供適當練習使學生熟練教材內容'],
+     ['B9','於每個學習活動後，適時歸納總結重點']]],
+   ['C. 活用教學策略與方法', [
+     ['C1','能持續引發學生的學習動機'],
+     ['C2','善用問答技巧吸引學生注意'],
+     ['C3','活用多種方式呈現教學內容'],
+     ['C4','能根據學生的反應，調整教學活動或策略'],
+     ['C5','適度使用肢體語言，增進溝通效果'],
+     ['C6','教學活動的轉換與銜接順暢'],
+     ['C7','有效掌握教學節奏和時間']]],
+   ['D. 善用學習評量', [
+     ['D1','適時檢視學生的學習情形'],
+     ['D2','依據實際的需要選擇適切的評量方式'],
+     ['D3','事先擬定評量規準']]],
+   ['E. 口語與非語言溝通', [
+     ['E1','目光環視全班學生'],
+     ['E2','仔細聆聽學生的意見與問題'],
+     ['E3','能查覺學生困惑、厭煩與好奇的反應並及時回應'],
+     ['E4','口齒清晰、音量適中']]],
+   ['F. 教學媒體的使用', [
+     ['F1','板書、投影片或幻燈片上的文字內容清楚工整'],
+     ['F2','能依據教學目標選用適切的教學媒體，以提升學生學習效果'],
+     ['F3','能適當運用與控制教學媒體（如教學者不應站在單槍投影的布幕前）']]]
+ ]],
+ ['二、班級經營與輔導', [
+   ['G. 營造學習環境', [
+     ['G1','適時鼓勵學生的優良表現'],
+     ['G2','妥善處理學生課堂中的突發或不當行為'],
+     ['G3','營造並維持有利學習的課堂環境與氛圍'],
+     ['G4','有效掌握教學時間'],
+     ['G5','表現教學熱忱']]]
+ ]]
+];
+const LV = ['優異','良好','普通','未呈現'];
+const tbody = document.getElementById('rubricBody');
+for (const [secName, groups] of SECTIONS) {
+  const nRows = groups.reduce((a,[,items]) => a + 1 + items.length, 0);
+  let dimCellDone = false;
+  for (const [gname, items] of groups) {
+    const gr = document.createElement('tr');
+    gr.className = 'group';
+    let html = '';
+    if (!dimCellDone) {
+      html += `<td class="dim" rowspan="${nRows}">${[...secName].join('<br>')}</td>`;
+      dimCellDone = true;
+    }
+    html += `<td class="g" colspan="6">${gname}</td>`;
+    gr.innerHTML = html;
+    tbody.appendChild(gr);
+    for (const [code, text] of items) {
+      const tr = document.createElement('tr');
+      let cells = `<td class="ind">${code} ${text}</td>`;
+      for (let i = 0; i < 4; i++)
+        cells += `<td class="lv"><input type="radio" name="r_${code}" value="${LV[i]}" data-k="r_${code}_${i}"></td>`;
+      cells += `<td class="sg"><input type="text" data-k="s_${code}"></td>`;
+      tr.innerHTML = cells;
+      tbody.appendChild(tr);
+    }
+  }
+}
+
+// ===== 自動暫存 =====
+const KEY = 'ncku_obs_feedback_v1';
+const note = document.getElementById('saveNote');
+let noteTimer = null;
+function fields(){ return document.querySelectorAll('[data-k]'); }
+function save(){
+  const d = {};
+  fields().forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') { if (el.checked) d[el.dataset.k] = 1; }
+    else if (el.value) d[el.dataset.k] = el.value;
+  });
+  try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e) {}
+  note.classList.add('show');
+  clearTimeout(noteTimer); noteTimer = setTimeout(() => note.classList.remove('show'), 900);
+}
+function load(){
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  fields().forEach(el => {
+    const v = d[el.dataset.k];
+    if (v === undefined) return;
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = true;
+    else el.value = v;
+  });
+}
+document.addEventListener('input', save);
+document.addEventListener('change', save);
+load();
+
+document.getElementById('btnPrint').addEventListener('click', () => window.print());
+document.getElementById('btnClear').addEventListener('click', () => {
+  if (!confirm('確定要清空所有已填內容嗎？')) return;
+  try { localStorage.removeItem(KEY); } catch(e) {}
+  fields().forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else el.value = '';
+  });
+});
+</script>
+</body>
+</html>
