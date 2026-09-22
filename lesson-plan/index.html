@@ -386,13 +386,19 @@ footer.doc a{ color:var(--ink-faint); }
 
 <!-- 板書設計 -->
 <section class="part">
-  <div class="part-head"><h2>六、板書設計</h2><span class="en">Board Plan</span></div>
+  <div class="part-head"><h2>六、板書設計與學習單</h2><span class="en">Board Plan &amp; Worksheet</span></div>
   <p class="part-note">可手繪板書規劃後拍照上傳，或直接上傳試教時的黑板照片；照片會存在這台裝置的瀏覽器並隨列印輸出。</p>
   <div class="check-row" style="margin-bottom:10px">
     <button type="button" id="board-btn" style="font-family:'Noto Sans TC',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 16px;">＋ 加入板書照片</button>
     <input type="file" id="board-input" accept="image/*" multiple style="display:none">
     <span style="font-size:.76rem;color:var(--ink-faint)">可多張；過大的照片會自動縮小以便儲存</span>
   </div>
+  <p class="part-note" style="margin-top:14px">若學習單是做在雲端（Google 雲端硬碟、簡報等），貼上「知道連結的人均可查看」的分享網址，按「抓取畫面」自動把預覽圖接進教案，跟板書照片顯示在一起。</p>
+  <div class="check-row" style="margin-bottom:6px">
+    <div class="fill" contenteditable="true" data-key="worksheetUrl" data-ph="貼上學習單的分享網址…" style="flex:1;min-width:240px;font-family:'IBM Plex Mono',monospace;font-size:.82rem;border:1px solid var(--border);border-radius:6px;padding:6px 10px"></div>
+    <button type="button" id="worksheet-fetch" style="font-family:'Noto Sans TC',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 16px;">抓取畫面 →</button>
+  </div>
+  <div id="worksheet-msg" style="font-size:.78rem;margin-bottom:10px;min-height:1.2em"></div>
   <div id="board-gallery" class="board-gallery"></div>
 </section>
 
@@ -533,6 +539,43 @@ footer.doc a{ color:var(--ink-faint); }
     binput.value='';
   });
   bload();
+
+  // ===== 學習單連結 → 自動抓取預覽圖 =====
+  function deriveImageSrc(url){
+    url = (url||'').trim();
+    var m;
+    m = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if(m) return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600';
+    m = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+    if(m) return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600';
+    if(/drive\.google\.com/.test(url)){
+      m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if(m) return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600';
+    }
+    if(/dropbox\.com\//.test(url)){
+      return url.replace(/([?&])dl=0/,'$1raw=1').replace(/dropbox\.com\/(?!.*[?&]raw=1)([^?]*)$/,'dropbox.com/$1?raw=1');
+    }
+    return url; // 直接圖片連結，或其他——交給瀏覽器嘗試載入
+  }
+  var wsMsg = document.getElementById('worksheet-msg');
+  document.getElementById('worksheet-fetch').addEventListener('click', function(){
+    var urlEl = document.querySelector('[data-key="worksheetUrl"]');
+    var url = (urlEl.textContent||'').trim();
+    wsMsg.textContent=''; wsMsg.style.color='';
+    if(!url){ wsMsg.textContent='請先貼上學習單網址'; wsMsg.style.color='#a13c3c'; return; }
+    var src = deriveImageSrc(url);
+    wsMsg.textContent='載入中…'; wsMsg.style.color='var(--ink-faint)';
+    var test = new Image();
+    test.onload = function(){
+      boards.push(src); bsave(); render();
+      wsMsg.textContent='✓ 已抓到畫面，接進下方板書照片區了'; wsMsg.style.color='#1f7a52';
+    };
+    test.onerror = function(){
+      wsMsg.innerHTML='⚠️ 抓不到這個連結的圖片——可能分享設定不是「知道連結的人均可查看」，或它不是圖片／雲端硬碟連結。<br>可以改分享設定後再試一次，或直接截圖用左邊「＋ 加入板書照片」上傳。';
+      wsMsg.style.color='#a13c3c';
+    };
+    test.src = src;
+  });
 
   // ===== 範例教案（六選一） =====
   var EX_COMMON_J = {
