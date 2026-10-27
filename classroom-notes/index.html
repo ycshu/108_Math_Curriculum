@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>觀課紀錄表｜數學教材教法</title>
+<style>
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --surface-2:#f6f8fa;
+  --ink:#1a2733; --ink-soft:#4b5b6b; --ink-faint:#7c8b99;
+  --border:#c9d3dc; --border-soft:#dde4ea;
+  --accent:#1f3a5f; --accent-soft:#eaf0f8;
+  --t1:#b3541e; --t2:#1f7a52; --t3:#6a3fa0; --fill:#fbfcfd;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#111823; --surface:#161f2b; --surface-2:#1b2531;
+    --ink:#e7edf3; --ink-soft:#aebccb; --ink-faint:#8294a6;
+    --border:#3a4856; --border-soft:#28333f;
+    --accent:#8fb2de; --accent-soft:#1c2d42;
+    --t1:#e0a06a; --t2:#5fc99a; --t3:#b89bdb; --fill:#131b26;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:14.5px;line-height:1.7}
+.toolbar{position:sticky;top:0;z-index:10;background:var(--surface);
+  border-bottom:1px solid var(--border-soft);padding:10px clamp(16px,4vw,40px);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.toolbar .tl{font-family:monospace;font-size:.74rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-faint);margin-right:auto}
+.toolbar button{font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--ink);
+  border-radius:8px;padding:6px 16px}
+.toolbar button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme: dark){.toolbar button.primary{color:#0e1520}}
+.toolbar .hint{font-size:.76rem;color:var(--ink-faint);width:100%}
+#sync-status{font-size:.76rem;color:var(--t2);white-space:nowrap}
+#sync-status.err{color:#a13c3c}
+.share-box{display:flex;gap:8px;align-items:center;flex-wrap:wrap;width:100%;margin-top:2px}
+.share-box input{flex:1;min-width:200px;font-size:.78rem;font-family:monospace;
+  border:1px solid var(--border);border-radius:6px;padding:5px 8px;background:var(--fill);color:var(--ink)}
+
+.sheet{max-width:860px;margin:28px auto 80px;background:var(--surface);
+  border:1px solid var(--border-soft);border-radius:12px;
+  padding:clamp(24px,5vw,48px);
+  box-shadow:0 1px 2px rgba(20,30,45,.06),0 8px 28px -12px rgba(20,30,45,.18)}
+header.doc h1{font-size:1.7rem;font-weight:900;text-align:center;margin:0 0 4px}
+header.doc .sub{text-align:center;font-size:.85rem;color:var(--t1);font-weight:700;margin-bottom:26px}
+
+table.meta{width:100%;border-collapse:collapse;margin-bottom:22px}
+table.meta th,table.meta td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+table.meta th{background:var(--surface-2);font-weight:700;font-size:.85rem;white-space:nowrap;width:120px;color:var(--ink-soft)}
+.fill{min-height:1.6em;outline:none;background:var(--fill);border-radius:4px;padding:2px 6px}
+.fill:focus{background:var(--accent-soft)}
+.fill:empty::before{content:attr(data-ph);color:var(--t1);opacity:.75;font-size:.85em}
+
+section.part{margin-bottom:26px}
+.part-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;
+  border-left:4px solid var(--accent);padding-left:12px}
+.part-head h2{font-size:1.08rem;font-weight:700;margin:0}
+.part-note{font-size:.78rem;color:var(--t2);margin:0 0 12px 16px}
+
+.timerbox{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border:1px solid var(--border);border-radius:10px;padding:14px 18px;background:var(--surface-2)}
+#start-class-btn{font-family:inherit;font-weight:700;font-size:.95rem;cursor:pointer;
+  border:none;border-radius:10px;padding:10px 24px;background:var(--t2);color:#fff}
+#start-class-btn.running{background:var(--surface);color:var(--t2);border:1.5px solid var(--t2)}
+#timer-display{font-family:monospace;font-size:1.3rem;font-weight:700;color:var(--ink-soft)}
+#timer-display.running{color:var(--t2)}
+
+.entries{display:flex;flex-direction:column;gap:16px}
+.entry{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--surface-2);position:relative}
+.entry .erow{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.entry .etime{width:140px;font-family:monospace;font-size:.86rem;font-weight:700;border:1px solid var(--border);
+  border-radius:6px;padding:5px 9px;background:var(--fill);color:var(--t2)}
+.entry .etime:empty::before{content:'時間／第幾節';color:var(--t1);opacity:.7;font-size:.9em;font-weight:400}
+.entry .edel{margin-left:auto;font-size:.76rem;color:var(--ink-faint);background:none;border:1px solid var(--border);
+  border-radius:6px;padding:3px 10px;cursor:pointer}
+.entry .etext{min-height:3.2em;border:1px solid var(--border);border-radius:8px;background:var(--fill);
+  padding:8px 10px;outline:none;margin-bottom:10px}
+.entry .etext:focus{background:var(--accent-soft)}
+.entry .etext:empty::before{content:'當時發生的狀況、你觀察到的重點……';color:var(--t1);opacity:.7;font-size:.9em}
+.ephotos{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.ephoto{position:relative;width:96px;height:96px;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:var(--fill)}
+.ephoto img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;display:block}
+.ephoto .pdel{position:absolute;top:2px;right:2px;background:rgba(20,30,45,.72);color:#fff;border:none;
+  border-radius:5px;font-size:.66rem;padding:2px 6px;cursor:pointer}
+.ephoto-add{width:96px;height:96px;border:1px dashed var(--border);border-radius:8px;display:flex;
+  align-items:center;justify-content:center;flex-direction:column;gap:3px;cursor:pointer;color:var(--t3);
+  background:var(--fill);font-size:.72rem;text-align:center;line-height:1.3}
+.ephoto-add:hover{background:var(--accent-soft)}
+
+#add-entry-btn{display:block;margin:14px auto 0;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;
+  border:1.5px dashed var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:10px 26px}
+
+.bigfill{border:1px solid var(--border);border-radius:8px;background:var(--fill);min-height:96px;padding:10px 14px;outline:none}
+.bigfill:focus{background:var(--accent-soft)}
+.bigfill:empty::before{content:attr(data-ph);color:var(--t1);opacity:.7;font-size:.85em;white-space:pre-line}
+
+.lightbox{position:fixed;inset:0;z-index:100;display:none;background:rgba(10,16,24,.88);
+  cursor:zoom-out;align-items:center;justify-content:center;padding:24px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:94vw;max-height:92vh;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);background:#fff}
+
+footer.doc{margin-top:34px;padding-top:16px;border-top:1px solid var(--border-soft);
+  font-size:.76rem;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer.doc a{color:var(--ink-faint)}
+
+@media print{
+  @page{size:A4;margin:14mm 13mm}
+  body{background:#fff;color:#111;font-size:11.5pt}
+  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn{display:none!important}
+  .sheet{max-width:none;margin:0;border:none;box-shadow:none;border-radius:0;padding:0;background:#fff}
+  .fill,.bigfill,.etext{background:#fff}
+  .fill:empty::before,.bigfill:empty::before,.etext:empty::before{content:''}
+  .entry{break-inside:avoid;background:#fff;border:1px solid #999}
+  .timerbox{border:1px solid #999;background:#fff}
+  table.meta th{background:#f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .lightbox{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="tl">數學教材教法・觀課紀錄表</span>
+  <span id="sync-status">尚未同步</span>
+  <button id="btn-clear" type="button">清空重填</button>
+  <button class="primary" type="button" onclick="window.print()">列印／存成 PDF</button>
+  <span class="hint">邊觀課邊寫：按「開始上課」計時，之後每新增一則記錄會自動帶入目前時間。內容每隔幾秒自動同步到伺服器，換手機、換電腦打開同一個網址（下面會出現）都接得回來，不怕本機瀏覽器資料遺失。</span>
+  <div class="share-box" id="share-box" style="display:none">
+    <span style="font-size:.78rem;color:var(--ink-faint)">同步網址（換裝置用這個打開）：</span>
+    <input id="share-url" readonly value="">
+    <button type="button" id="share-copy">複製</button>
+  </div>
+</div>
+
+<div class="sheet">
+<header class="doc">
+  <h1>觀課紀錄表</h1>
+  <div class="sub">現場邊看邊寫・不是總結評分</div>
+</header>
+
+<section class="part">
+  <table class="meta">
+    <tr>
+      <th>觀察者</th><td><div class="fill" contenteditable="true" data-key="observer" data-ph="姓名／學號"></div></td>
+      <th>觀察日期</th><td><div class="fill" contenteditable="true" data-key="date" data-ph="　年　月　日"></div></td>
+    </tr>
+    <tr>
+      <th>觀察對象</th><td><div class="fill" contenteditable="true" data-key="target" data-ph="教師／班級／科目，或活動名稱"></div></td>
+      <th>地點</th><td><div class="fill" contenteditable="true" data-key="place" data-ph=""></div></td>
+    </tr>
+  </table>
+</section>
+
+<section class="part">
+  <div class="part-head"><h2>上課計時</h2></div>
+  <p class="part-note">按一下開始，之後新增的每則記錄會自動帶入「上到第幾分鐘」，不用自己手動對時間。</p>
+  <div class="timerbox">
+    <button id="start-class-btn" type="button">▶ 開始上課</button>
+    <span id="timer-display">尚未開始</span>
+  </div>
+</section>
+
+<section class="part">
+  <div class="part-head"><h2>現場紀錄</h2></div>
+  <p class="part-note">每一則記一個時刻：當時的狀況，可附照片（照片會自動壓縮，夠看清楚狀況即可，不需要高畫質）。想到就記，不用等下課整理。</p>
+  <div class="entries" id="entries"></div>
+  <button id="add-entry-btn" type="button">＋ 新增一則記錄</button>
+</section>
+
+<section class="part">
+  <div class="part-head"><h2>整體印象（選填）</h2></div>
+  <div class="bigfill" contenteditable="true" data-key="overall" data-ph="觀察結束後，整堂課／整場活動留給你最深的印象是什麼？"></div>
+</section>
+
+<footer class="doc">
+  <span>數學教材教法課程用・搭配教學觀摩回饋表使用</span>
+  <span><a href="../">課程資源總覽</a></span>
+</footer>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-label="照片放大檢視">
+  <img id="lightbox-img" src="" alt="照片放大">
+</div>
+
+<script>
+(function(){
+  var API = 'https://www.emath.tw/classroom-notes/api';
+  var LKEY = 'classroom-notes-local-v1';   // 離線備援：{fields, entries, token}
+  var TKEY = 'classroom-notes-timer-v1';   // 計時起點（ms epoch）
+
+  var state = { fields:{}, entries:[], token:null };
+  var classStart = null, timerInterval = null;
+
+  // ---------- 本機離線備援（伺服器連不上時還是能繼續寫） ----------
+  function localSave(){
+    try{ localStorage.setItem(LKEY, JSON.stringify(state)); }catch(e){}
+  }
+  function localLoad(){
+    try{
+      var d = JSON.parse(localStorage.getItem(LKEY) || 'null');
+      if(d){ state.fields = d.fields || {}; state.entries = d.entries || []; state.token = d.token || null; }
+    }catch(e){}
+  }
+
+  // ---------- 計時 ----------
+  function fmtElapsed(ms){
+    var s = Math.max(0, Math.floor(ms/1000));
+    var hh = Math.floor(s/3600), mm = Math.floor((s%3600)/60), ss = s%60;
+    function pad(n){ return (n<10?'0':'')+n; }
+    return hh>0 ? (pad(hh)+':'+pad(mm)+':'+pad(ss)) : (pad(mm)+':'+pad(ss));
+  }
+  var timerDisplay = document.getElementById('timer-display');
+  var startBtn = document.getElementById('start-class-btn');
+  function tickDisplay(){
+    if(!classStart) return;
+    timerDisplay.textContent = '⏱ 已進行 ' + fmtElapsed(Date.now() - classStart);
+  }
+  function startTimer(ts){
+    classStart = ts;
+    try{ localStorage.setItem(TKEY, String(ts)); }catch(e){}
+    startBtn.textContent = '⟲ 重新開始計時';
+    startBtn.classList.add('running');
+    timerDisplay.classList.add('running');
+    clearInterval(timerInterval);
+    timerInterval = setInterval(tickDisplay, 1000);
+    tickDisplay();
+  }
+  startBtn.addEventListener('click', function(){
+    if(classStart && !confirm('已經在計時中，確定要從現在重新計時嗎？（之前寫的記錄不會被刪除或更動）')) return;
+    startTimer(Date.now());
+  });
+  (function initTimer(){
+    try{
+      var saved = localStorage.getItem(TKEY);
+      if(saved) startTimer(parseInt(saved, 10));
+    }catch(e){}
+  })();
+
+  // ---------- 照片：壓縮到夠看清楚狀況就好，不求高畫質 ----------
+  function addPhotoFile(entryIdx, file, cb){
+    var img = new Image();
+    img.onload = function(){
+      var MAX = 900, w = img.width, h = img.height;
+      if(w > MAX || h > MAX){ var r = MAX/Math.max(w,h); w = Math.round(w*r); h = Math.round(h*r); }
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      state.entries[entryIdx].photos.push(c.toDataURL('image/jpeg', 0.6));
+      localSave(); render(); scheduleSync();
+      URL.revokeObjectURL(img.src);
+      if(cb) cb();
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  // ---------- 畫面 ----------
+  var lb = document.getElementById('lightbox'), lbimg = document.getElementById('lightbox-img');
+  function openLightbox(src){ lbimg.src = src; lb.classList.add('open'); }
+  lb.addEventListener('click', function(){ lb.classList.remove('open'); lbimg.src=''; });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ lb.classList.remove('open'); lbimg.src=''; } });
+
+  document.querySelectorAll('[data-key]').forEach(function(el){
+    el.addEventListener('input', function(){
+      state.fields[el.dataset.key] = el.innerHTML;
+      localSave(); scheduleSync();
+    });
+  });
+
+  var entriesEl = document.getElementById('entries');
+  function render(){
+    entriesEl.innerHTML = '';
+    state.entries.forEach(function(en, i){
+      var card = document.createElement('div');
+      card.className = 'entry';
+
+      var erow = document.createElement('div'); erow.className = 'erow';
+      var etime = document.createElement('div'); etime.className = 'etime'; etime.contentEditable = 'true';
+      etime.innerHTML = en.time || '';
+      etime.addEventListener('input', function(){ state.entries[i].time = etime.innerHTML; localSave(); scheduleSync(); });
+      var edel = document.createElement('button'); edel.type='button'; edel.className='edel'; edel.textContent='刪除本則';
+      edel.addEventListener('click', function(){ state.entries.splice(i,1); localSave(); render(); scheduleSync(); });
+      erow.appendChild(etime); erow.appendChild(edel);
+
+      var etext = document.createElement('div'); etext.className = 'etext'; etext.contentEditable = 'true';
+      etext.innerHTML = en.text || '';
+      etext.addEventListener('input', function(){ state.entries[i].text = etext.innerHTML; localSave(); scheduleSync(); });
+
+      var ephotos = document.createElement('div'); ephotos.className = 'ephotos';
+      (en.photos||[]).forEach(function(src, pi){
+        var box = document.createElement('div'); box.className = 'ephoto';
+        var img = document.createElement('img'); img.src = src; img.alt = '觀課照片';
+        img.addEventListener('click', function(){ openLightbox(src); });
+        var pdel = document.createElement('button'); pdel.type='button'; pdel.className='pdel'; pdel.textContent='移除';
+        pdel.addEventListener('click', function(ev){ ev.stopPropagation(); state.entries[i].photos.splice(pi,1); localSave(); render(); scheduleSync(); });
+        box.appendChild(img); box.appendChild(pdel); ephotos.appendChild(box);
+      });
+      var addBox = document.createElement('label'); addBox.className = 'ephoto-add';
+      addBox.innerHTML = '📷<span>加照片</span>';
+      var finput = document.createElement('input'); finput.type='file'; finput.accept='image/*'; finput.multiple=true; finput.style.display='none';
+      finput.addEventListener('change', function(){
+        Array.prototype.forEach.call(finput.files, function(f){ addPhotoFile(i, f); });
+        finput.value = '';
+      });
+      addBox.appendChild(finput);
+      ephotos.appendChild(addBox);
+
+      card.appendChild(erow); card.appendChild(etext); card.appendChild(ephotos);
+      entriesEl.appendChild(card);
+    });
+  }
+
+  document.getElementById('add-entry-btn').addEventListener('click', function(){
+    var t = classStart ? fmtElapsed(Date.now() - classStart) : '';
+    state.entries.push({time:t, text:'', photos:[]});
+    localSave(); render(); scheduleSync();
+    var cards = entriesEl.querySelectorAll('.entry');
+    var last = cards[cards.length-1];
+    if(last){ last.scrollIntoView({behavior:'smooth', block:'center'}); var et = last.querySelector('.etext'); if(et) et.focus(); }
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', function(){
+    if(!confirm('確定清空所有已填寫的內容（含照片、全部記錄與計時）？伺服器上已同步的版本不會自動刪除。')) return;
+    try{ localStorage.removeItem(LKEY); localStorage.removeItem(TKEY); }catch(e){}
+    state = { fields:{}, entries:[], token:null };
+    document.querySelectorAll('[data-key]').forEach(function(el){ el.innerHTML = ''; });
+    classStart = null; clearInterval(timerInterval);
+    startBtn.textContent = '▶ 開始上課'; startBtn.classList.remove('running'); timerDisplay.classList.remove('running');
+    timerDisplay.textContent = '尚未開始';
+    document.getElementById('share-box').style.display = 'none';
+    render(); setSyncStatus('尚未同步', false);
+  });
+
+  // ---------- 同步到伺服器（debounce） ----------
+  var syncStatusEl = document.getElementById('sync-status');
+  function setSyncStatus(text, isErr){
+    syncStatusEl.textContent = text;
+    syncStatusEl.classList.toggle('err', !!isErr);
+  }
+  var syncTimer = null;
+  function scheduleSync(){
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(doSync, 1500);
+  }
+  var syncing = false, pendingAgain = false;
+  function doSync(){
+    var name = (state.fields.observer || '').replace(/<[^>]*>/g, '').trim();
+    if(!name){ setSyncStatus('請先填「觀察者」姓名才能同步', true); return; }
+    if(syncing){ pendingAgain = true; return; }
+    syncing = true;
+    setSyncStatus('同步中…');
+    fetch(API + '/save', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: state.token, sid: name, name: name, fields: state.fields, entries: state.entries })
+    }).then(function(r){ return r.json(); }).then(function(d){
+      syncing = false;
+      if(!d.ok){ setSyncStatus('同步失敗：' + (d.error||'未知錯誤'), true); return; }
+      state.token = d.token; localSave();
+      document.getElementById('share-url').value = d.share;
+      document.getElementById('share-box').style.display = 'flex';
+      setSyncStatus('✓ 已同步（' + d.time + '）' + (d.truncated ? '・照片已達上限，較早的照片可能被忽略' : ''));
+      if(pendingAgain){ pendingAgain = false; scheduleSync(); }
+    }).catch(function(){
+      syncing = false;
+      setSyncStatus('⚠️ 連不上伺服器，內容仍保留在本機，待會網路恢復會自動重試', true);
+      scheduleSync();
+    });
+  }
+  document.getElementById('share-copy').addEventListener('click', function(){
+    var inp = document.getElementById('share-url');
+    inp.select(); inp.setSelectionRange(0, 99999);
+    try{ document.execCommand('copy'); }catch(e){}
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(inp.value).catch(function(){}); }
+  });
+
+  // ---------- 載入 ----------
+  var NOTE_TOKEN = new URLSearchParams(location.search).get('note');
+  function applyState(){
+    document.querySelectorAll('[data-key]').forEach(function(el){
+      var v = state.fields[el.dataset.key];
+      if(v !== undefined) el.innerHTML = v;
+    });
+    render();
+  }
+  if(NOTE_TOKEN && /^[0-9a-f]{10}$/.test(NOTE_TOKEN)){
+    setSyncStatus('讀取中…');
+    fetch(API + '/note/' + NOTE_TOKEN).then(function(r){ return r.json(); }).then(function(d){
+      if(!d.ok){ setSyncStatus('找不到這份紀錄，網址可能有誤', true); localLoad(); applyState(); return; }
+      state.token = NOTE_TOKEN; state.fields = d.fields || {}; state.entries = d.entries || [];
+      localSave(); applyState();
+      document.getElementById('share-url').value = location.origin + location.pathname + '?note=' + NOTE_TOKEN;
+      document.getElementById('share-box').style.display = 'flex';
+      setSyncStatus('✓ 已讀取（最後更新 ' + d.time + '）');
+    }).catch(function(){ setSyncStatus('⚠️ 連不上伺服器，改用本機備份', true); localLoad(); applyState(); });
+  } else {
+    localLoad(); applyState();
+    if(state.token){
+      document.getElementById('share-url').value = location.origin + location.pathname + '?note=' + state.token;
+      document.getElementById('share-box').style.display = 'flex';
+    }
+  }
+})();
+</script>
+</body>
+</html>
