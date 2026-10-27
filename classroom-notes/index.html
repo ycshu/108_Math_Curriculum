@@ -73,6 +73,8 @@ section.part{margin-bottom:26px}
   border:2px solid var(--t1);background:var(--surface);color:var(--t1);border-radius:999px;padding:9px 20px;
   margin-left:auto}
 #lap-btn:active{background:var(--t1);color:#fff}
+#end-btn{display:none;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--ink-soft);border-radius:999px;padding:9px 18px}
 
 .entries{display:flex;flex-direction:column;gap:16px}
 .entry{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--surface-2);position:relative}
@@ -108,6 +110,17 @@ section.part{margin-bottom:26px}
 .lightbox.open{display:flex}
 .lightbox img{max-width:94vw;max-height:92vh;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);background:#fff}
 
+.confirm-modal{position:fixed;inset:0;z-index:110;display:none;background:rgba(10,16,24,.55);
+  align-items:center;justify-content:center;padding:20px}
+.confirm-modal.open{display:flex}
+.confirm-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:22px 26px;max-width:380px;width:100%;box-shadow:0 16px 48px rgba(0,0,0,.35)}
+.confirm-card p{margin:0 0 18px;font-size:.92rem;line-height:1.6}
+.confirm-card .row{display:flex;gap:10px;justify-content:flex-end}
+.confirm-card button{font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:8px 18px}
+.confirm-card button.go{background:var(--t2);border-color:var(--t2);color:#fff}
+
 footer.doc{margin-top:34px;padding-top:16px;border-top:1px solid var(--border-soft);
   font-size:.76rem;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 footer.doc a{color:var(--ink-faint)}
@@ -115,14 +128,14 @@ footer.doc a{color:var(--ink-faint)}
 @media print{
   @page{size:A4;margin:14mm 13mm}
   body{background:#fff;color:#111;font-size:11.5pt}
-  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn,#lap-btn{display:none!important}
+  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn,#lap-btn,#end-btn{display:none!important}
   .sheet{max-width:none;margin:0;border:none;box-shadow:none;border-radius:0;padding:0;background:#fff}
   .fill,.bigfill,.etext{background:#fff}
   .fill:empty::before,.bigfill:empty::before,.etext:empty::before{content:''}
   .entry{break-inside:avoid;background:#fff;border:1px solid #999}
   .timerbox{border:1px solid #999;background:#fff}
   table.meta th{background:#f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .lightbox{display:none!important}
+  .lightbox,.confirm-modal{display:none!important}
 }
 </style>
 </head>
@@ -167,6 +180,7 @@ footer.doc a{color:var(--ink-faint)}
     <button id="start-class-btn" type="button">▶ 開始上課</button>
     <span id="timer-display">尚未開始</span>
     <button id="lap-btn" type="button">⏺ 記一個時間點</button>
+    <button id="end-btn" type="button">■ 結束上課</button>
   </div>
 </section>
 
@@ -190,6 +204,16 @@ footer.doc a{color:var(--ink-faint)}
 
 <div class="lightbox" id="lightbox" role="dialog" aria-label="照片放大檢視">
   <img id="lightbox-img" src="" alt="照片放大">
+</div>
+
+<div class="confirm-modal" id="confirm-modal" role="dialog" aria-label="確認重新計時">
+  <div class="confirm-card">
+    <p>已經在計時中，確定要從現在重新開始計時嗎？<br>（之前寫的記錄不會被刪除或更動，只是重設目前的計時起點）</p>
+    <div class="row">
+      <button type="button" id="confirm-cancel">取消</button>
+      <button type="button" class="go" id="confirm-go">確定重新計時</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -225,20 +249,45 @@ footer.doc a{color:var(--ink-faint)}
     if(!classStart) return;
     timerDisplay.textContent = '⏱ 已進行 ' + fmtElapsed(Date.now() - classStart);
   }
+  var lapBtn = document.getElementById('lap-btn'), endBtn = document.getElementById('end-btn');
   function startTimer(ts){
     classStart = ts;
     try{ localStorage.setItem(TKEY, String(ts)); }catch(e){}
     startBtn.textContent = '⟲ 重新開始計時';
     startBtn.classList.add('running');
     timerDisplay.classList.add('running');
-    document.getElementById('lap-btn').style.display = 'inline-block';
+    lapBtn.style.display = 'inline-block';
+    endBtn.style.display = 'inline-block';
     clearInterval(timerInterval);
     timerInterval = setInterval(tickDisplay, 1000);
     tickDisplay();
   }
+  function endTimer(){
+    if(!classStart) return;
+    var final = fmtElapsed(Date.now() - classStart);
+    clearInterval(timerInterval); timerInterval = null;
+    classStart = null;
+    try{ localStorage.removeItem(TKEY); }catch(e){}
+    timerDisplay.textContent = '⏹ 已結束，共 ' + final;
+    timerDisplay.classList.remove('running');
+    startBtn.textContent = '▶ 開始上課';
+    startBtn.classList.remove('running');
+    lapBtn.style.display = 'none';
+    endBtn.style.display = 'none';
+  }
+  var confirmModal = document.getElementById('confirm-modal');
   startBtn.addEventListener('click', function(){
+    if(classStart){ confirmModal.classList.add('open'); return; }
     startTimer(Date.now());
   });
+  document.getElementById('confirm-cancel').addEventListener('click', function(){
+    confirmModal.classList.remove('open');
+  });
+  document.getElementById('confirm-go').addEventListener('click', function(){
+    confirmModal.classList.remove('open');
+    startTimer(Date.now());
+  });
+  endBtn.addEventListener('click', endTimer);
   (function initTimer(){
     try{
       var saved = localStorage.getItem(TKEY);
@@ -337,7 +386,8 @@ footer.doc a{color:var(--ink-faint)}
     classStart = null; clearInterval(timerInterval);
     startBtn.textContent = '▶ 開始上課'; startBtn.classList.remove('running'); timerDisplay.classList.remove('running');
     timerDisplay.textContent = '尚未開始';
-    document.getElementById('lap-btn').style.display = 'none';
+    lapBtn.style.display = 'none';
+    endBtn.style.display = 'none';
     document.getElementById('share-box').style.display = 'none';
     render(); setSyncStatus('尚未同步', false);
   });
