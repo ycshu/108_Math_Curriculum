@@ -69,6 +69,10 @@ section.part{margin-bottom:26px}
 #start-class-btn.running{background:var(--surface);color:var(--t2);border:1.5px solid var(--t2)}
 #timer-display{font-family:monospace;font-size:1.3rem;font-weight:700;color:var(--ink-soft)}
 #timer-display.running{color:var(--t2)}
+#lap-btn{display:none;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;
+  border:2px solid var(--t1);background:var(--surface);color:var(--t1);border-radius:999px;padding:9px 20px;
+  margin-left:auto}
+#lap-btn:active{background:var(--t1);color:#fff}
 
 .entries{display:flex;flex-direction:column;gap:16px}
 .entry{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--surface-2);position:relative}
@@ -111,7 +115,7 @@ footer.doc a{color:var(--ink-faint)}
 @media print{
   @page{size:A4;margin:14mm 13mm}
   body{background:#fff;color:#111;font-size:11.5pt}
-  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn{display:none!important}
+  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn,#lap-btn{display:none!important}
   .sheet{max-width:none;margin:0;border:none;box-shadow:none;border-radius:0;padding:0;background:#fff}
   .fill,.bigfill,.etext{background:#fff}
   .fill:empty::before,.bigfill:empty::before,.etext:empty::before{content:''}
@@ -162,6 +166,7 @@ footer.doc a{color:var(--ink-faint)}
   <div class="timerbox">
     <button id="start-class-btn" type="button">▶ 開始上課</button>
     <span id="timer-display">尚未開始</span>
+    <button id="lap-btn" type="button">⏺ 記一個時間點</button>
   </div>
 </section>
 
@@ -226,6 +231,7 @@ footer.doc a{color:var(--ink-faint)}
     startBtn.textContent = '⟲ 重新開始計時';
     startBtn.classList.add('running');
     timerDisplay.classList.add('running');
+    document.getElementById('lap-btn').style.display = 'inline-block';
     clearInterval(timerInterval);
     timerInterval = setInterval(tickDisplay, 1000);
     tickDisplay();
@@ -313,14 +319,16 @@ footer.doc a{color:var(--ink-faint)}
     });
   }
 
-  document.getElementById('add-entry-btn').addEventListener('click', function(){
+  function addEntryNow(){
     var t = classStart ? fmtElapsed(Date.now() - classStart) : '';
     state.entries.push({time:t, text:'', photos:[]});
     localSave(); render(); scheduleSync();
     var cards = entriesEl.querySelectorAll('.entry');
     var last = cards[cards.length-1];
     if(last){ last.scrollIntoView({behavior:'smooth', block:'center'}); var et = last.querySelector('.etext'); if(et) et.focus(); }
-  });
+  }
+  document.getElementById('add-entry-btn').addEventListener('click', addEntryNow);
+  document.getElementById('lap-btn').addEventListener('click', addEntryNow);
 
   document.getElementById('btn-clear').addEventListener('click', function(){
     if(!confirm('確定清空所有已填寫的內容（含照片、全部記錄與計時）？伺服器上已同步的版本不會自動刪除。')) return;
@@ -330,6 +338,7 @@ footer.doc a{color:var(--ink-faint)}
     classStart = null; clearInterval(timerInterval);
     startBtn.textContent = '▶ 開始上課'; startBtn.classList.remove('running'); timerDisplay.classList.remove('running');
     timerDisplay.textContent = '尚未開始';
+    document.getElementById('lap-btn').style.display = 'none';
     document.getElementById('share-box').style.display = 'none';
     render(); setSyncStatus('尚未同步', false);
   });
