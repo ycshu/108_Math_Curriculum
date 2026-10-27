@@ -237,7 +237,6 @@ footer.doc a{color:var(--ink-faint)}
     tickDisplay();
   }
   startBtn.addEventListener('click', function(){
-    if(classStart && !confirm('已經在計時中，確定要從現在重新計時嗎？（之前寫的記錄不會被刪除或更動）')) return;
     startTimer(Date.now());
   });
   (function initTimer(){
