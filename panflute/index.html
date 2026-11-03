@@ -47,6 +47,9 @@ svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-web
 table.ratio{border-collapse:collapse;margin:6px 0 4px;font-size:.86rem}
 table.ratio td,table.ratio th{border:1px solid var(--border);padding:3px 10px;text-align:center}
 table.ratio th{background:var(--surface-2);font-weight:600}
+.today{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;background:var(--surface);border:1px solid var(--border);
+  border-left:4px solid var(--t1);border-radius:10px;padding:8px 14px;margin:0 0 12px;font-size:.95rem}
+.today #w-info b{color:var(--t1);font-size:1.15rem}
 footer{margin-top:18px;font-size:.78rem;color:var(--ink-soft)}
 footer a{color:var(--ink-soft)}
 </style>
@@ -55,6 +58,7 @@ footer a{color:var(--ink-soft)}
 <div class="wrap">
   <h1>吸管排笛模擬器</h1>
   <p class="sub">按 ♪ 吹奏・拖曳吸管換位置・拖曳棉花改變空氣柱長度</p>
+  <div class="today"><span id="w-info">正在抓今日氣溫⋯</span><button id="b-geo" type="button">改用我所在的位置</button></div>
 
   <div class="tools">
     <button class="primary" id="b-scale" type="button">排成 Do Re Mi</button>
@@ -64,7 +68,9 @@ footer a{color:var(--ink-soft)}
     <button id="b-play" type="button">由左到右吹一遍</button>
     <label class="ck"><input type="checkbox" id="c-marks">顯示 3/4、2/3、1/2 刻度</label>
     <label class="ck"><input type="checkbox" id="c-preview" checked>放開棉花時試聽</label>
-    <label class="ck">基準吸管長 <input type="number" id="n-cm" value="16" min="5" max="40" step="0.5"> 公分</label>
+    <label class="ck">基準空氣柱 <input type="number" id="n-cm" value="16.6" min="4" max="20.5" step="0.1"> 公分</label>
+    <label class="ck">氣溫 <input type="number" id="n-temp" value="28" min="0" max="40" step="1"> °C</label>
+    <span id="v-info" style="font-size:.82rem;color:var(--t2)"></span>
   </div>
 
   <div class="stage"><svg id="svg" viewBox="0 0 1000 690" aria-label="八支吸管排笛"></svg></div>
@@ -72,13 +78,15 @@ footer a{color:var(--ink-soft)}
 
   <div class="note">
     <h3>長度和音高的關係</h3>
-    <p>吹氣時，發出聲音的是<b>吸管口到棉花之間的那段空氣</b>。空氣柱越短，聲音越高：<b>長度變成幾分之幾，頻率就變成它的倒數倍</b>。</p>
+    <p>吹氣時，發出聲音的是<b>吸管口到棉花之間的那段空氣</b>。一端開、一端被棉花塞住，是「半閉管」，它的基本頻率是</p>
+    <p style="text-align:center;font-size:1.05rem"><b>f = v ÷ (4 × L)</b>　　v = 331.3 + 0.606 × 氣溫（°C）</p>
+    <p>L 是空氣柱長度（公尺），v 是聲速。27～30°C 時聲速約 347.7～349.5 公尺／秒。因為 f 跟 L 成反比，<b>長度變成幾分之幾，頻率就變成它的倒數倍</b>：</p>
     <table class="ratio">
       <tr><th>長度（跟基準比）</th><td>1</td><td>3/4</td><td>2/3</td><td>1/2</td></tr>
       <tr><th>頻率變成</th><td>1 倍</td><td>4/3 倍</td><td>3/2 倍</td><td>2 倍</td></tr>
-      <tr><th>音程</th><td>基準音 C3</td><td>4 度（F3）</td><td>5 度（G3）</td><td>8 度（C4）</td></tr>
+      <tr><th>音程</th><td>基準音（Do）</td><td>4 度（Fa）</td><td>5 度（Sol）</td><td>8 度（高音 Do）</td></tr>
     </table>
-    <p>「排成 Do Re Mi」用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。</p>
+    <p>「排成 Do Re Mi」用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。畫面上的吸管照珍奶粗吸管 22 公分的比例畫，棉花最深可以推到 20.5 公分。基準那支的空氣柱 16.6 公分，在 28°C 剛好是 C5（Do）；棉花往下推、比基準更長，就能吹出比 C5 更低的音。</p>
   </div>
   <footer>數學教材教法課程用・搭配「神奇吸管排笛」教案・<a href="../">課程資源總覽</a></footer>
 </div>
@@ -89,15 +97,17 @@ footer a{color:var(--ink-soft)}
   var svg = document.getElementById('svg');
   var W = 1000, H = 690;
   var TOP = 120;            // 預設吸管口位置
-  var L0 = 400;             // 基準空氣柱長度（像素）
-  var TW = 64;              // 吸管寬
-  var CH = 40;              // 棉花厚度
-  var TH = L0 + CH + 16;    // 吸管總長
-  var MINR = 0.3;           // 最短可到基準的 0.3
+  // 依實際比例畫：珍奶粗吸管 22 公分，1 公分 = 20 像素
+  var PX = 20, STRAW_CM = 22, PLUG_CM = 1.5;
+  var MAXCM = STRAW_CM - PLUG_CM, MINCM = 4;   // 空氣柱可調範圍（公分）
+  var TW = 64;              // 吸管寬（畫面上加粗，方便操作）
+  var CH = PLUG_CM * PX;    // 棉花厚度
+  var TH = STRAW_CM * PX;   // 吸管總長
+  function L0(){ return baseCm() * PX; }   // 基準空氣柱長度（像素）
   var F0 = 130.8128;        // C3
   var HUES = [350, 25, 48, 140, 190, 215, 265, 300];
   var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2];
-  var KEY = 'panflute-state-v1';
+  var KEY = 'panflute-state-v2';
 
   var straws = [];
   function defaults(){
@@ -119,12 +129,14 @@ footer a{color:var(--ink-soft)}
     var m = 48 + 12*Math.log2(f/F0), n = Math.round(m), c = Math.round((m-n)*100);
     return {name: NAMES[((n%12)+12)%12] + (Math.floor(n/12)-1), cents: c};
   }
-  var FRACS = [[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
+  var FRACS = [[6,5],[9,8],[16,15],[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
   function fracText(r){
     for(var i=0;i<FRACS.length;i++){ var v = FRACS[i][0]/FRACS[i][1]; if(Math.abs(r-v)/v < 0.006) return FRACS[i][0]===1&&FRACS[i][1]===1 ? '1（基準）' : '≈ '+FRACS[i][0]+'/'+FRACS[i][1]; }
     return r.toFixed(3);
   }
-  function freqOf(s){ return F0 / s.r; }
+  function speed(){ var T = parseFloat(document.getElementById('n-temp').value); if(isNaN(T)) T = 28; return 331.3 + 0.606*T; }
+  function baseCm(){ var c = parseFloat(document.getElementById('n-cm').value); if(!(c > 0)) c = 16.6; return Math.max(MINCM, Math.min(MAXCM, c)); }
+  function freqOf(s){ return speed() / (4 * s.r * baseCm() / 100); }
 
   // ---------- 聲音合成 ----------
   var ac = null, noiseBuf = null;
@@ -201,7 +213,7 @@ footer a{color:var(--ink-soft)}
 
     straws.forEach(function(s){
       var g = el('g', {transform:'translate('+s.x+','+s.y+')', 'data-id':s.id}, svg);
-      var Lpx = s.r * L0, f = freqOf(s), nt = noteOf(f);
+      var Lpx = s.r * L0(), f = freqOf(s), nt = noteOf(f);
       var col = 'hsl('+s.hue+',70%,55%)';
       // 空氣柱（吹奏時亮起來）
       el('rect', {x:5, y:2, width:TW-10, height:Lpx-2, rx:6,
@@ -213,7 +225,7 @@ footer a{color:var(--ink-soft)}
       // 刻度
       if(showMarks){
         [[3/4,'3/4'],[2/3,'2/3'],[1/2,'1/2']].forEach(function(m){
-          var yy = m[0]*L0;
+          var yy = m[0]*L0();
           el('line', {x1:-8, x2:TW+2, y1:yy, y2:yy, stroke:'#c0392b', 'stroke-width':1.5, 'stroke-dasharray':'4 3', 'pointer-events':'none', opacity:.7}, g);
           var tx = el('text', {x:-10, y:yy+4, 'text-anchor':'end', 'font-size':12, fill:'#c0392b', 'pointer-events':'none'}, g); tx.textContent = m[1];
         });
@@ -222,10 +234,10 @@ footer a{color:var(--ink-soft)}
       if(drag && drag.kind === 'cotton' && drag.s === s && drag.snap){
         var fr = drag.snap, bx = TW + 12, gx = TW + 30;
         el('line', {x1:-14, x2:TW+40, y1:Lpx, y2:Lpx, stroke:'#e8590c', 'stroke-width':2.5, 'pointer-events':'none'}, g);
-        // 全長（灰）與目前長度（橘）兩條尺
-        el('line', {x1:gx, x2:gx, y1:0, y2:L0, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g);
-        [0, L0].forEach(function(yy){ el('line', {x1:gx-6, x2:gx+6, y1:yy, y2:yy, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g); });
-        var tf = el('text', {x:gx+8, y:L0-6, 'font-size':13, fill:'#6b7682', 'pointer-events':'none'}, g); tf.textContent = '全長';
+        // 基準長（灰）與目前長度（橘）兩條尺
+        el('line', {x1:gx, x2:gx, y1:0, y2:L0(), stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g);
+        [0, L0()].forEach(function(yy){ el('line', {x1:gx-6, x2:gx+6, y1:yy, y2:yy, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g); });
+        var tf = el('text', {x:gx+8, y:L0()-6, 'font-size':13, fill:'#6b7682', 'pointer-events':'none'}, g); tf.textContent = '基準長';
         el('line', {x1:bx, x2:bx, y1:0, y2:Lpx, stroke:'#e8590c', 'stroke-width':3.5, 'pointer-events':'none'}, g);
         [0, Lpx].forEach(function(yy){ el('line', {x1:bx-7, x2:bx+7, y1:yy, y2:yy, stroke:'#e8590c', 'stroke-width':3, 'pointer-events':'none'}, g); });
         var lab = '長度的 ' + fr, lw = 20 + lab.length*13;
@@ -241,7 +253,7 @@ footer a{color:var(--ink-soft)}
         var lk = el('text', {x:TW/2, y:Lpx+25, 'text-anchor':'middle', 'font-size':15, 'pointer-events':'none'}, cg); lk.textContent = '🔒';
       }
       // 水滴
-      el('ellipse', {cx:TW/2, cy:Lpx+CH+6, rx:9, ry:4, fill:'#9cc9f0', opacity:.75, 'pointer-events':'none'}, g);
+      if(Lpx + CH + 12 < TH) el('ellipse', {cx:TW/2, cy:Lpx+CH+6, rx:9, ry:4, fill:'#9cc9f0', opacity:.75, 'pointer-events':'none'}, g);
       // 吸管口
       el('ellipse', {cx:TW/2, cy:0, rx:TW/2, ry:7, fill:'hsla('+s.hue+',50%,35%,.35)', stroke:col, 'stroke-width':2.5, 'pointer-events':'none'}, g);
       // 音符按鈕
@@ -256,7 +268,7 @@ footer a{color:var(--ink-soft)}
       if(nt.cents !== 0){ var ts = el('tspan', {'font-size':12, 'font-weight':500, dx:2, fill:'#7a4bc0'}, t1); ts.textContent = (nt.cents>0?'+':'')+nt.cents; }
       var t2 = el('text', {x:TW/2, y:by+20, 'text-anchor':'middle', 'font-size':13, fill:'#1f7a52', 'pointer-events':'none'}, g);
       t2.textContent = f.toFixed(1) + ' Hz';
-      var cm = parseFloat(document.getElementById('n-cm').value) || 16;
+      var cm = baseCm();
       var t3 = el('text', {x:TW/2, y:by+38, 'text-anchor':'middle', 'font-size':13, fill:'#b3541e', 'pointer-events':'none'}, g);
       t3.textContent = (s.ref ? '基準 ' : '') + fracText(s.r);
       var t4 = el('text', {x:TW/2, y:by+55, 'text-anchor':'middle', 'font-size':12, fill:'var(--ink-soft)', 'pointer-events':'none'}, g);
@@ -289,7 +301,7 @@ footer a{color:var(--ink-soft)}
     if(role === 'note'){ drag = {kind:'note', s:s}; play(s); return; }
     if(role === 'cotton' && !s.ref){
       straws.splice(straws.indexOf(s),1); straws.push(s);
-      drag = {kind:'cotton', s:s, oy:p.y - (s.y + s.r*L0), snap:snapOf(s.r)}; render(); return;
+      drag = {kind:'cotton', s:s, oy:p.y - (s.y + s.r*L0()), snap:snapOf(s.r)}; render(); return;
     }
     // 把拿起來的吸管放到最上層
     straws.splice(straws.indexOf(s),1); straws.push(s);
@@ -302,7 +314,7 @@ footer a{color:var(--ink-soft)}
       s.x = Math.max(16, Math.min(W - TW - 6, p.x - drag.ox));
       s.y = Math.max(78, Math.min(H - TH - 70, p.y - drag.oy));
     } else {
-      var r = Math.max(MINR, Math.min(1, (p.y - drag.oy - s.y) / L0));
+      var r = Math.max(MINCM/baseCm(), Math.min(MAXCM/baseCm(), (p.y - drag.oy - s.y) / L0()));
       var sn = nearSnap(r);
       if(sn){ r = sn.v; drag.snap = sn.t; } else drag.snap = null;
       s.r = r;
@@ -311,7 +323,7 @@ footer a{color:var(--ink-soft)}
   });
   // 接近整數比就吸附過去
   // [分子, 分母, 吸附範圍]：1/2、2/3、3/4 範圍大，好對準
-  var SNAPS = [[1,2,.022],[2,3,.022],[3,4,.022],[4,5,.01],[3,5,.01],[8,9,.01],[8,15,.01],[5,6,.01],[2,5,.01],[1,3,.01]];
+  var SNAPS = [[1,2,.022],[2,3,.022],[3,4,.022],[4,5,.01],[3,5,.01],[8,9,.01],[8,15,.01],[5,6,.01],[2,5,.01],[1,3,.01],[9,8,.01],[6,5,.01]];
   function nearSnap(r){
     for(var i=0;i<SNAPS.length;i++){ var v = SNAPS[i][0]/SNAPS[i][1]; if(Math.abs(r - v) < SNAPS[i][2]) return {v:v, t:SNAPS[i][0]+'/'+SNAPS[i][1]}; }
     return null;
@@ -352,7 +364,36 @@ footer a{color:var(--ink-soft)}
     orderLR().forEach(function(s, i){ setTimeout(function(){ play(s); setTimeout(function(){ release(s); }, 380); }, i*520); });
   });
   document.getElementById('c-marks').addEventListener('change', function(e){ showMarks = e.target.checked; render(); });
-  document.getElementById('n-cm').addEventListener('input', render);
+  function vinfo(){ var T = parseFloat(document.getElementById('n-temp').value); if(isNaN(T)) T = 28; document.getElementById('v-info').textContent = '聲速 v = 331.3 + 0.606×' + T + ' = ' + speed().toFixed(1) + ' m/s'; }
+  ['n-cm','n-temp'].forEach(function(id){ document.getElementById(id).addEventListener('input', function(){ vinfo(); render(); }); });
+  vinfo();
+
+  // ---------- 今日氣溫（Open-Meteo，免金鑰） ----------
+  var wInfo = document.getElementById('w-info'), tempEl = document.getElementById('n-temp');
+  function fetchTemp(lat, lon, place){
+    wInfo.textContent = '正在抓今日氣溫⋯';
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(3) + '&longitude=' + lon.toFixed(3) + '&current=temperature_2m&daily=temperature_2m_max,temperature_2m_min&forecast_days=1&timezone=Asia%2FTaipei')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var t = d.current.temperature_2m, tm = String(d.current.time).slice(11, 16);
+        tempEl.value = t; vinfo(); render();
+        var lo = d.daily && d.daily.temperature_2m_min ? d.daily.temperature_2m_min[0] : null, hi = d.daily && d.daily.temperature_2m_max ? d.daily.temperature_2m_max[0] : null;
+        wInfo.innerHTML = '今日氣溫（' + place + '）' + (lo !== null ? '：' + lo + '～' + hi + '°C' : '') + '　現在（' + tm + '）<b>' + t + '°C</b>　→　聲速 ' + speed().toFixed(1) + ' m/s';
+      })
+      .catch(function(){ wInfo.textContent = '抓不到今日氣溫，先用 ' + tempEl.value + '°C 計算（可以在上面自己改）'; });
+  }
+  // 預設台南成大；如果這個人之前已經允許過定位，就直接用他的位置（不跳出詢問）
+  fetchTemp(22.997, 120.217, '台南成大');
+  if(navigator.permissions && navigator.geolocation){
+    navigator.permissions.query({name:'geolocation'}).then(function(st){
+      if(st.state === 'granted') navigator.geolocation.getCurrentPosition(function(pos){ fetchTemp(pos.coords.latitude, pos.coords.longitude, '你所在的位置'); });
+    }).catch(function(){});
+  }
+  document.getElementById('b-geo').addEventListener('click', function(){
+    if(!navigator.geolocation){ wInfo.textContent = '這個瀏覽器不能取得位置，仍用台南的氣溫'; return; }
+    navigator.geolocation.getCurrentPosition(function(pos){ fetchTemp(pos.coords.latitude, pos.coords.longitude, '你所在的位置'); },
+      function(){ wInfo.textContent = '沒有取得位置權限，仍用台南的氣溫'; fetchTemp(22.997, 120.217, '台南成大'); });
+  });
 
   if(!load()) defaults();
   render();
