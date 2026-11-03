@@ -62,7 +62,8 @@ footer a{color:var(--ink-soft)}
 
   <div class="tools">
     <button class="primary" id="b-scale" type="button">排成 Do Re Mi</button>
-    <button id="b-equal" type="button">全部跟基準一樣長</button>
+    <button class="primary" id="b-pyth" type="button">五度相生排法</button>
+    <button id="b-equal" type="button">全部跟長度基準一樣長</button>
     <button id="b-sort" type="button">依長短排好</button>
     <button id="b-align" type="button">吸管口對齊</button>
     <button id="b-play" type="button">由左到右吹一遍</button>
@@ -86,6 +87,8 @@ footer a{color:var(--ink-soft)}
       <tr><th>頻率變成</th><td>1 倍</td><td>4/3 倍</td><td>3/2 倍</td><td>2 倍</td></tr>
       <tr><th>音程</th><td>基準音（Do）</td><td>4 度（Fa）</td><td>5 度（Sol）</td><td>8 度（高音 Do）</td></tr>
     </table>
+    <p><b>換一支當「長度基準」</b>：按吸管上方的「設為基準」，比例和輔助線就改成跟那一支比。例如先把 G5 設為基準，再把另一支的棉花推到「G5 的 2/3」，就得到 D6——C5 → G5 → D6，每次都取 2/3，就是「五度相生」。音高永遠照實際長度算，上鎖的 C5 不會變。</p>
+    <p><b>五度相生排法</b>：C5 →（2/3）G5 →（2/3）D6 →（×2）D5 →（2/3）A5 →（2/3）E6 →（×2）E5 →（2/3）B5；F5 是 C5 的 3/4、C6 是 C5 的 1/2。全部只用「取 2/3」和「長度加倍或減半」做出來。</p>
     <p>「排成 Do Re Mi」從 C5 排到 E6，用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2、4/9、2/5。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。畫面上的吸管照珍奶粗吸管 22 公分的比例畫，棉花最深可以推到 20.5 公分。基準那支的空氣柱 16.6 公分，在 28°C 剛好是 C5（Do）；棉花往下推、比基準更長，就能吹出比 C5 更低的音。</p>
   </div>
   <footer>數學教材教法課程用・搭配「神奇吸管排笛」教案・<a href="../">課程資源總覽</a></footer>
@@ -106,19 +109,22 @@ footer a{color:var(--ink-soft)}
   function L0(){ return baseCm() * PX; }   // 基準空氣柱長度（像素）
   var F0 = 130.8128;        // C3
   var HUES = [350, 22, 45, 95, 145, 180, 205, 230, 270, 310];
-  var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2, 4/9, 2/5];   // C5 D5 E5 F5 G5 A5 B5 C6 D6 E6
-  var KEY = 'panflute-state-v3';
+  var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2, 4/9, 2/5];   // C5 D5 E5 F5 G5 A5 B5 C6 D6 E6（純律）
+  var PYTH  = [1, 8/9, 64/81, 3/4, 2/3, 16/27, 128/243, 1/2, 4/9, 32/81];   // 五度相生（畢氏音律）
+  var KEY = 'panflute-state-v4';
 
-  var straws = [];
+  var straws = [], refId = 0;   // refId：目前拿來當「長度基準」的吸管（量比例用；音高仍以上鎖的 C5 為準）
   function defaults(){
     straws = SCALE.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:HUES[i]}; });
+    refId = 0;
   }
+  function refS(){ return byId(refId) || straws[0]; }
   function slotX(i){ return 34 + i*96; }
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(straws)); }catch(e){} }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({straws:straws, refId:refId})); }catch(e){} }
   function load(){
     try{
       var d = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if(Array.isArray(d) && d.length === SCALE.length){ straws = d; return true; }
+      if(d && Array.isArray(d.straws) && d.straws.length === SCALE.length){ straws = d.straws; refId = d.refId || 0; return true; }
     }catch(e){}
     return false;
   }
@@ -129,9 +135,9 @@ footer a{color:var(--ink-soft)}
     var m = 48 + 12*Math.log2(f/F0), n = Math.round(m), c = Math.round((m-n)*100);
     return {name: NAMES[((n%12)+12)%12] + (Math.floor(n/12)-1), cents: c};
   }
-  var FRACS = [[6,5],[9,8],[16,15],[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
+  var FRACS = [[64,81],[16,27],[128,243],[32,81],[2,1],[5,3],[3,2],[4,3],[5,4],[6,5],[9,8],[16,15],[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
   function fracText(r){
-    for(var i=0;i<FRACS.length;i++){ var v = FRACS[i][0]/FRACS[i][1]; if(Math.abs(r-v)/v < 0.006) return FRACS[i][0]===1&&FRACS[i][1]===1 ? '1（基準）' : '≈ '+FRACS[i][0]+'/'+FRACS[i][1]; }
+    for(var i=0;i<FRACS.length;i++){ var v = FRACS[i][0]/FRACS[i][1]; if(Math.abs(r-v)/v < 0.006) return FRACS[i][0]===1&&FRACS[i][1]===1 ? '一樣長' : '≈ '+FRACS[i][0]+'/'+FRACS[i][1]; }
     return r.toFixed(3);
   }
   function speed(){ var T = parseFloat(document.getElementById('n-temp').value); if(isNaN(T)) T = 28; return 331.3 + 0.606*T; }
@@ -225,22 +231,22 @@ footer a{color:var(--ink-soft)}
       // 刻度
       if(showMarks){
         [[3/4,'3/4'],[2/3,'2/3'],[1/2,'1/2']].forEach(function(m){
-          var yy = m[0]*L0();
+          var yy = m[0]*refS().r*L0();
           el('line', {x1:-8, x2:TW+2, y1:yy, y2:yy, stroke:'#c0392b', 'stroke-width':1.5, 'stroke-dasharray':'4 3', 'pointer-events':'none', opacity:.7}, g);
           var tx = el('text', {x:-10, y:yy+4, 'text-anchor':'end', 'font-size':12, fill:'#c0392b', 'pointer-events':'none'}, g); tx.textContent = m[1];
         });
       }
       // 拖棉花對到整數比時的輔助線
       if(drag && drag.kind === 'cotton' && drag.s === s && drag.snap){
-        var fr = drag.snap, bx = TW + 12, gx = TW + 30;
+        var fr = drag.snap, bx = TW + 12, gx = TW + 30, Lr = refS().r*L0(), rn = noteOf(freqOf(refS())).name;
         el('line', {x1:-14, x2:TW+40, y1:Lpx, y2:Lpx, stroke:'#e8590c', 'stroke-width':2.5, 'pointer-events':'none'}, g);
         // 基準長（灰）與目前長度（橘）兩條尺
-        el('line', {x1:gx, x2:gx, y1:0, y2:L0(), stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g);
-        [0, L0()].forEach(function(yy){ el('line', {x1:gx-6, x2:gx+6, y1:yy, y2:yy, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g); });
-        var tf = el('text', {x:gx+8, y:L0()-6, 'font-size':13, fill:'#6b7682', 'pointer-events':'none'}, g); tf.textContent = '基準長';
+        el('line', {x1:gx, x2:gx, y1:0, y2:Lr, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g);
+        [0, Lr].forEach(function(yy){ el('line', {x1:gx-6, x2:gx+6, y1:yy, y2:yy, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g); });
+        var tf = el('text', {x:gx+8, y:Lr-6, 'font-size':13, fill:'#6b7682', 'pointer-events':'none'}, g); tf.textContent = rn + ' 長';
         el('line', {x1:bx, x2:bx, y1:0, y2:Lpx, stroke:'#e8590c', 'stroke-width':3.5, 'pointer-events':'none'}, g);
         [0, Lpx].forEach(function(yy){ el('line', {x1:bx-7, x2:bx+7, y1:yy, y2:yy, stroke:'#e8590c', 'stroke-width':3, 'pointer-events':'none'}, g); });
-        var lab = '長度的 ' + fr, lw = 20 + lab.length*13;
+        var lab = fr === '1/1' ? '跟 ' + rn + ' 一樣長' : rn + ' 的 ' + fr, lw = 20 + lab.length*12;
         el('rect', {x:bx+6, y:Lpx/2-16, width:lw, height:30, rx:8, fill:'#e8590c', 'pointer-events':'none'}, g);
         var tl = el('text', {x:bx+6+lw/2, y:Lpx/2+5, 'text-anchor':'middle', 'font-size':15, 'font-weight':700, fill:'#fff', 'pointer-events':'none'}, g);
         tl.textContent = lab;
@@ -256,6 +262,12 @@ footer a{color:var(--ink-soft)}
       if(Lpx + CH + 12 < TH) el('ellipse', {cx:TW/2, cy:Lpx+CH+6, rx:9, ry:4, fill:'#9cc9f0', opacity:.75, 'pointer-events':'none'}, g);
       // 吸管口
       el('ellipse', {cx:TW/2, cy:0, rx:TW/2, ry:7, fill:'hsla('+s.hue+',50%,35%,.35)', stroke:col, 'stroke-width':2.5, 'pointer-events':'none'}, g);
+      // 設為長度基準
+      var isRef = s.id === refId;
+      var rb = el('g', {'data-role':'setref', style:'cursor:pointer'}, g);
+      el('rect', {x:-4, y:-92, width:TW+8, height:22, rx:11, fill: isRef ? '#e8590c' : '#fff', stroke:'#e8590c', 'stroke-width':1.5}, rb);
+      var rt = el('text', {x:TW/2, y:-76, 'text-anchor':'middle', 'font-size':12, 'font-weight':700, fill: isRef ? '#fff' : '#e8590c', 'pointer-events':'none'}, rb);
+      rt.textContent = isRef ? '長度基準' : '設為基準';
       // 音符按鈕
       var nb = el('g', {'data-role':'note', style:'cursor:pointer'}, g);
       el('circle', {cx:TW/2, cy:-44, r:24, fill: playing[s.id] ? col : '#fff', stroke:col, 'stroke-width':3}, nb);
@@ -270,7 +282,7 @@ footer a{color:var(--ink-soft)}
       t2.textContent = f.toFixed(1) + ' Hz';
       var cm = baseCm();
       var t3 = el('text', {x:TW/2, y:by+38, 'text-anchor':'middle', 'font-size':13, fill:'#b3541e', 'pointer-events':'none'}, g);
-      t3.textContent = (s.ref ? '基準 ' : '') + fracText(s.r);
+      t3.textContent = s.id === refId ? '長度基準' : fracText(s.r / refS().r);
       var t4 = el('text', {x:TW/2, y:by+55, 'text-anchor':'middle', 'font-size':12, fill:'var(--ink-soft)', 'pointer-events':'none'}, g);
       t4.textContent = (s.r*cm).toFixed(1) + ' 公分';
     });
@@ -298,10 +310,11 @@ footer a{color:var(--ink-soft)}
     var s = byId(+t.getAttribute('data-id')); if(!s) return;
     e.preventDefault(); try{ svg.setPointerCapture(e.pointerId); }catch(err){}
     var p = svgPt(e);
+    if(role === 'setref'){ refId = s.id; save(); render(); return; }
     if(role === 'note'){ drag = {kind:'note', s:s}; play(s); return; }
     if(role === 'cotton' && !s.ref){
       straws.splice(straws.indexOf(s),1); straws.push(s);
-      drag = {kind:'cotton', s:s, oy:p.y - (s.y + s.r*L0()), snap:snapOf(s.r)}; render(); return;
+      drag = {kind:'cotton', s:s, oy:p.y - (s.y + s.r*L0()), snap:null}; render(); return;
     }
     // 把拿起來的吸管放到最上層
     straws.splice(straws.indexOf(s),1); straws.push(s);
@@ -312,23 +325,24 @@ footer a{color:var(--ink-soft)}
     var p = svgPt(e), s = drag.s;
     if(drag.kind === 'tube'){
       s.x = Math.max(16, Math.min(W - TW - 6, p.x - drag.ox));
-      s.y = Math.max(78, Math.min(H - TH - 70, p.y - drag.oy));
+      s.y = Math.max(96, Math.min(H - TH - 70, p.y - drag.oy));
     } else {
       var r = Math.max(MINCM/baseCm(), Math.min(MAXCM/baseCm(), (p.y - drag.oy - s.y) / L0()));
-      var sn = nearSnap(r);
-      if(sn){ r = sn.v; drag.snap = sn.t; } else drag.snap = null;
+      // 以「長度基準」那支來量比例；拖的正是基準那支時不吸附
+      var R = refS().r, sn = s.id === refId ? null : nearSnap(r / R);
+      if(sn && sn.v*R >= MINCM/baseCm() && sn.v*R <= MAXCM/baseCm()){ r = sn.v * R; drag.snap = sn.t; } else drag.snap = null;
       s.r = r;
     }
     render();
   });
   // 接近整數比就吸附過去
   // [分子, 分母, 吸附範圍]：1/2、2/3、3/4 範圍大，好對準
-  var SNAPS = [[1,2,.022],[2,3,.022],[3,4,.022],[4,5,.01],[3,5,.01],[8,9,.01],[8,15,.01],[5,6,.01],[2,5,.01],[1,3,.01],[9,8,.01],[6,5,.01],[4,9,.01]];
-  function nearSnap(r){
-    for(var i=0;i<SNAPS.length;i++){ var v = SNAPS[i][0]/SNAPS[i][1]; if(Math.abs(r - v) < SNAPS[i][2]) return {v:v, t:SNAPS[i][0]+'/'+SNAPS[i][1]}; }
+  var SNAPS = [[1,2,.03],[2,3,.03],[3,4,.03],[3,2,.03],[4,3,.03],[2,1,.03],[1,1,.02],
+               [4,5,.012],[3,5,.012],[8,9,.012],[8,15,.012],[5,6,.012],[2,5,.012],[1,3,.012],[9,8,.012],[6,5,.012],[4,9,.012],[5,4,.012],[5,3,.012]];
+  function nearSnap(rel){
+    for(var i=0;i<SNAPS.length;i++){ var v = SNAPS[i][0]/SNAPS[i][1]; if(Math.abs(rel/v - 1) < SNAPS[i][2]) return {v:v, t:SNAPS[i][0]+'/'+SNAPS[i][1]}; }
     return null;
   }
-  function snapOf(r){ var sn = nearSnap(r); return sn ? sn.t : null; }
   function endDrag(){
     if(!drag) return;
     var d = drag; drag = null;
@@ -354,7 +368,8 @@ footer a{color:var(--ink-soft)}
 
   // ---------- 工具列 ----------
   document.getElementById('b-scale').addEventListener('click', function(){ defaults(); render(); save(); });
-  document.getElementById('b-equal').addEventListener('click', function(){ straws.forEach(function(s){ s.r = 1; }); render(); save(); });
+  document.getElementById('b-pyth').addEventListener('click', function(){ defaults(); straws.forEach(function(s, i){ s.r = PYTH[i]; }); render(); save(); });
+  document.getElementById('b-equal').addEventListener('click', function(){ var R = refS().r; straws.forEach(function(s){ s.r = R; }); render(); save(); });
   document.getElementById('b-sort').addEventListener('click', function(){
     straws.slice().sort(function(a,b){ return b.r - a.r || a.x - b.x; }).forEach(function(s, i){ s.x = slotX(i); });
     render(); save();
