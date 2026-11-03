@@ -44,6 +44,12 @@ svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-web
 .note h3{font-size:1rem;margin:0 0 6px;color:var(--t3)}
 .note p{margin:0 0 6px}
 .note b{color:var(--t2)}
+.note h3:not(:first-child){margin-top:16px}
+.note .road{background:var(--bg);border-radius:8px;padding:8px 12px;font-size:.88rem;line-height:1.9}
+.note .cf{text-align:center;font-size:1.05rem;margin:10px 0;overflow-x:auto;white-space:nowrap}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px}
+.fr>span:last-child{padding-top:2px}
 table.ratio{border-collapse:collapse;margin:6px 0 4px;font-size:.86rem}
 table.ratio td,table.ratio th{border:1px solid var(--border);padding:3px 10px;text-align:center}
 table.ratio th{background:var(--surface-2);font-weight:600}
@@ -74,8 +80,8 @@ footer a{color:var(--ink-soft)}
     <span id="v-info" style="font-size:.82rem;color:var(--t2)"></span>
   </div>
 
-  <div class="stage"><svg id="svg" viewBox="0 0 1000 690" aria-label="十支吸管排笛"></svg></div>
-  <p class="hint">電腦鍵盤 1～9、0 也可以吹（由左到右第 1～10 支）。</p>
+  <div class="stage"><svg id="svg" viewBox="0 0 1000 690" aria-label="吸管排笛"></svg></div>
+  <p class="hint">電腦鍵盤 1～9、0、-、=、Backspace 也可以吹（由左到右第 1～13 支）。</p>
 
   <div class="note">
     <h3>長度和音高的關係</h3>
@@ -88,8 +94,64 @@ footer a{color:var(--ink-soft)}
       <tr><th>音程</th><td>基準音（Do）</td><td>4 度（Fa）</td><td>5 度（Sol）</td><td>8 度（高音 Do）</td></tr>
     </table>
     <p><b>換一支當「長度基準」</b>：按吸管上方的「設為基準」，比例和輔助線就改成跟那一支比。例如先把 G5 設為基準，再把另一支的棉花推到「G5 的 2/3」，就得到 D6——C5 → G5 → D6，每次都取 2/3，就是「五度相生」。音高永遠照實際長度算，上鎖的 C5 不會變。</p>
-    <p><b>五度相生排法</b>：C5 →（2/3）G5 →（2/3）D6 →（×2）D5 →（2/3）A5 →（2/3）E6 →（×2）E5 →（2/3）B5；F5 是 C5 的 3/4、C6 是 C5 的 1/2。全部只用「取 2/3」和「長度加倍或減半」做出來。</p>
     <p>「排成 Do Re Mi」從 C5 排到 E6，用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2、4/9、2/5。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。畫面上的吸管照珍奶粗吸管 22 公分的比例畫，棉花最深可以推到 20.5 公分。基準那支的空氣柱 16.6 公分，在 28°C 剛好是 C5（Do）；棉花往下推、比基準更長，就能吹出比 C5 更低的音。</p>
+  </div>
+
+  <div class="note" id="story">
+    <h3>一條線串起來：五度相生 → 2<sup>p</sup>／3<sup>q</sup> → 輾轉相除 → 連分數</h3>
+    <p class="road">吸管一直取 2/3 → 長度都是 2<sup>p</sup>／3<sup>q</sup> → 想繞回 C 就要 2<sup>p</sup> ＝ 3<sup>q</sup> → 取 log 變成 p／q ≈ log 3 ÷ log 2 → 對 log 3、log 2 做輾轉相除 → 商排成連分數 → 漸近分數就是答案 → 回到吸管：為什麼一個八度是 12 個音</p>
+
+    <h3>① 五度相生：一直取 2/3</h3>
+    <p>按「五度相生排法」：C5 →（2/3）G5 →（2/3）D6 →（×2）D5 →（2/3）A5 →（2/3）E6 →（×2）E5 →（2/3）B5 →（2/3）F♯6 →（×2）F♯5 →（2/3）C♯6；另外 F5 是 C5 的 3/4、C6 是 C5 的 1/2，一共 13 支。也可以自己做：把 G5「設為基準」，再把另一支推到「G5 的 2/3」，就得到 D6。</p>
+    <p>注意 B5 的 2/3 是 <b>F♯6</b>（升 Fa），不是 F6：B 到 F 只差 6 個半音，B 往上五度要到 F♯。所以一路往下走，會依序出現 F♯、C♯、G♯⋯⋯這些黑鍵；要得到 F，反而要從 C 往反方向走：C5 長度乘 3/2（低五度的 F4）再減半，就是 F5＝C5 的 3/4。</p>
+
+    <h3>② 長度一定是 2<sup>p</sup>／3<sup>q</sup></h3>
+    <p>每「取 2/3」一次，分子多乘一個 2、分母多乘一個 3；每「加倍」一次，分子再多乘一個 2。所以鏈上每一支的長度（跟 C5 比）都是 2<sup>p</sup>／3<sup>q</sup>，q 是取了幾次 2/3：</p>
+    <div style="overflow-x:auto"><table class="ratio">
+      <tr><th>音</th><td>G5</td><td>D6</td><td>D5</td><td>A5</td><td>E6</td><td>E5</td><td>B5</td><td>F♯6</td><td>F♯5</td><td>C♯6</td></tr>
+      <tr><th>長度</th><td>2/3</td><td>4/9</td><td>8/9</td><td>16/27</td><td>32/81</td><td>64/81</td><td>128/243</td><td>256/729</td><td>512/729</td><td>1024/2187</td></tr>
+      <tr><th>2<sup>p</sup>／3<sup>q</sup></th><td>2<sup>1</sup>/3<sup>1</sup></td><td>2<sup>2</sup>/3<sup>2</sup></td><td>2<sup>3</sup>/3<sup>2</sup></td><td>2<sup>4</sup>/3<sup>3</sup></td><td>2<sup>5</sup>/3<sup>4</sup></td><td>2<sup>6</sup>/3<sup>4</sup></td><td>2<sup>7</sup>/3<sup>5</sup></td><td>2<sup>8</sup>/3<sup>6</sup></td><td>2<sup>9</sup>/3<sup>6</sup></td><td>2<sup>10</sup>/3<sup>7</sup></td></tr>
+    </table></div>
+    <p>想要走一走<b>繞回 C</b>（長度剛好是 1 或 1/2），就需要 2<sup>p</sup> ＝ 3<sup>q</sup>。可是 2<sup>p</sup> 是偶數、3<sup>q</sup> 是奇數，<b>永遠不可能相等</b>。那退一步問：<b>2<sup>p</sup> 什麼時候最接近 3<sup>q</sup>？</b></p>
+
+    <h3>③ 取 log：變成找 p／q ≈ log 3 ÷ log 2</h3>
+    <p>2<sup>p</sup> ≈ 3<sup>q</sup> 兩邊取 log，就是 p × log 2 ≈ q × log 3，也就是 <b>p／q ≈ log 3 ÷ log 2 ＝ log<sub>2</sub>3 ≈ 1.58496</b>。問題變成：用分數去逼近 log<sub>2</sub>3。找「兩個量的比」最好的工具，就是輾轉相除法。</p>
+
+    <h3>④ 對 log 3 和 log 2 做輾轉相除</h3>
+    <p>把 log 3 和 log 2 當成兩段長度：大的減掉小的，能減幾次就減幾次（這是「商」），剩下的「餘數」再拿去除前一個。log 的加減就是比值的乘除，所以每個餘數都可以寫成一個比值——而且<b>每一個餘數都是一個音程</b>：</p>
+    <div style="overflow-x:auto"><table class="ratio">
+      <tr><th>步驟</th><th>被除數 ＝ 商 × 除數 ＋ 餘數（寫成 log）</th><th>商</th><th>餘數是什麼音程</th><th>多少分</th></tr>
+      <tr><td>1</td><td>log 3 ＝ 1 × log 2 ＋ log(3/2)</td><td>1</td><td>3/2：五度</td><td>702</td></tr>
+      <tr><td>2</td><td>log 2 ＝ 1 × log(3/2) ＋ log(4/3)</td><td>1</td><td>4/3：四度（八度＝五度＋四度）</td><td>498</td></tr>
+      <tr><td>3</td><td>log(3/2) ＝ 1 × log(4/3) ＋ log(9/8)</td><td>1</td><td>9/8：全音（五度＝四度＋全音）</td><td>204</td></tr>
+      <tr><td>4</td><td>log(4/3) ＝ 2 × log(9/8) ＋ log(256/243)</td><td>2</td><td>256/243：半音（四度＝兩個全音＋半音）</td><td>90</td></tr>
+      <tr><td>5</td><td>log(9/8) ＝ 2 × log(256/243) ＋ log(3<sup>12</sup>/2<sup>19</sup>)</td><td>2</td><td>畢氏音差（全音＝兩個半音＋一點點）</td><td>23.5</td></tr>
+      <tr><td>6</td><td>log(256/243) ＝ 3 × log(音差) ＋ log(2<sup>65</sup>/3<sup>41</sup>)</td><td>3</td><td>41 次五度剩下的差</td><td>19.8</td></tr>
+      <tr><td>7</td><td>log(音差) ＝ 1 × log(2<sup>65</sup>/3<sup>41</sup>) ＋ log(3<sup>53</sup>/2<sup>84</sup>)</td><td>1</td><td>53 次五度剩下的差</td><td>3.6</td></tr>
+      <tr><td>8</td><td>⋯</td><td>5</td><td>3<sup>306</sup>/2<sup>485</sup></td><td>1.8</td></tr>
+      <tr><td>9</td><td>⋯</td><td>2</td><td>2<sup>1054</sup>/3<sup>665</sup></td><td>0.08</td></tr>
+    </table></div>
+    <p>餘數一直變小，但永遠不會是 0——這跟 ② 的「奇數不等於偶數」是同一件事：log<sub>2</sub>3 是無理數，輾轉相除做不完。每一個餘數也都是某個 2<sup>p</sup>／3<sup>q</sup>，正好就是 ② 裡「差一點點回不去」的那一點點。</p>
+
+    <h3>⑤ 商排起來就是連分數</h3>
+    <p>把每一步的商依序排好：1, 1, 1, 2, 2, 3, 1, 5, 2, ⋯，就是 log<sub>2</sub>3 的連分數：</p>
+    <div class="cf">log<sub>2</sub>3 ＝ 1 ＋ <span class="fr"><span>1</span><span>1 ＋ <span class="fr"><span>1</span><span>1 ＋ <span class="fr"><span>1</span><span>2 ＋ <span class="fr"><span>1</span><span>2 ＋ <span class="fr"><span>1</span><span>3 ＋ ⋯</span></span></span></span></span></span></span></span></span></span></div>
+    <p>只算到某一層、後面丟掉，得到的分數叫「漸近分數」。它們就是 ② 問題的答案——p／q 越來越接近 log<sub>2</sub>3，2<sup>p</sup> 也越來越接近 3<sup>q</sup>：</p>
+    <div style="overflow-x:auto"><table class="ratio">
+      <tr><th>算到</th><th>漸近分數 p／q</th><th>2<sup>p</sup></th><th>3<sup>q</sup></th><th>差多少</th><th>回到吸管／音樂</th></tr>
+      <tr><td>[1; 1]</td><td>2/1</td><td>4</td><td>3</td><td>498 分</td><td>3/4：四度（F5 那支）</td></tr>
+      <tr><td>[1; 1, 1]</td><td>3/2</td><td>8</td><td>9</td><td>204 分</td><td>8/9：全音（C5→D5）</td></tr>
+      <tr><td>[1; 1, 1, 2]</td><td>8/5</td><td>256</td><td>243</td><td>90 分</td><td>半音（E→F、B→C）；5 次五度只差半音，所以一組 5 個音（五聲音階）</td></tr>
+      <tr><td>[1; 1, 1, 2, 2]</td><td><b>19/12</b></td><td>524288</td><td>531441</td><td>23.5 分</td><td><b>12 次五度幾乎繞回 C</b>：一個八度分成 12 個音，鋼琴就是這樣來的</td></tr>
+      <tr><td>[1; 1, 1, 2, 2, 3]</td><td>65/41</td><td>約 3.69×10<sup>19</sup></td><td>約 3.65×10<sup>19</sup></td><td>19.8 分</td><td>41 次五度</td></tr>
+      <tr><td>[⋯, 3, 1]</td><td>84/53</td><td>約 1.93×10<sup>25</sup></td><td>約 1.94×10<sup>25</sup></td><td>3.6 分</td><td>53 次五度幾乎完全繞回：有人把八度分成 53 等份</td></tr>
+      <tr><td>[⋯, 1, 5]</td><td>485/306</td><td colspan="2">（太大，寫不下）</td><td>1.8 分</td><td>306 次五度</td></tr>
+      <tr><td>[⋯, 5, 2]</td><td>1054/665</td><td colspan="2">（太大，寫不下）</td><td>0.08 分</td><td>665 次五度</td></tr>
+    </table></div>
+    <p>漸近分數可以一層一層算出來：新的分子＝商 × 前一個分子＋再前一個分子（分母也一樣）。例如 19/12 之後的商是 3：(3×19＋8)／(3×12＋5)＝65/41。</p>
+
+    <h3>⑥ 回到吸管</h3>
+    <p>在這個模擬器裡從 C5 一直取 2/3、太短就加倍，走到第 12 次會到 B♯，長度是 2<sup>19</sup>/3<sup>12</sup> ≈ 0.9865——比 C5 短一點點，音高比上鎖的 C5 高了大約 23 分（音名會顯示 C，旁邊的小數字多 23 左右）。這 23.5 分就是畢氏音差，也是輾轉相除第 5 步的餘數、連分數 19/12 的誤差。鋼琴的「平均律」把這 23.5 分平均分給 12 個五度，每個五度少 2 分，所以五度相生排出來的音，旁邊的小數字會是 +2、+4、+6⋯⋯一路累加（G5 +2、D6 +4、A5 +6⋯⋯，再加上基準 C5 本身的偏差）。</p>
   </div>
   <footer>數學教材教法課程用・搭配「神奇吸管排笛」教案・<a href="../">課程資源總覽</a></footer>
 </div>
@@ -99,6 +161,7 @@ footer a{color:var(--ink-soft)}
   var NS = 'http://www.w3.org/2000/svg';
   var svg = document.getElementById('svg');
   var W = 1000, H = 690;
+  function fitW(){ var n = straws.length; W = Math.max(1000, slotX(n-1) + TW + 90); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); }
   var TOP = 120;            // 預設吸管口位置
   // 依實際比例畫：珍奶粗吸管 22 公分，1 公分 = 20 像素
   var PX = 20, STRAW_CM = 22, PLUG_CM = 1.5;
@@ -109,13 +172,18 @@ footer a{color:var(--ink-soft)}
   function L0(){ return baseCm() * PX; }   // 基準空氣柱長度（像素）
   var F0 = 130.8128;        // C3
   var HUES = [350, 22, 45, 95, 145, 180, 205, 230, 270, 310];
+  var PHUES = [350, 22, 45, 95, 120, 145, 180, 205, 230, 250, 270, 310, 330];
   var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2, 4/9, 2/5];   // C5 D5 E5 F5 G5 A5 B5 C6 D6 E6（純律）
-  var PYTH  = [1, 8/9, 64/81, 3/4, 2/3, 16/27, 128/243, 1/2, 4/9, 32/81];   // 五度相生（畢氏音律）
+  // 五度相生（畢氏音律）：C5 D5 E5 F5 F♯5 G5 A5 B5 C6 C♯6 D6 E6 F♯6
+  var PYTH  = [1, 8/9, 64/81, 3/4, 512/729, 2/3, 16/27, 128/243, 1/2, 1024/2187, 4/9, 32/81, 256/729];
   var KEY = 'panflute-state-v4';
 
   var straws = [], refId = 0;   // refId：目前拿來當「長度基準」的吸管（量比例用；音高仍以上鎖的 C5 為準）
   function defaults(){
-    straws = SCALE.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:HUES[i]}; });
+    build(SCALE, HUES);
+  }
+  function build(rs, hues){
+    straws = rs.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:hues[i]}; });
     refId = 0;
   }
   function refS(){ return byId(refId) || straws[0]; }
@@ -124,7 +192,7 @@ footer a{color:var(--ink-soft)}
   function load(){
     try{
       var d = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if(d && Array.isArray(d.straws) && d.straws.length === SCALE.length){ straws = d.straws; refId = d.refId || 0; return true; }
+      if(d && Array.isArray(d.straws) && (d.straws.length === SCALE.length || d.straws.length === PYTH.length)){ straws = d.straws; refId = d.refId || 0; return true; }
     }catch(e){}
     return false;
   }
@@ -135,7 +203,7 @@ footer a{color:var(--ink-soft)}
     var m = 48 + 12*Math.log2(f/F0), n = Math.round(m), c = Math.round((m-n)*100);
     return {name: NAMES[((n%12)+12)%12] + (Math.floor(n/12)-1), cents: c};
   }
-  var FRACS = [[64,81],[16,27],[128,243],[32,81],[2,1],[5,3],[3,2],[4,3],[5,4],[6,5],[9,8],[16,15],[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
+  var FRACS = [[512,729],[1024,2187],[256,729],[64,81],[16,27],[128,243],[32,81],[2,1],[5,3],[3,2],[4,3],[5,4],[6,5],[9,8],[16,15],[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
   function fracText(r){
     for(var i=0;i<FRACS.length;i++){ var v = FRACS[i][0]/FRACS[i][1]; if(Math.abs(r-v)/v < 0.006) return FRACS[i][0]===1&&FRACS[i][1]===1 ? '一樣長' : '≈ '+FRACS[i][0]+'/'+FRACS[i][1]; }
     return r.toFixed(3);
@@ -205,7 +273,7 @@ footer a{color:var(--ink-soft)}
     return d;
   }
   function render(){
-    svg.innerHTML = '';
+    svg.innerHTML = ''; fitW();
     var defs = el('defs', {}, svg);
     var gr = el('linearGradient', {id:'gloss', x1:'0', x2:'1', y1:'0', y2:'0'}, defs);
     el('stop', {offset:'0', 'stop-color':'#fff', 'stop-opacity':'.55'}, gr);
@@ -356,19 +424,20 @@ footer a{color:var(--ink-soft)}
 
   // 鍵盤 1～9、0
   function orderLR(){ return straws.slice().sort(function(a,b){ return a.x - b.x; }); }
+  var KEYS = {'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'0':10,'-':11,'=':12,'Backspace':13};
   document.addEventListener('keydown', function(e){
     if(e.repeat || e.target.tagName === 'INPUT') return;
-    var k = parseInt(e.key, 10); if(isNaN(k)) return; k = k === 0 ? 10 : k; if(k > straws.length) return;
-    play(orderLR()[k-1]);
+    var k = KEYS[e.key]; if(!k || k > straws.length) return;
+    e.preventDefault(); play(orderLR()[k-1]);
   });
   document.addEventListener('keyup', function(e){
-    var k = parseInt(e.key, 10); if(isNaN(k)) return; k = k === 0 ? 10 : k; if(k > straws.length) return;
+    var k = KEYS[e.key]; if(!k || k > straws.length) return;
     release(orderLR()[k-1]);
   });
 
   // ---------- 工具列 ----------
   document.getElementById('b-scale').addEventListener('click', function(){ defaults(); render(); save(); });
-  document.getElementById('b-pyth').addEventListener('click', function(){ defaults(); straws.forEach(function(s, i){ s.r = PYTH[i]; }); render(); save(); });
+  document.getElementById('b-pyth').addEventListener('click', function(){ build(PYTH, PHUES); render(); save(); });
   document.getElementById('b-equal').addEventListener('click', function(){ var R = refS().r; straws.forEach(function(s){ s.r = R; }); render(); save(); });
   document.getElementById('b-sort').addEventListener('click', function(){
     straws.slice().sort(function(a,b){ return b.r - a.r || a.x - b.x; }).forEach(function(s, i){ s.x = slotX(i); });
