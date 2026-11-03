@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>吸管排笛模擬器</title>
+<style>
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --surface-2:#f6f8fa;
+  --ink:#1a2733; --ink-soft:#4b5b6b;
+  --border:#c9d3dc; --accent:#1f3a5f;
+  --t1:#b3541e; --t2:#1f7a52; --t3:#6a3fa0;
+  --desk:#f7f1e6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111823; --surface:#161f2b; --surface-2:#1b2531;
+    --ink:#e7edf3; --ink-soft:#aebccb;
+    --border:#3a4856; --accent:#8fb2de;
+    --t1:#e0a06a; --t2:#5fc99a; --t3:#b89bdb;
+    --desk:#1d2733;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:15px;line-height:1.7}
+.wrap{max-width:1060px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.5rem;margin:0 0 2px;font-weight:900}
+.sub{color:var(--t1);font-size:.88rem;margin:0 0 14px;font-weight:600}
+.tools{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;
+  display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:12px}
+button{font-family:inherit;font-size:.86rem;cursor:pointer;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 12px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) button.primary{color:#0e1520} }
+label.ck{font-size:.84rem;display:flex;gap:5px;align-items:center;cursor:pointer}
+input[type=number]{width:4.2em;font-family:inherit;font-size:.86rem;border:1px solid var(--border);
+  border-radius:6px;padding:3px 6px;background:var(--surface-2);color:var(--ink)}
+.stage{background:var(--desk);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.hint{font-size:.82rem;color:var(--t2);margin:8px 2px 0}
+.note{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-top:14px;font-size:.9rem}
+.note h3{font-size:1rem;margin:0 0 6px;color:var(--t3)}
+.note p{margin:0 0 6px}
+.note b{color:var(--t2)}
+table.ratio{border-collapse:collapse;margin:6px 0 4px;font-size:.86rem}
+table.ratio td,table.ratio th{border:1px solid var(--border);padding:3px 10px;text-align:center}
+table.ratio th{background:var(--surface-2);font-weight:600}
+footer{margin-top:18px;font-size:.78rem;color:var(--ink-soft)}
+footer a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>吸管排笛模擬器</h1>
+  <p class="sub">按 ♪ 吹奏・拖曳吸管換位置・拖曳棉花改變空氣柱長度</p>
+
+  <div class="tools">
+    <button class="primary" id="b-scale" type="button">排成 Do Re Mi</button>
+    <button id="b-equal" type="button">全部跟基準一樣長</button>
+    <button id="b-sort" type="button">依長短排好</button>
+    <button id="b-align" type="button">吸管口對齊</button>
+    <button id="b-play" type="button">由左到右吹一遍</button>
+    <label class="ck"><input type="checkbox" id="c-marks">顯示 3/4、2/3、1/2 刻度</label>
+    <label class="ck"><input type="checkbox" id="c-preview" checked>放開棉花時試聽</label>
+    <label class="ck">基準吸管長 <input type="number" id="n-cm" value="16" min="5" max="40" step="0.5"> 公分</label>
+  </div>
+
+  <div class="stage"><svg id="svg" viewBox="0 0 1000 690" aria-label="八支吸管排笛"></svg></div>
+  <p class="hint">電腦鍵盤 1～8 也可以吹（由左到右第 1～8 支）。</p>
+
+  <div class="note">
+    <h3>長度和音高的關係</h3>
+    <p>吹氣時，發出聲音的是<b>吸管口到棉花之間的那段空氣</b>。空氣柱越短，聲音越高：<b>長度變成幾分之幾，頻率就變成它的倒數倍</b>。</p>
+    <table class="ratio">
+      <tr><th>長度（跟基準比）</th><td>1</td><td>3/4</td><td>2/3</td><td>1/2</td></tr>
+      <tr><th>頻率變成</th><td>1 倍</td><td>4/3 倍</td><td>3/2 倍</td><td>2 倍</td></tr>
+      <tr><th>音程</th><td>基準音 C3</td><td>4 度（F3）</td><td>5 度（G3）</td><td>8 度（C4）</td></tr>
+    </table>
+    <p>「排成 Do Re Mi」用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。</p>
+  </div>
+  <footer>數學教材教法課程用・搭配「神奇吸管排笛」教案・<a href="../">課程資源總覽</a></footer>
+</div>
+
+<script>
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.getElementById('svg');
+  var W = 1000, H = 690;
+  var TOP = 120;            // 預設吸管口位置
+  var L0 = 400;             // 基準空氣柱長度（像素）
+  var TW = 64;              // 吸管寬
+  var CH = 40;              // 棉花厚度
+  var TH = L0 + CH + 16;    // 吸管總長
+  var MINR = 0.3;           // 最短可到基準的 0.3
+  var F0 = 130.8128;        // C3
+  var HUES = [350, 25, 48, 140, 190, 215, 265, 300];
+  var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2];
+  var KEY = 'panflute-state-v1';
+
+  var straws = [];
+  function defaults(){
+    straws = SCALE.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:HUES[i]}; });
+  }
+  function slotX(i){ return 52 + i*118; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(straws)); }catch(e){} }
+  function load(){
+    try{
+      var d = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if(Array.isArray(d) && d.length === 8){ straws = d; return true; }
+    }catch(e){}
+    return false;
+  }
+
+  // ---------- 音名、比例 ----------
+  var NAMES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+  function noteOf(f){
+    var m = 48 + 12*Math.log2(f/F0), n = Math.round(m), c = Math.round((m-n)*100);
+    return {name: NAMES[((n%12)+12)%12] + (Math.floor(n/12)-1), cents: c};
+  }
+  var FRACS = [[1,1],[8,9],[5,6],[4,5],[3,4],[2,3],[5,8],[3,5],[9,16],[8,15],[1,2],[4,9],[2,5],[3,8],[1,3]];
+  function fracText(r){
+    for(var i=0;i<FRACS.length;i++){ var v = FRACS[i][0]/FRACS[i][1]; if(Math.abs(r-v)/v < 0.006) return FRACS[i][0]===1&&FRACS[i][1]===1 ? '1（基準）' : '≈ '+FRACS[i][0]+'/'+FRACS[i][1]; }
+    return r.toFixed(3);
+  }
+  function freqOf(s){ return F0 / s.r; }
+
+  // ---------- 聲音合成 ----------
+  var ac = null, noiseBuf = null;
+  function audio(){
+    if(!ac){
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      noiseBuf = ac.createBuffer(1, ac.sampleRate*2, ac.sampleRate);
+      var d = noiseBuf.getChannelData(0); for(var i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+    }
+    if(ac.state === 'suspended') ac.resume();
+    return ac;
+  }
+  function startTone(f){
+    var a = audio(), t = a.currentTime;
+    var out = a.createGain(); out.gain.setValueAtTime(0, t);
+    var lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.min(7000, f*9);
+    out.connect(lp); lp.connect(a.destination);
+    // 閉管：奇數泛音為主，再帶一點偶數泛音
+    var parts = [[1,1],[2,0.06],[3,0.16],[5,0.05]];
+    var lfo = a.createOscillator(); lfo.frequency.value = 5.2;
+    var lfoG = a.createGain(); lfoG.gain.setValueAtTime(0, t); lfoG.gain.linearRampToValueAtTime(9, t+0.35);
+    lfo.connect(lfoG); lfo.start(t);
+    var oscs = parts.map(function(p){
+      var o = a.createOscillator(); o.type = 'sine'; o.frequency.value = f*p[0];
+      var g = a.createGain(); g.gain.value = p[1]*0.30;
+      lfoG.connect(o.detune); o.connect(g); g.connect(out); o.start(t); return o;
+    });
+    // 氣音
+    var nz = a.createBufferSource(); nz.buffer = noiseBuf; nz.loop = true;
+    var bp = a.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f*2.2; bp.Q.value = 1.2;
+    var ng = a.createGain(); ng.gain.setValueAtTime(0, t);
+    ng.gain.linearRampToValueAtTime(0.20, t+0.03); ng.gain.exponentialRampToValueAtTime(0.045, t+0.25);
+    nz.connect(bp); bp.connect(ng); ng.connect(lp); nz.start(t);
+    out.gain.linearRampToValueAtTime(0.42, t+0.07);
+    out.gain.linearRampToValueAtTime(0.32, t+0.25);
+    var t0 = t;
+    return function stop(){
+      var now = a.currentTime, at = Math.max(now, t0 + 0.45);
+      [out.gain, ng.gain].forEach(function(p){ p.cancelScheduledValues(at); p.setValueAtTime(p.value || 0.0001, at); p.linearRampToValueAtTime(0.0001, at+0.28); });
+      var end = at + 0.32;
+      oscs.forEach(function(o){ o.stop(end); }); nz.stop(end); lfo.stop(end);
+    };
+  }
+
+  // ---------- 畫面 ----------
+  var playing = {};
+  var showMarks = false;
+  function el(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  function cottonPath(y){
+    // 上緣有小凸起，凸起最高點剛好在 y
+    var x0 = 4, x1 = TW-4, d = 'M'+x0+' '+(y+7);
+    var bumps = 4, w = (x1-x0)/bumps;
+    for(var i=0;i<bumps;i++){ var a = x0+i*w; d += ' Q'+(a+w/2)+' '+(y-3+(i%2)*3)+' '+(a+w)+' '+(y+7); }
+    d += ' L'+x1+' '+(y+CH-6)+' Q'+(TW/2)+' '+(y+CH+4)+' '+x0+' '+(y+CH-6)+' Z';
+    return d;
+  }
+  function render(){
+    svg.innerHTML = '';
+    var defs = el('defs', {}, svg);
+    var gr = el('linearGradient', {id:'gloss', x1:'0', x2:'1', y1:'0', y2:'0'}, defs);
+    el('stop', {offset:'0', 'stop-color':'#fff', 'stop-opacity':'.55'}, gr);
+    el('stop', {offset:'.35', 'stop-color':'#fff', 'stop-opacity':'0'}, gr);
+    el('stop', {offset:'.8', 'stop-color':'#fff', 'stop-opacity':'0'}, gr);
+    el('stop', {offset:'1', 'stop-color':'#fff', 'stop-opacity':'.3'}, gr);
+    var wg = el('linearGradient', {id:'wet', x1:'0', x2:'0', y1:'0', y2:'1'}, defs);
+    el('stop', {offset:'0', 'stop-color':'#ffffff'}, wg);
+    el('stop', {offset:'.45', 'stop-color':'#f4f9ff'}, wg);
+    el('stop', {offset:'1', 'stop-color':'#9cc9f0'}, wg);
+
+    straws.forEach(function(s){
+      var g = el('g', {transform:'translate('+s.x+','+s.y+')', 'data-id':s.id}, svg);
+      var Lpx = s.r * L0, f = freqOf(s), nt = noteOf(f);
+      var col = 'hsl('+s.hue+',70%,55%)';
+      // 空氣柱（吹奏時亮起來）
+      el('rect', {x:5, y:2, width:TW-10, height:Lpx-2, rx:6,
+        fill: playing[s.id] ? 'hsla('+s.hue+',90%,70%,.55)' : 'hsla('+s.hue+',70%,85%,.18)', 'pointer-events':'none'}, g);
+      // 吸管本體
+      el('rect', {x:0, y:0, width:TW, height:TH, rx:10, fill:'hsla('+s.hue+',60%,80%,.30)',
+        stroke:col, 'stroke-width':2.5, 'data-role':'tube', style:'cursor:grab'}, g);
+      el('rect', {x:0, y:0, width:TW, height:TH, rx:10, fill:'url(#gloss)', 'pointer-events':'none'}, g);
+      // 刻度
+      if(showMarks){
+        [[3/4,'3/4'],[2/3,'2/3'],[1/2,'1/2']].forEach(function(m){
+          var yy = m[0]*L0;
+          el('line', {x1:-8, x2:TW+2, y1:yy, y2:yy, stroke:'#c0392b', 'stroke-width':1.5, 'stroke-dasharray':'4 3', 'pointer-events':'none', opacity:.7}, g);
+          var tx = el('text', {x:-10, y:yy+4, 'text-anchor':'end', 'font-size':12, fill:'#c0392b', 'pointer-events':'none'}, g); tx.textContent = m[1];
+        });
+      }
+      // 拖棉花對到整數比時的輔助線
+      if(drag && drag.kind === 'cotton' && drag.s === s && drag.snap){
+        var fr = drag.snap, bx = TW + 12, gx = TW + 30;
+        el('line', {x1:-14, x2:TW+40, y1:Lpx, y2:Lpx, stroke:'#e8590c', 'stroke-width':2.5, 'pointer-events':'none'}, g);
+        // 全長（灰）與目前長度（橘）兩條尺
+        el('line', {x1:gx, x2:gx, y1:0, y2:L0, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g);
+        [0, L0].forEach(function(yy){ el('line', {x1:gx-6, x2:gx+6, y1:yy, y2:yy, stroke:'#8a96a3', 'stroke-width':2, 'pointer-events':'none'}, g); });
+        var tf = el('text', {x:gx+8, y:L0-6, 'font-size':13, fill:'#6b7682', 'pointer-events':'none'}, g); tf.textContent = '全長';
+        el('line', {x1:bx, x2:bx, y1:0, y2:Lpx, stroke:'#e8590c', 'stroke-width':3.5, 'pointer-events':'none'}, g);
+        [0, Lpx].forEach(function(yy){ el('line', {x1:bx-7, x2:bx+7, y1:yy, y2:yy, stroke:'#e8590c', 'stroke-width':3, 'pointer-events':'none'}, g); });
+        var lab = '長度的 ' + fr, lw = 20 + lab.length*13;
+        el('rect', {x:bx+6, y:Lpx/2-16, width:lw, height:30, rx:8, fill:'#e8590c', 'pointer-events':'none'}, g);
+        var tl = el('text', {x:bx+6+lw/2, y:Lpx/2+5, 'text-anchor':'middle', 'font-size':15, 'font-weight':700, fill:'#fff', 'pointer-events':'none'}, g);
+        tl.textContent = lab;
+      }
+      // 棉花＋水
+      var cg = el('g', {'data-role':'cotton', style: s.ref ? 'cursor:not-allowed' : 'cursor:ns-resize'}, g);
+      el('path', {d:cottonPath(Lpx), fill:'url(#wet)', stroke:'#8fb3d6', 'stroke-width':1.5}, cg);
+      [[18,22],[34,28],[48,20],[26,32]].forEach(function(p){ el('circle', {cx:p[0], cy:Lpx+p[1], r:2.4, fill:'#6fa8dc', opacity:.8}, cg); });
+      if(s.ref){
+        var lk = el('text', {x:TW/2, y:Lpx+25, 'text-anchor':'middle', 'font-size':15, 'pointer-events':'none'}, cg); lk.textContent = '🔒';
+      }
+      // 水滴
+      el('ellipse', {cx:TW/2, cy:Lpx+CH+6, rx:9, ry:4, fill:'#9cc9f0', opacity:.75, 'pointer-events':'none'}, g);
+      // 吸管口
+      el('ellipse', {cx:TW/2, cy:0, rx:TW/2, ry:7, fill:'hsla('+s.hue+',50%,35%,.35)', stroke:col, 'stroke-width':2.5, 'pointer-events':'none'}, g);
+      // 音符按鈕
+      var nb = el('g', {'data-role':'note', style:'cursor:pointer'}, g);
+      el('circle', {cx:TW/2, cy:-44, r:24, fill: playing[s.id] ? col : '#fff', stroke:col, 'stroke-width':3}, nb);
+      var nt1 = el('text', {x:TW/2, y:-35, 'text-anchor':'middle', 'font-size':26, 'font-weight':700,
+        fill: playing[s.id] ? '#fff' : col, 'pointer-events':'none'}, nb); nt1.textContent = '♪';
+      // 標籤
+      var by = TH + 30;
+      var t1 = el('text', {x:TW/2, y:by, 'text-anchor':'middle', 'font-size':24, 'font-weight':800, fill:'var(--ink)', 'pointer-events':'none'}, g);
+      t1.textContent = nt.name;
+      if(nt.cents !== 0){ var ts = el('tspan', {'font-size':12, 'font-weight':500, dx:2, fill:'#7a4bc0'}, t1); ts.textContent = (nt.cents>0?'+':'')+nt.cents; }
+      var t2 = el('text', {x:TW/2, y:by+20, 'text-anchor':'middle', 'font-size':13, fill:'#1f7a52', 'pointer-events':'none'}, g);
+      t2.textContent = f.toFixed(1) + ' Hz';
+      var cm = parseFloat(document.getElementById('n-cm').value) || 16;
+      var t3 = el('text', {x:TW/2, y:by+38, 'text-anchor':'middle', 'font-size':13, fill:'#b3541e', 'pointer-events':'none'}, g);
+      t3.textContent = (s.ref ? '基準 ' : '') + fracText(s.r);
+      var t4 = el('text', {x:TW/2, y:by+55, 'text-anchor':'middle', 'font-size':12, fill:'var(--ink-soft)', 'pointer-events':'none'}, g);
+      t4.textContent = (s.r*cm).toFixed(1) + ' 公分';
+    });
+  }
+
+  // ---------- 拖曳與吹奏 ----------
+  var drag = null, stops = {};
+  function svgPt(e){ var p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+  function byId(id){ for(var i=0;i<straws.length;i++) if(straws[i].id === id) return straws[i]; }
+  function play(s){
+    if(stops[s.id]) return;
+    stops[s.id] = startTone(freqOf(s)); playing[s.id] = true; render();
+  }
+  function release(s){
+    if(!stops[s.id]) return;
+    stops[s.id](); delete stops[s.id];
+    setTimeout(function(){ delete playing[s.id]; render(); }, 450);
+  }
+  function blip(s){ play(s); setTimeout(function(){ release(s); }, 10); }
+
+  svg.addEventListener('pointerdown', function(e){
+    var t = e.target, role = null;
+    while(t && t !== svg){ if(t.getAttribute && t.getAttribute('data-role') && !role) role = t.getAttribute('data-role'); if(t.getAttribute && t.getAttribute('data-id') !== null && t.tagName === 'g' && t.getAttribute('data-id') !== '') break; t = t.parentNode; }
+    if(!t || t === svg || !role) return;
+    var s = byId(+t.getAttribute('data-id')); if(!s) return;
+    e.preventDefault(); try{ svg.setPointerCapture(e.pointerId); }catch(err){}
+    var p = svgPt(e);
+    if(role === 'note'){ drag = {kind:'note', s:s}; play(s); return; }
+    if(role === 'cotton' && !s.ref){
+      straws.splice(straws.indexOf(s),1); straws.push(s);
+      drag = {kind:'cotton', s:s, oy:p.y - (s.y + s.r*L0), snap:snapOf(s.r)}; render(); return;
+    }
+    // 把拿起來的吸管放到最上層
+    straws.splice(straws.indexOf(s),1); straws.push(s);
+    drag = {kind:'tube', s:s, ox:p.x - s.x, oy:p.y - s.y}; render();
+  });
+  svg.addEventListener('pointermove', function(e){
+    if(!drag || drag.kind === 'note') return;
+    var p = svgPt(e), s = drag.s;
+    if(drag.kind === 'tube'){
+      s.x = Math.max(16, Math.min(W - TW - 6, p.x - drag.ox));
+      s.y = Math.max(78, Math.min(H - TH - 70, p.y - drag.oy));
+    } else {
+      var r = Math.max(MINR, Math.min(1, (p.y - drag.oy - s.y) / L0));
+      var sn = nearSnap(r);
+      if(sn){ r = sn.v; drag.snap = sn.t; } else drag.snap = null;
+      s.r = r;
+    }
+    render();
+  });
+  // 接近整數比就吸附過去
+  // [分子, 分母, 吸附範圍]：1/2、2/3、3/4 範圍大，好對準
+  var SNAPS = [[1,2,.022],[2,3,.022],[3,4,.022],[4,5,.01],[3,5,.01],[8,9,.01],[8,15,.01],[5,6,.01],[2,5,.01],[1,3,.01]];
+  function nearSnap(r){
+    for(var i=0;i<SNAPS.length;i++){ var v = SNAPS[i][0]/SNAPS[i][1]; if(Math.abs(r - v) < SNAPS[i][2]) return {v:v, t:SNAPS[i][0]+'/'+SNAPS[i][1]}; }
+    return null;
+  }
+  function snapOf(r){ var sn = nearSnap(r); return sn ? sn.t : null; }
+  function endDrag(){
+    if(!drag) return;
+    var d = drag; drag = null;
+    if(d.kind === 'cotton') render();
+    if(d.kind === 'note') release(d.s);
+    if(d.kind === 'cotton' && document.getElementById('c-preview').checked) blip(d.s);
+    save();
+  }
+  svg.addEventListener('pointerup', endDrag);
+  svg.addEventListener('pointercancel', endDrag);
+
+  // 鍵盤 1～8
+  function orderLR(){ return straws.slice().sort(function(a,b){ return a.x - b.x; }); }
+  document.addEventListener('keydown', function(e){
+    if(e.repeat || e.target.tagName === 'INPUT') return;
+    var k = parseInt(e.key, 10); if(!(k>=1 && k<=8)) return;
+    play(orderLR()[k-1]);
+  });
+  document.addEventListener('keyup', function(e){
+    var k = parseInt(e.key, 10); if(!(k>=1 && k<=8)) return;
+    release(orderLR()[k-1]);
+  });
+
+  // ---------- 工具列 ----------
+  document.getElementById('b-scale').addEventListener('click', function(){ defaults(); render(); save(); });
+  document.getElementById('b-equal').addEventListener('click', function(){ straws.forEach(function(s){ s.r = 1; }); render(); save(); });
+  document.getElementById('b-sort').addEventListener('click', function(){
+    straws.slice().sort(function(a,b){ return b.r - a.r || a.x - b.x; }).forEach(function(s, i){ s.x = slotX(i); });
+    render(); save();
+  });
+  document.getElementById('b-align').addEventListener('click', function(){ straws.forEach(function(s){ s.y = TOP; }); render(); save(); });
+  document.getElementById('b-play').addEventListener('click', function(){
+    orderLR().forEach(function(s, i){ setTimeout(function(){ play(s); setTimeout(function(){ release(s); }, 380); }, i*520); });
+  });
+  document.getElementById('c-marks').addEventListener('change', function(e){ showMarks = e.target.checked; render(); });
+  document.getElementById('n-cm').addEventListener('input', render);
+
+  if(!load()) defaults();
+  render();
+})();
+</script>
+</body>
+</html>
