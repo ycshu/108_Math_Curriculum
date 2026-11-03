@@ -73,8 +73,8 @@ footer a{color:var(--ink-soft)}
     <span id="v-info" style="font-size:.82rem;color:var(--t2)"></span>
   </div>
 
-  <div class="stage"><svg id="svg" viewBox="0 0 1000 690" aria-label="八支吸管排笛"></svg></div>
-  <p class="hint">電腦鍵盤 1～8 也可以吹（由左到右第 1～8 支）。</p>
+  <div class="stage"><svg id="svg" viewBox="0 0 1000 690" aria-label="十支吸管排笛"></svg></div>
+  <p class="hint">電腦鍵盤 1～9、0 也可以吹（由左到右第 1～10 支）。</p>
 
   <div class="note">
     <h3>長度和音高的關係</h3>
@@ -86,7 +86,7 @@ footer a{color:var(--ink-soft)}
       <tr><th>頻率變成</th><td>1 倍</td><td>4/3 倍</td><td>3/2 倍</td><td>2 倍</td></tr>
       <tr><th>音程</th><td>基準音（Do）</td><td>4 度（Fa）</td><td>5 度（Sol）</td><td>8 度（高音 Do）</td></tr>
     </table>
-    <p>「排成 Do Re Mi」用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。畫面上的吸管照珍奶粗吸管 22 公分的比例畫，棉花最深可以推到 20.5 公分。基準那支的空氣柱 16.6 公分，在 28°C 剛好是 C5（Do）；棉花往下推、比基準更長，就能吹出比 C5 更低的音。</p>
+    <p>「排成 Do Re Mi」從 C5 排到 E6，用的長度是 1、8/9、4/5、3/4、2/3、3/5、8/15、1/2、4/9、2/5。音名旁的小數字是跟鋼琴（平均律）差幾「分」（100 分 = 半音）。畫面上的吸管照珍奶粗吸管 22 公分的比例畫，棉花最深可以推到 20.5 公分。基準那支的空氣柱 16.6 公分，在 28°C 剛好是 C5（Do）；棉花往下推、比基準更長，就能吹出比 C5 更低的音。</p>
   </div>
   <footer>數學教材教法課程用・搭配「神奇吸管排笛」教案・<a href="../">課程資源總覽</a></footer>
 </div>
@@ -100,25 +100,25 @@ footer a{color:var(--ink-soft)}
   // 依實際比例畫：珍奶粗吸管 22 公分，1 公分 = 20 像素
   var PX = 20, STRAW_CM = 22, PLUG_CM = 1.5;
   var MAXCM = STRAW_CM - PLUG_CM, MINCM = 4;   // 空氣柱可調範圍（公分）
-  var TW = 64;              // 吸管寬（畫面上加粗，方便操作）
+  var TW = 56;              // 吸管寬（畫面上加粗，方便操作）
   var CH = PLUG_CM * PX;    // 棉花厚度
   var TH = STRAW_CM * PX;   // 吸管總長
   function L0(){ return baseCm() * PX; }   // 基準空氣柱長度（像素）
   var F0 = 130.8128;        // C3
-  var HUES = [350, 25, 48, 140, 190, 215, 265, 300];
-  var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2];
-  var KEY = 'panflute-state-v2';
+  var HUES = [350, 22, 45, 95, 145, 180, 205, 230, 270, 310];
+  var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2, 4/9, 2/5];   // C5 D5 E5 F5 G5 A5 B5 C6 D6 E6
+  var KEY = 'panflute-state-v3';
 
   var straws = [];
   function defaults(){
     straws = SCALE.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:HUES[i]}; });
   }
-  function slotX(i){ return 52 + i*118; }
+  function slotX(i){ return 34 + i*96; }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(straws)); }catch(e){} }
   function load(){
     try{
       var d = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if(Array.isArray(d) && d.length === 8){ straws = d; return true; }
+      if(Array.isArray(d) && d.length === SCALE.length){ straws = d; return true; }
     }catch(e){}
     return false;
   }
@@ -323,7 +323,7 @@ footer a{color:var(--ink-soft)}
   });
   // 接近整數比就吸附過去
   // [分子, 分母, 吸附範圍]：1/2、2/3、3/4 範圍大，好對準
-  var SNAPS = [[1,2,.022],[2,3,.022],[3,4,.022],[4,5,.01],[3,5,.01],[8,9,.01],[8,15,.01],[5,6,.01],[2,5,.01],[1,3,.01],[9,8,.01],[6,5,.01]];
+  var SNAPS = [[1,2,.022],[2,3,.022],[3,4,.022],[4,5,.01],[3,5,.01],[8,9,.01],[8,15,.01],[5,6,.01],[2,5,.01],[1,3,.01],[9,8,.01],[6,5,.01],[4,9,.01]];
   function nearSnap(r){
     for(var i=0;i<SNAPS.length;i++){ var v = SNAPS[i][0]/SNAPS[i][1]; if(Math.abs(r - v) < SNAPS[i][2]) return {v:v, t:SNAPS[i][0]+'/'+SNAPS[i][1]}; }
     return null;
@@ -340,15 +340,15 @@ footer a{color:var(--ink-soft)}
   svg.addEventListener('pointerup', endDrag);
   svg.addEventListener('pointercancel', endDrag);
 
-  // 鍵盤 1～8
+  // 鍵盤 1～9、0
   function orderLR(){ return straws.slice().sort(function(a,b){ return a.x - b.x; }); }
   document.addEventListener('keydown', function(e){
     if(e.repeat || e.target.tagName === 'INPUT') return;
-    var k = parseInt(e.key, 10); if(!(k>=1 && k<=8)) return;
+    var k = parseInt(e.key, 10); if(isNaN(k)) return; k = k === 0 ? 10 : k; if(k > straws.length) return;
     play(orderLR()[k-1]);
   });
   document.addEventListener('keyup', function(e){
-    var k = parseInt(e.key, 10); if(!(k>=1 && k<=8)) return;
+    var k = parseInt(e.key, 10); if(isNaN(k)) return; k = k === 0 ? 10 : k; if(k > straws.length) return;
     release(orderLR()[k-1]);
   });
 
