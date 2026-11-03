@@ -102,8 +102,8 @@ footer a{color:var(--ink-soft)}
     <p class="road">吸管一直取 2/3 → 長度都是 2<sup>p</sup>／3<sup>q</sup> → 想繞回 C 就要 2<sup>p</sup> ＝ 3<sup>q</sup> → 取 log 變成 p／q ≈ log 3 ÷ log 2 → 對 log 3、log 2 做輾轉相除 → 商排成連分數 → 漸近分數就是答案 → 回到吸管：為什麼一個八度是 12 個音</p>
 
     <h3>① 五度相生：一直取 2/3</h3>
-    <p>按「五度相生排法」，吸管由左到右照這個順序排好：C5 →（2/3）G5 →（2/3）D6 →（×2）D5 →（2/3）A5 →（2/3）E6 →（×2）E5 →（2/3）B5 → F6 →（×2）F5 →（2/3）C6，一共 11 支、全是白鍵。按「依長短排好」可以改回由長到短。也可以自己做：把 G5「設為基準」，再把另一支推到「G5 的 2/3」，就得到 D6。</p>
-    <p>B5 之後接 F6：F6 的長度是 C5 的 3/8，加倍就是 F5（C5 的 3/4），F5 的 2/3 剛好是 C6（C5 的 1/2）。</p>
+    <p>按「五度相生排法」，吸管由左到右照這個順序排好，每支吸管上方標著它是怎麼來的：C5 →（×2/3）G5 →（×2/3）D6 →（×2）D5 →（×2/3）A5 →（×2/3）E6 →（×2）E5 →（×2/3）B5。長度變 2/3，就是在鋼琴上往右數 7 格（黑鍵白鍵都算）；長度加倍，就是往左 12 格。也可以自己做：把 G5「設為基準」，再把另一支推到「G5 的 2/3」，就得到 D6。</p>
+    <p><b>F 要倒過來想。</b>從 C 一直往右跳 7 格，怎麼跳都要很久才碰到 F。所以反過來：先拿 C6（C5 的 1/2），把它<b>拉長成 3/2 倍</b>，就是往左跳 7 格，得到 F5（1/2 × 3/2 ＝ 3/4）；再減半就是 F6（C5 的 3/8）。也就是 F5 的 2/3 是 C6——五度相生往另一邊走一步。用格數看：往左 7 格再往右 12 格＝往右 5 格，C 往右數 5 格正好是 F。</p>
 
     <h3>② 長度一定是 2<sup>p</sup>／3<sup>q</sup></h3>
     <p>每「取 2/3」一次，分子多乘一個 2、分母多乘一個 3；每「加倍」一次，分子再多乘一個 2。所以鏈上每一支的長度（跟 C5 比）都是 2<sup>p</sup>／3<sup>q</sup>，q 是取了幾次 2/3：</p>
@@ -173,18 +173,19 @@ footer a{color:var(--ink-soft)}
   var F0 = 130.8128;        // C3
   var HUES = [350, 22, 45, 95, 145, 180, 205, 230, 270, 310];
   var SCALE = [1, 8/9, 4/5, 3/4, 2/3, 3/5, 8/15, 1/2, 4/9, 2/5];   // C5 D5 E5 F5 G5 A5 B5 C6 D6 E6（純律）
-  // 五度相生（畢氏音律），由左到右照相生的順序：C5 G5 D6 D5 A5 E6 E5 B5 F6 F5 C6
-  // B5 之後不取 2/3（會到 F♯），改用 F6＝C5 的 3/8，再 ×2 到 F5、取 2/3 到 C6
-  var PYTH  = [1, 2/3, 4/9, 8/9, 16/27, 32/81, 64/81, 128/243, 3/8, 3/4, 1/2];
-  var PHUES = [350, 145, 270, 22, 180, 310, 45, 205, 330, 95, 230];
+  // 五度相生（畢氏音律），由左到右照相生的順序：C5 G5 D6 D5 A5 E6 E5 B5，
+  // F 要倒過來：C6（C5 的 1/2）拉長 3/2 倍得 F5，再減半得 F6
+  var PYTH  = [1, 2/3, 4/9, 8/9, 16/27, 32/81, 64/81, 128/243, 1/2, 3/4, 3/8];
+  var PHUES = [350, 145, 270, 22, 180, 310, 45, 205, 230, 95, 330];
+  var POPS  = ['', '×2/3', '×2/3', '×2', '×2/3', '×2/3', '×2', '×2/3', 'C5 的 ½', '倒過來 ×3/2', '×½'];
   var KEY = 'panflute-state-v4';
 
   var straws = [], refId = 0;   // refId：目前拿來當「長度基準」的吸管（量比例用；音高仍以上鎖的 C5 為準）
   function defaults(){
     build(SCALE, HUES);
   }
-  function build(rs, hues){
-    straws = rs.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:hues[i]}; });
+  function build(rs, hues, ops){
+    straws = rs.map(function(r, i){ return {id:i, x:slotX(i), y:TOP, r:r, ref:i===0, hue:hues[i], op:ops ? ops[i] : ''}; });
     refId = 0;
   }
   function refS(){ return byId(refId) || straws[0]; }
@@ -337,6 +338,13 @@ footer a{color:var(--ink-soft)}
       el('rect', {x:-4, y:-92, width:TW+8, height:22, rx:11, fill: isRef ? '#e8590c' : '#fff', stroke:'#e8590c', 'stroke-width':1.5}, rb);
       var rt = el('text', {x:TW/2, y:-76, 'text-anchor':'middle', 'font-size':12, 'font-weight':700, fill: isRef ? '#fff' : '#e8590c', 'pointer-events':'none'}, rb);
       rt.textContent = isRef ? '長度基準' : '設為基準';
+      // 五度相生排法：標出這支是從左邊那支怎麼來的
+      if(s.op){
+        var ow = 14 + s.op.length*11, rev = s.op.indexOf('倒') === 0;
+        el('rect', {x:-20-ow/2, y:-118, width:ow, height:20, rx:10, fill: rev ? '#7a4bc0' : '#1f7a52', 'pointer-events':'none'}, g);
+        var ot = el('text', {x:-20, y:-103, 'text-anchor':'middle', 'font-size':12, 'font-weight':700, fill:'#fff', 'pointer-events':'none'}, g);
+        ot.textContent = s.op;
+      }
       // 音符按鈕
       var nb = el('g', {'data-role':'note', style:'cursor:pointer'}, g);
       el('circle', {cx:TW/2, cy:-44, r:24, fill: playing[s.id] ? col : '#fff', stroke:col, 'stroke-width':3}, nb);
@@ -394,7 +402,7 @@ footer a{color:var(--ink-soft)}
     var p = svgPt(e), s = drag.s;
     if(drag.kind === 'tube'){
       s.x = Math.max(16, Math.min(W - TW - 6, p.x - drag.ox));
-      s.y = Math.max(96, Math.min(H - TH - 70, p.y - drag.oy));
+      s.y = Math.max(s.op ? 118 : 96, Math.min(H - TH - 70, p.y - drag.oy));
     } else {
       var r = Math.max(MINCM/baseCm(), Math.min(MAXCM/baseCm(), (p.y - drag.oy - s.y) / L0()));
       // 以「長度基準」那支來量比例；拖的正是基準那支時不吸附
@@ -438,7 +446,7 @@ footer a{color:var(--ink-soft)}
 
   // ---------- 工具列 ----------
   document.getElementById('b-scale').addEventListener('click', function(){ defaults(); render(); save(); });
-  document.getElementById('b-pyth').addEventListener('click', function(){ build(PYTH, PHUES); render(); save(); });
+  document.getElementById('b-pyth').addEventListener('click', function(){ build(PYTH, PHUES, POPS); render(); save(); });
   document.getElementById('b-equal').addEventListener('click', function(){ var R = refS().r; straws.forEach(function(s){ s.r = R; }); render(); save(); });
   document.getElementById('b-sort').addEventListener('click', function(){
     straws.slice().sort(function(a,b){ return b.r - a.r || a.x - b.x; }).forEach(function(s, i){ s.x = slotX(i); });
