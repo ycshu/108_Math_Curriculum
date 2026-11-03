@@ -69,10 +69,14 @@ section.part{margin-bottom:26px}
 #start-class-btn.running{background:var(--surface);color:var(--t2);border:1.5px solid var(--t2)}
 #timer-display{font-family:monospace;font-size:1.3rem;font-weight:700;color:var(--ink-soft)}
 #timer-display.running{color:var(--t2)}
+#timer-display.paused{color:var(--t1)}
 #lap-btn{display:none;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;
   border:2px solid var(--t1);background:var(--surface);color:var(--t1);border-radius:999px;padding:9px 20px;
   margin-left:auto}
 #lap-btn:active{background:var(--t1);color:#fff}
+#pause-btn{display:none;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;
+  border:2px solid var(--t3);background:var(--surface);color:var(--t3);border-radius:999px;padding:9px 20px}
+#pause-btn.paused{background:var(--t3);color:#fff}
 #end-btn{display:none;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;
   border:1px solid var(--border);background:var(--surface-2);color:var(--ink-soft);border-radius:999px;padding:9px 18px}
 
@@ -128,7 +132,7 @@ footer.doc a{color:var(--ink-faint)}
 @media print{
   @page{size:A4;margin:14mm 13mm}
   body{background:#fff;color:#111;font-size:11.5pt}
-  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn,#lap-btn,#end-btn{display:none!important}
+  .toolbar,#add-entry-btn,.edel,.pdel,.ephoto-add,#start-class-btn,#lap-btn,#pause-btn,#end-btn{display:none!important}
   .sheet{max-width:none;margin:0;border:none;box-shadow:none;border-radius:0;padding:0;background:#fff}
   .fill,.bigfill,.etext{background:#fff}
   .fill:empty::before,.bigfill:empty::before,.etext:empty::before{content:''}
@@ -180,6 +184,7 @@ footer.doc a{color:var(--ink-faint)}
     <button id="start-class-btn" type="button">▶ 開始上課</button>
     <span id="timer-display">尚未開始</span>
     <button id="lap-btn" type="button">⏺ 記一個時間點</button>
+    <button id="pause-btn" type="button">⏸ 暫停</button>
     <button id="end-btn" type="button">■ 結束上課</button>
   </div>
 </section>
@@ -223,7 +228,7 @@ footer.doc a{color:var(--ink-faint)}
   var TKEY = 'classroom-notes-timer-v1';   // 計時起點（ms epoch）
 
   var state = { fields:{}, entries:[], token:null };
-  var classStart = null, timerInterval = null;
+  var classStart = null, timerInterval = null, isPaused = false, pausedElapsedMs = 0;
 
   // ---------- 本機離線備援（伺服器連不上時還是能繼續寫） ----------
   function localSave(){
@@ -245,34 +250,70 @@ footer.doc a{color:var(--ink-faint)}
   }
   var timerDisplay = document.getElementById('timer-display');
   var startBtn = document.getElementById('start-class-btn');
+  function currentElapsedMs(){
+    if(!classStart) return null;
+    return isPaused ? pausedElapsedMs : (Date.now() - classStart);
+  }
   function tickDisplay(){
-    if(!classStart) return;
+    if(!classStart || isPaused) return;
     timerDisplay.textContent = '⏱ 已進行 ' + fmtElapsed(Date.now() - classStart);
   }
   var lapBtn = document.getElementById('lap-btn'), endBtn = document.getElementById('end-btn');
+  var pauseBtn = document.getElementById('pause-btn');
+  function persistTimer(){
+    try{ localStorage.setItem(TKEY, JSON.stringify({start:classStart, paused:isPaused, pausedElapsedMs:pausedElapsedMs})); }catch(e){}
+  }
   function startTimer(ts){
     classStart = ts;
-    try{ localStorage.setItem(TKEY, String(ts)); }catch(e){}
+    isPaused = false; pausedElapsedMs = 0;
+    persistTimer();
     startBtn.textContent = '⟲ 重新開始計時';
     startBtn.classList.add('running');
     timerDisplay.classList.add('running');
+    timerDisplay.classList.remove('paused');
     lapBtn.style.display = 'inline-block';
+    pauseBtn.style.display = 'inline-block';
+    pauseBtn.textContent = '⏸ 暫停'; pauseBtn.classList.remove('paused');
     endBtn.style.display = 'inline-block';
+    clearInterval(timerInterval);
+    timerInterval = setInterval(tickDisplay, 1000);
+    tickDisplay();
+  }
+  function pauseTimer(){
+    if(!classStart || isPaused) return;
+    pausedElapsedMs = Date.now() - classStart;
+    isPaused = true;
+    clearInterval(timerInterval); timerInterval = null;
+    persistTimer();
+    timerDisplay.textContent = '⏸ 已暫停 ' + fmtElapsed(pausedElapsedMs);
+    timerDisplay.classList.remove('running');
+    timerDisplay.classList.add('paused');
+    pauseBtn.textContent = '▶ 繼續'; pauseBtn.classList.add('paused');
+  }
+  function resumeTimer(){
+    if(!classStart || !isPaused) return;
+    classStart = Date.now() - pausedElapsedMs;
+    isPaused = false;
+    persistTimer();
+    timerDisplay.classList.remove('paused');
+    timerDisplay.classList.add('running');
+    pauseBtn.textContent = '⏸ 暫停'; pauseBtn.classList.remove('paused');
     clearInterval(timerInterval);
     timerInterval = setInterval(tickDisplay, 1000);
     tickDisplay();
   }
   function endTimer(){
     if(!classStart) return;
-    var final = fmtElapsed(Date.now() - classStart);
+    var final = fmtElapsed(currentElapsedMs());
     clearInterval(timerInterval); timerInterval = null;
-    classStart = null;
+    classStart = null; isPaused = false; pausedElapsedMs = 0;
     try{ localStorage.removeItem(TKEY); }catch(e){}
     timerDisplay.textContent = '⏹ 已結束，共 ' + final;
-    timerDisplay.classList.remove('running');
+    timerDisplay.classList.remove('running'); timerDisplay.classList.remove('paused');
     startBtn.textContent = '▶ 開始上課';
     startBtn.classList.remove('running');
     lapBtn.style.display = 'none';
+    pauseBtn.style.display = 'none';
     endBtn.style.display = 'none';
   }
   var confirmModal = document.getElementById('confirm-modal');
@@ -287,11 +328,30 @@ footer.doc a{color:var(--ink-faint)}
     confirmModal.classList.remove('open');
     startTimer(Date.now());
   });
+  pauseBtn.addEventListener('click', function(){
+    if(isPaused) resumeTimer(); else pauseTimer();
+  });
   endBtn.addEventListener('click', endTimer);
   (function initTimer(){
     try{
       var saved = localStorage.getItem(TKEY);
-      if(saved) startTimer(parseInt(saved, 10));
+      if(!saved) return;
+      var d = null;
+      try{ d = JSON.parse(saved); }catch(e){ d = null; }
+      if(d && typeof d === 'object' && d.start){
+        startTimer(d.start);          // 先重建成跑動狀態
+        if(d.paused){                 // 再疊上暫停狀態（用存檔裡的秒數，不要重算）
+          isPaused = true;
+          pausedElapsedMs = d.pausedElapsedMs || 0;
+          clearInterval(timerInterval); timerInterval = null;
+          timerDisplay.textContent = '⏸ 已暫停 ' + fmtElapsed(pausedElapsedMs);
+          timerDisplay.classList.remove('running'); timerDisplay.classList.add('paused');
+          pauseBtn.textContent = '▶ 繼續'; pauseBtn.classList.add('paused');
+        }
+      } else {
+        var ts = parseInt(saved, 10); // 舊格式：純數字字串的開始時間
+        if(!isNaN(ts)) startTimer(ts);
+      }
     }catch(e){}
   })();
 
@@ -368,7 +428,8 @@ footer.doc a{color:var(--ink-faint)}
   }
 
   function addEntryNow(){
-    var t = classStart ? fmtElapsed(Date.now() - classStart) : '';
+    var ms = currentElapsedMs();
+    var t = ms !== null ? fmtElapsed(ms) : '';
     state.entries.push({time:t, text:'', photos:[]});
     localSave(); render(); scheduleSync();
     var cards = entriesEl.querySelectorAll('.entry');
@@ -383,10 +444,12 @@ footer.doc a{color:var(--ink-faint)}
     try{ localStorage.removeItem(LKEY); localStorage.removeItem(TKEY); }catch(e){}
     state = { fields:{}, entries:[], token:null };
     document.querySelectorAll('[data-key]').forEach(function(el){ el.innerHTML = ''; });
-    classStart = null; clearInterval(timerInterval);
-    startBtn.textContent = '▶ 開始上課'; startBtn.classList.remove('running'); timerDisplay.classList.remove('running');
+    classStart = null; isPaused = false; pausedElapsedMs = 0; clearInterval(timerInterval);
+    startBtn.textContent = '▶ 開始上課'; startBtn.classList.remove('running');
+    timerDisplay.classList.remove('running'); timerDisplay.classList.remove('paused');
     timerDisplay.textContent = '尚未開始';
     lapBtn.style.display = 'none';
+    pauseBtn.style.display = 'none'; pauseBtn.textContent = '⏸ 暫停'; pauseBtn.classList.remove('paused');
     endBtn.style.display = 'none';
     document.getElementById('share-box').style.display = 'none';
     render(); setSyncStatus('尚未同步', false);
