@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>翻摺六邊形兩面對照</title>
+<style>
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --surface-2:#f6f8fa;
+  --ink:#1a2733; --ink-soft:#4b5b6b;
+  --border:#c9d3dc; --accent:#1f3a5f; --accent-soft:#eaf0f8;
+  --t1:#b3541e; --t2:#1f7a52; --t3:#6a3fa0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111823; --surface:#161f2b; --surface-2:#1b2531;
+    --ink:#e7edf3; --ink-soft:#aebccb;
+    --border:#3a4856; --accent:#8fb2de; --accent-soft:#1c2d42;
+    --t1:#e0a06a; --t2:#5fc99a; --t3:#b89bdb;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:15px;line-height:1.7}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.5rem;margin:0 0 2px;font-weight:900}
+.sub{color:var(--t1);font-size:.88rem;margin:0 0 16px;font-weight:600}
+.tools{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;
+  display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:14px}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.grp>.lb{font-size:.78rem;color:var(--ink-soft);margin-right:2px}
+button,select{font-family:inherit;font-size:.86rem;cursor:pointer;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 12px}
+button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) button.on{color:#0e1520} }
+.sw{width:26px;height:26px;border-radius:50%;padding:0;border:2px solid transparent}
+.sw.on{border-color:var(--ink);outline:2px solid var(--surface);outline-offset:-4px}
+input[type=text]{font-family:inherit;font-size:.95rem;width:7em;border:1px solid var(--border);
+  border-radius:8px;padding:5px 8px;background:var(--surface-2);color:var(--ink)}
+input[type=range]{width:90px}
+label.ck{font-size:.84rem;display:flex;gap:5px;align-items:center;cursor:pointer}
+.boards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:720px){ .boards{grid-template-columns:1fr} }
+.board{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.board h2{font-size:1rem;margin:2px 0 6px}
+.board h2 small{font-weight:400;color:var(--ink-soft);font-size:.78rem}
+canvas{width:100%;max-width:460px;aspect-ratio:1/1;touch-action:none;cursor:crosshair;display:block;margin:0 auto}
+.note{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-top:16px;font-size:.9rem}
+.note h3{font-size:1rem;margin:0 0 6px;color:var(--t3)}
+.note p{margin:0 0 8px}
+.note b{color:var(--t2)}
+footer{margin-top:18px;font-size:.78rem;color:var(--ink-soft)}
+footer a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>翻摺六邊形・兩面對照</h1>
+  <p class="sub">在任一面畫圖或寫字，另一面會立刻顯示「翻過去之後」看到的樣子。</p>
+
+  <div class="tools">
+    <div class="grp">
+      <button id="m-pen" class="on" type="button">畫筆</button>
+      <button id="m-eraser" type="button">橡皮擦</button>
+      <button id="m-text" type="button">寫字</button>
+    </div>
+    <div class="grp" id="colors"><span class="lb">顏色</span></div>
+    <div class="grp"><span class="lb">粗細</span><input type="range" id="size" min="4" max="60" value="14"></div>
+    <div class="grp" id="text-opts" style="display:none">
+      <span class="lb">字</span><input type="text" id="txt" value="回" maxlength="12">
+      <span class="lb">大小</span><input type="range" id="tsize" min="20" max="200" value="90">
+      <span class="lb">旋轉</span><input type="range" id="trot" min="-180" max="180" step="15" value="0">
+      <span id="trot-v" style="font-size:.78rem;color:var(--ink-soft);width:3em">0°</span>
+    </div>
+    <div class="grp">
+      <button id="undo" type="button">復原</button>
+      <button id="clear" type="button">清空</button>
+      <select id="preset">
+        <option value="">載入範例…</option>
+        <option value="photo">照片上的 A1～A6</option>
+        <option value="hui">回回回（兩面一模一樣）</option>
+        <option value="ya">大大的「丫」（兩面都是丫）</option>
+        <option value="sos">SOS（兩面都讀得出來）</option>
+        <option value="ring">一個圓圈會變成什麼？</option>
+      </select>
+      <button id="save" type="button">下載圖片</button>
+    </div>
+    <div class="grp">
+      <label class="ck"><input type="checkbox" id="tint" checked>標出 3 個菱形</label>
+      <label class="ck"><input type="checkbox" id="mirror">我的六邊形是反方向摺的</label>
+    </div>
+  </div>
+
+  <div class="boards">
+    <div class="board"><h2>這一面 <small>（可以畫）</small></h2><canvas id="cP" width="600" height="600"></canvas></div>
+    <div class="board"><h2>翻過去之後 <small>（也可以畫）</small></h2><canvas id="cQ" width="600" height="600"></canvas></div>
+  </div>
+
+  <div class="note">
+    <h3>為什麼會變成這樣？</h3>
+    <p>六邊形的 6 個三角形其實是<b>兩兩黏在一起的 3 個菱形</b>（打開「標出 3 個菱形」就看得到）。翻過去的時候，每個菱形整塊搬家，<b>原本在正中心的那個角，會跑到最外面</b>；所以畫在中心的圖案，翻過去會散到外圍的角上。</p>
+    <h3>怎麼設計兩面都認得出來的字？</h3>
+    <p>1. <b>一個菱形寫一個字，不要跨過菱形的邊</b>——同一個菱形裡的筆畫翻過去還是連在一起。</p>
+    <p>2. <b>三個菱形寫一樣的字，方向跟著繞一圈</b>——翻過去之後三個字都還在，只是「頭朝外」變成「頭朝內」。</p>
+    <p>3. 如果挑<b>倒過來看也一樣的字</b>（回、田、中、SOS），兩面就會一模一樣。</p>
+  </div>
+  <footer>數學教材教法課程用・以實體翻摺六邊形照片校對翻面規則・<a href="../">課程資源總覽</a></footer>
+</div>
+
+<script>
+(function(){
+  var N = 600, cx = 300, cy = 300, R = 270;
+  var cP = document.getElementById('cP'), cQ = document.getElementById('cQ');
+  var gP = cP.getContext('2d'), gQ = cQ.getContext('2d');
+  function mk(){ var c = document.createElement('canvas'); c.width = N; c.height = N; return c; }
+  var own = { P: mk(), Q: mk() };
+  var tmp = mk();
+
+  // 數學座標（y 向上）的角度 deg、半徑 r → 畫布座標
+  function pt(deg, r){ var a = deg*Math.PI/180; return [cx + r*Math.cos(a), cy - r*Math.sin(a)]; }
+  var V = []; for(var j=0;j<6;j++) V.push(pt(60*j, R));
+  var O = [cx, cy];
+  var HEX = V;
+  // 三個菱形（以「這一面」為準）：A1+A2、A3+A4、A5+A6
+  var RHOMB = [ [O,V[0],V[1],V[2]], [O,V[4],V[5],V[0]], [O,V[2],V[3],V[4]] ];
+  var TINT = ['rgba(232,92,140,.16)','rgba(31,150,120,.16)','rgba(240,170,40,.20)'];
+  // 由實體照片讀出的翻面規則（畫布座標）：
+  //   A1+A2 平移；A3+A4 繞 A3 重心轉 240°；A5+A6 繞 A6 重心轉 120°（皆為數學逆時針）
+  var c330 = pt(330, R/Math.sqrt(3)), c150 = pt(150, R/Math.sqrt(3));
+  function rotAbout(c, degCCW){ return new DOMMatrix().translate(c[0],c[1]).rotate(-degCCW).translate(-c[0],-c[1]); }
+  var BASE_M = [ new DOMMatrix().translate(-0.5*R, Math.sqrt(3)/2*R), rotAbout(c330,240), rotAbout(c150,120) ];
+  var FLIP = new DOMMatrix([-1,0,0,1,2*cx,0]);
+  var mirror = false;
+  function M(i){ return mirror ? FLIP.multiply(BASE_M[i]).multiply(FLIP) : BASE_M[i]; }
+  function srcPoly(i){ return RHOMB[i].map(function(p){ if(!mirror) return p; var q = FLIP.transformPoint({x:p[0],y:p[1]}); return [q.x,q.y]; }); }
+  function dstPoly(i){ var m = M(i); return srcPoly(i).map(function(p){ var q = m.transformPoint({x:p[0],y:p[1]}); return [q.x,q.y]; }); }
+  function polyPath(g, poly){ g.beginPath(); g.moveTo(poly[0][0],poly[0][1]); for(var k=1;k<poly.length;k++) g.lineTo(poly[k][0],poly[k][1]); g.closePath(); }
+
+  // 把 src 依翻面規則畫到 g 上；dir='fwd'：這一面→翻過去；'inv'：翻過去→這一面
+  function drawMapped(g, src, dir){
+    for(var i=0;i<3;i++){
+      g.save();
+      if(dir === 'fwd'){ g.setTransform(M(i)); polyPath(g, srcPoly(i)); }
+      else { g.setTransform(M(i).inverse()); polyPath(g, dstPoly(i)); }
+      g.clip();
+      g.drawImage(src, 0, 0);
+      g.restore();
+    }
+  }
+
+  // ---------- 操作紀錄（可復原） ----------
+  var ops = [];
+  function applyOp(op){
+    if(op.type === 'clear'){ own.P.getContext('2d').clearRect(0,0,N,N); own.Q.getContext('2d').clearRect(0,0,N,N); return; }
+    var g = own[op.side].getContext('2d');
+    if(op.type === 'pen'){ strokePath(g, op, 'source-over'); }
+    else if(op.type === 'eraser'){ eraseWith(op, op.pts); }
+    else if(op.type === 'text'){
+      g.save(); g.translate(op.x, op.y); g.rotate(op.rot*Math.PI/180);
+      g.fillStyle = op.color; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = '900 ' + op.size + 'px "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+      g.fillText(op.text, 0, 0); g.restore();
+    }
+  }
+  function strokePath(g, op, mode, pts){
+    pts = pts || op.pts;
+    g.save(); g.globalCompositeOperation = mode;
+    g.strokeStyle = op.color || '#000'; g.fillStyle = op.color || '#000';
+    g.lineWidth = op.size; g.lineCap = 'round'; g.lineJoin = 'round';
+    if(pts.length === 1){ g.beginPath(); g.arc(pts[0][0], pts[0][1], op.size/2, 0, Math.PI*2); g.fill(); }
+    else { g.beginPath(); g.moveTo(pts[0][0],pts[0][1]); for(var k=1;k<pts.length;k++) g.lineTo(pts[k][0],pts[k][1]); g.stroke(); }
+    g.restore();
+  }
+  // 橡皮擦：擦自己這面，也擦掉另一面映射過來、此處看得到的部分
+  function eraseWith(op, pts){
+    strokePath(own[op.side].getContext('2d'), op, 'destination-out', pts);
+    var t = tmp.getContext('2d'); t.clearRect(0,0,N,N);
+    strokePath(t, {color:'#000', size:op.size}, 'source-over', pts);
+    var other = op.side === 'P' ? 'Q' : 'P';
+    var go = own[other].getContext('2d');
+    go.save(); go.globalCompositeOperation = 'destination-out';
+    drawMapped(go, tmp, op.side === 'P' ? 'fwd' : 'inv');
+    go.restore();
+  }
+  function replay(){
+    own.P.getContext('2d').clearRect(0,0,N,N); own.Q.getContext('2d').clearRect(0,0,N,N);
+    ops.forEach(applyOp); compose();
+  }
+
+  // ---------- 畫面合成 ----------
+  var showTint = true;
+  function compose(){
+    [['P',gP,'Q','inv'],['Q',gQ,'P','fwd']].forEach(function(s){
+      var side = s[0], g = s[1], other = s[2], dir = s[3];
+      g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,N,N);
+      g.save(); polyPath(g, HEX); g.clip();
+      g.fillStyle = '#ffffff'; g.fillRect(0,0,N,N);
+      if(showTint){
+        for(var i=0;i<3;i++){ g.fillStyle = TINT[i]; polyPath(g, side === 'P' ? srcPoly(i) : dstPoly(i)); g.fill(); }
+      }
+      g.drawImage(own[side], 0, 0);
+      drawMapped(g, own[other], dir);
+      g.restore();
+      // 紙上的黑線：六邊形外框＋三條對角線
+      g.save(); g.strokeStyle = '#1a1a1a'; g.lineWidth = 3; g.lineJoin = 'round';
+      polyPath(g, HEX); g.stroke();
+      g.beginPath(); for(var k=0;k<3;k++){ g.moveTo(V[k][0],V[k][1]); g.lineTo(V[k+3][0],V[k+3][1]); } g.stroke();
+      g.restore();
+    });
+  }
+
+  // ---------- 工具列 ----------
+  var mode = 'pen', color = '#e0457b';
+  var COLORS = ['#e0457b','#f08a24','#1f9a74','#2f6fd0','#7a4bc0','#1a1a1a'];
+  var colorsEl = document.getElementById('colors');
+  COLORS.forEach(function(c, i){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'sw' + (i===0?' on':'');
+    b.style.background = c; b.setAttribute('aria-label','顏色 '+(i+1));
+    b.addEventListener('click', function(){ color = c; colorsEl.querySelectorAll('.sw').forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on'); });
+    colorsEl.appendChild(b);
+  });
+  function setMode(m){
+    mode = m;
+    ['pen','eraser','text'].forEach(function(k){ document.getElementById('m-'+k).classList.toggle('on', k===m); });
+    document.getElementById('text-opts').style.display = m === 'text' ? 'flex' : 'none';
+  }
+  ['pen','eraser','text'].forEach(function(k){ document.getElementById('m-'+k).addEventListener('click', function(){ setMode(k); }); });
+  var sizeEl = document.getElementById('size'), txtEl = document.getElementById('txt'),
+      tsizeEl = document.getElementById('tsize'), trotEl = document.getElementById('trot');
+  trotEl.addEventListener('input', function(){ document.getElementById('trot-v').textContent = trotEl.value + '°'; });
+  document.getElementById('undo').addEventListener('click', function(){ ops.pop(); replay(); });
+  document.getElementById('clear').addEventListener('click', function(){ if(ops.length){ ops.push({type:'clear'}); replay(); } });
+  document.getElementById('tint').addEventListener('change', function(e){ showTint = e.target.checked; compose(); });
+  document.getElementById('mirror').addEventListener('change', function(e){ mirror = e.target.checked; replay(); });
+
+  // ---------- 繪圖輸入 ----------
+  var cur = null;
+  function pos(canvas, e){ var r = canvas.getBoundingClientRect(); return [ (e.clientX - r.left)*N/r.width, (e.clientY - r.top)*N/r.height ]; }
+  [['P',cP],['Q',cQ]].forEach(function(s){
+    var side = s[0], cv = s[1];
+    cv.addEventListener('pointerdown', function(e){
+      e.preventDefault();
+      var p = pos(cv, e);
+      if(mode === 'text'){
+        var t = txtEl.value.trim(); if(!t) return;
+        var op = {type:'text', side:side, x:p[0], y:p[1], text:t, size:+tsizeEl.value, rot:+trotEl.value, color:color};
+        ops.push(op); applyOp(op); compose(); return;
+      }
+      cv.setPointerCapture(e.pointerId);
+      cur = {type: mode, side: side, color: color, size: +sizeEl.value * (mode === 'eraser' ? 2 : 1), pts:[p]};
+      if(mode === 'pen') strokePath(own[side].getContext('2d'), cur, 'source-over');
+      else eraseWith(cur, [p]);
+      compose();
+    });
+    cv.addEventListener('pointermove', function(e){
+      if(!cur || cur.side !== side) return;
+      var p = pos(cv, e), last = cur.pts[cur.pts.length-1];
+      cur.pts.push(p);
+      if(cur.type === 'pen') strokePath(own[side].getContext('2d'), cur, 'source-over', [last, p]);
+      else eraseWith(cur, [last, p]);
+      compose();
+    });
+    function end(){ if(cur && cur.side === side){ ops.push(cur); cur = null; } }
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  });
+
+  // ---------- 範例 ----------
+  function txtOp(text, deg, r, rot, size, col){ var p = pt(deg, r); return {type:'text', side:'P', x:p[0], y:p[1], text:text, size:size, rot:rot, color:col}; }
+  var PRESETS = {
+    // 與實體照片相同：每個 A 的頭朝外
+    photo: function(){
+      var sub = ['₁','₂','₃','₄','₅','₆'], ang = [90,30,330,270,210,150];
+      return ang.map(function(a,i){ return txtOp('A'+sub[i], a, R*0.52, 90-a, 74, '#e0457b'); });
+    },
+    hui: function(){ return [60,300,180].map(function(a){ return txtOp('回', a, R/2, 60-a, 120, '#2f6fd0'); }); },
+    sos: function(){ return [60,300,180].map(function(a){ return txtOp('SOS', a, R/2, 90-a, 66, '#1f9a74'); }); },
+    ya: function(){
+      return [60,180,300].map(function(a){ var e = pt(a, R*0.93); return {type:'pen', side:'P', color:'#7a4bc0', size:36, pts:[[cx,cy], e]}; });
+    },
+    ring: function(){
+      var pts = []; for(var k=0;k<=96;k++){ pts.push(pt(k*3.75, R*0.42)); }
+      return [{type:'pen', side:'P', color:'#f08a24', size:22, pts:pts}];
+    }
+  };
+  document.getElementById('preset').addEventListener('change', function(e){
+    var k = e.target.value; e.target.value = '';
+    if(!PRESETS[k]) return;
+    ops.push({type:'clear'}); PRESETS[k]().forEach(function(op){ ops.push(op); });
+    replay();
+  });
+
+  // ---------- 下載 ----------
+  document.getElementById('save').addEventListener('click', function(){
+    var out = document.createElement('canvas'); out.width = 1260; out.height = 700;
+    var g = out.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0,0,1260,700);
+    g.fillStyle = '#1a2733'; g.font = '700 32px "Noto Sans TC","PingFang TC",sans-serif'; g.textAlign = 'center';
+    g.fillText('這一面', 330, 56); g.fillText('翻過去之後', 930, 56);
+    g.drawImage(cP, 30, 80); g.drawImage(cQ, 630, 80);
+    var a = document.createElement('a'); a.download = '翻摺六邊形_兩面.png'; a.href = out.toDataURL('image/png'); a.click();
+  });
+
+  // 預設載入照片範例，方便對照實體
+  PRESETS.photo().forEach(function(op){ ops.push(op); });
+  replay();
+})();
+</script>
+</body>
+</html>
