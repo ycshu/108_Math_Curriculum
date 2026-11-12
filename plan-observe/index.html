@@ -424,7 +424,7 @@ footer a{color:var(--ink-faint)}
         if(!d.ok){ setSync('同步失敗：' + (d.error||''), true); return; }
         if(state.token !== d.token){ state.token = d.token; try{ localStorage.setItem(LKEY, JSON.stringify(state)); }catch(e){} }
         showShare();
-        setSync('✓ 已同步 ' + d.time.slice(11) + (d.truncated ? '・照片已達上限' : ''));
+        setSync('✓ 已同步 ' + new Date().toTimeString().slice(0, 8) + (d.truncated ? '・照片已達上限' : ''));
         if(again){ again = false; changed(); }
       }).catch(function(){ syncing = false; setSync('⚠️ 連不上伺服器，先存在這台裝置，稍後自動重試', true); clearTimeout(syncT); syncT = setTimeout(doSync, 5000); });
   }
@@ -468,7 +468,7 @@ footer a{color:var(--ink-faint)}
         state = {token:NOTE, fields:n.fields || {}, entries:n.entries || []};
         // 本機比較新（例如剛剛離線時寫的）就用本機的
         if(local && local.token === NOTE && JSON.stringify(local).length > JSON.stringify(state).length) state = local;
-        applyState(); setSync('✓ 已接續紀錄（' + n.time.slice(5, 16) + '）');
+        applyState(); setSync('✓ 已接續之前的紀錄');
       }).catch(function(){ if(local) state = local; applyState(); setSync('找不到這份紀錄，改用這台裝置上的', true); });
     }
     if(local) state = local;
