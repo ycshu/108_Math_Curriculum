@@ -96,6 +96,14 @@ table.meta th{background:var(--surface-2);width:96px;white-space:nowrap;color:va
 .bigfill:empty::before{content:attr(data-ph);color:var(--t1);opacity:.75;font-size:.88em}
 .boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .boards img{width:100%;border:1px solid var(--border);border-radius:8px;cursor:zoom-in}
+.pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:6px}
+.pg{border:1px solid var(--border);border-radius:10px;padding:8px;background:var(--surface)}
+.pg.has{border-color:var(--t3)}
+.pgh{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.86rem}
+.pg img{width:100%;display:block;border-radius:6px;border:1px solid var(--border-soft);cursor:zoom-in;background:#fff}
+.pg .notes{margin-left:0}
+.fname{font-size:.86rem;margin:4px 0 2px}
+.fname a{color:var(--accent);font-weight:700}
 .loader{max-width:560px;margin:60px auto;background:var(--surface);border:1px solid var(--border-soft);border-radius:12px;padding:24px}
 .loader input{width:100%;font-size:.95rem;border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin:8px 0;background:var(--fill);color:var(--ink)}
 .lightbox{position:fixed;inset:0;z-index:100;display:none;background:rgba(10,16,24,.88);align-items:center;justify-content:center;cursor:zoom-out}
@@ -124,7 +132,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   body{background:#fff;color:#111}
   .sheet{border:none;margin:0;padding:0;max-width:none}
   .act.now{background:#fff}
-  .entry,.act{break-inside:avoid}
+  .entry,.act,.pg{break-inside:avoid}
   .entry .tx{border:none}
 }
 </style>
@@ -225,6 +233,30 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     ['reflect', '九、教學省思', ['reflect','']]
   ];
   var STAGE_NAMES = ['引起動機','發展活動（一）','發展活動（二）','總結活動'];
+  var FILE_API = 'https://www.emath.tw/lesson-plan/api/file/';
+
+  // 投影片、講義／學習單：每一頁一個區塊，可以各自記錄（紀錄的 anchor 是 f<檔案序>p<頁>）
+  function filePart(kind, title){
+    var all = plan.files || [], fl = all.filter(function(f){ return f.kind === kind; });
+    if(!fl.length) return null;
+    var d = document.createElement('div'); d.className = 'part';
+    d.innerHTML = '<div class="ph"><h2>'+title+'</h2></div>';
+    fl.forEach(function(f){
+      var idx = all.indexOf(f);
+      d.insertAdjacentHTML('beforeend', '<div class="fname">'+(kind === 'slides' ? '📊 ' : '📄 ')+'<a href="'+FILE_API+f.id+'" target="_blank" rel="noopener">'+esc(f.name)+'</a>'+
+        (f.pages ? '　共 '+f.pages+' 頁' : '　（這個檔案沒辦法逐頁顯示，請點檔名下載來看）')+'</div>');
+      if(!f.pages) return;
+      var g = document.createElement('div'); g.className = 'pages';
+      for(var n = 1; n <= f.pages; n++){
+        var key = 'f'+idx+'p'+n;
+        g.insertAdjacentHTML('beforeend', '<div class="pg" id="blk-'+key+'"><div class="pgh"><b>第 '+n+' 頁</b>'+
+          '<button class="add" data-anchor="'+key+'" type="button">＋ 記在這裡</button></div>'+
+          '<img loading="lazy" alt="第 '+n+' 頁" src="'+FILE_API+f.id+'/p/'+n+'"><div class="notes" data-notes="'+key+'"></div></div>');
+      }
+      d.appendChild(g);
+    });
+    return d;
+  }
 
   function buildStages(){
     var f = plan.fields;
@@ -290,6 +322,8 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
         d.insertAdjacentHTML('beforeend', '<div class="notes" data-notes="'+sec[0]+'"></div>');
       }
       host.appendChild(d);
+      var extra = sec[0] === 'acts' ? filePart('slides', '投影片（一頁一頁給意見）') : sec[0] === 'board' ? filePart('handout', '講義／學習單（一頁一頁給意見）') : null;
+      if(extra) host.appendChild(extra);
     });
   }
 
@@ -465,7 +499,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
   function openLB(src){ lbImg.src = src; lb.classList.add('open'); }
   lb.addEventListener('click', function(){ lb.classList.remove('open'); });
-  document.addEventListener('click', function(e){ if(e.target.matches && e.target.matches('.boards img')) openLB(e.target.src); });
+  document.addEventListener('click', function(e){ if(e.target.matches && e.target.matches('.boards img, .pg img')) openLB(e.target.src); });
 
   // ---------- 議課總整理：同一份教案所有觀察者的紀錄 ----------
   var COLORS = ['#c0392b','#1f6fb2','#1f7a52','#8e44ad','#b9770e','#16807f','#c2185b','#5d6d1e'];
@@ -549,6 +583,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     // 各段紀錄：所有人合在一起，照時間排
     document.querySelectorAll('[data-notes]').forEach(function(hst){ hst.innerHTML = ''; });
     document.querySelectorAll('.cnt').forEach(function(c){ c.remove(); });
+    document.querySelectorAll('.pg.has').forEach(function(c){ c.classList.remove('has'); });
     var all = [];
     shown.forEach(function(n){ n.entries.forEach(function(e){ all.push({n:n, e:e}); }); });
     all.sort(function(a, b){ var x = toMs(a.e.time), y = toMs(b.e.time); return (x === null ? 1e12 : x) - (y === null ? 1e12 : y); });
@@ -568,7 +603,9 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
       host.appendChild(c);
     });
     Object.keys(per).forEach(function(k){
-      var host = document.querySelector('[data-notes="'+k+'"]'), head = k.indexOf('act') === 0 ? document.querySelector('#blk-'+k+' .ah') : host.parentNode.querySelector('.ph');
+      var host = document.querySelector('[data-notes="'+k+'"]'), blk = document.getElementById('blk-'+k),
+          head = blk ? blk.querySelector('.ah, .pgh') : host.parentNode.querySelector('.ph');
+      if(blk && blk.classList.contains('pg')) blk.classList.add('has');
       if(head) head.insertAdjacentHTML('beforeend', '<span class="cnt">'+per[k].c+' 筆・'+Object.keys(per[k].who).length+' 位</span>');
     });
     // 整體印象

@@ -202,6 +202,17 @@ footer.doc a{ color:var(--ink-faint); }
   font-size:.74rem; padding:3px 9px; font-family:"Noto Sans TC",sans-serif;
 }
 .board-item img{ cursor:zoom-in; }
+.att{ margin-top:18px; border-top:1px dashed var(--border); padding-top:14px; }
+.att-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.att-btn{ font-family:'Noto Sans TC',sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--ink); border-radius:8px; padding:6px 16px; }
+.att-list{ display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+.att-item{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; border:1px solid var(--border); border-radius:8px;
+  padding:6px 12px; font-size:.86rem; background:var(--fill); }
+.att-item a{ color:#1f5f9e; font-weight:600; word-break:break-all; }
+.att-item .meta{ font-size:.76rem; color:#1f7a52; }
+.att-item .meta.err{ color:#a13c3c; }
+.att-item .del{ margin-left:auto; font-size:.75rem; cursor:pointer; background:none; border:1px solid var(--border); border-radius:6px; color:#a13c3c; padding:1px 8px; }
 .lightbox{
   position:fixed; inset:0; z-index:100; display:none;
   background:rgba(10,16,24,.88); cursor:zoom-out;
@@ -239,6 +250,7 @@ footer.doc a{ color:var(--ink-faint); }
   .board-item{ break-inside:avoid; }
   .board-item .del{ display:none; }
   #board-btn{ display:none; }
+  .att-btn, .att-item .del{ display:none; }
   .lightbox{ display:none !important; }
 }
 </style>
@@ -408,6 +420,23 @@ footer.doc a{ color:var(--ink-faint); }
   </div>
   <div id="worksheet-msg" style="font-size:.78rem;margin-bottom:10px;min-height:1.2em"></div>
   <div id="board-gallery" class="board-gallery"></div>
+
+  <div class="att">
+    <div class="att-row">
+      <b>📊 投影片</b>
+      <button type="button" class="att-btn" data-kind="slides">＋ 上傳投影片（PDF）</button>
+      <input type="file" id="slides-input" accept=".pdf,application/pdf" multiple style="display:none">
+    </div>
+    <p class="part-note">PowerPoint、Keynote、Google 簡報請先「另存為 PDF」再上傳，觀課與議課時大家才能一頁一頁給意見。單檔 20 MB 以內。</p>
+    <div class="att-list" id="slides-list"></div><div class="att-list" id="slides-pending"></div>
+    <div class="att-row" style="margin-top:12px">
+      <b>📄 講義／學習單</b>
+      <button type="button" class="att-btn" data-kind="handout">＋ 上傳講義／學習單</button>
+      <input type="file" id="handout-input" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" multiple style="display:none">
+    </div>
+    <p class="part-note">可上傳 PDF、Word 或圖片。PDF 和圖片可以一頁一頁給意見，Word 檔只能下載來看。單檔 20 MB 以內。</p>
+    <div class="att-list" id="handout-list"></div><div class="att-list" id="handout-pending"></div>
+  </div>
 </section>
 
 <!-- 差異化 -->
@@ -486,13 +515,14 @@ footer.doc a{ color:var(--ink-faint); }
   document.addEventListener('input',function(){ clearTimeout(t); t=setTimeout(save,400); });
   document.addEventListener('change',function(){ save(); });
   document.getElementById('btn-clear').addEventListener('click',function(){
-    if(!confirm('確定清空所有已填寫的內容（含板書照片）？'))return;
+    if(!confirm('確定清空所有已填寫的內容（含板書照片、投影片、講義）？'))return;
     try{localStorage.removeItem(KEY);}catch(e){}
     document.querySelectorAll('[data-key]').forEach(function(el){
       if(el.type==='checkbox'){el.checked=false;} else {el.innerHTML='';}
     });
-    try{localStorage.removeItem(BKEY);}catch(e){}
+    try{localStorage.removeItem(BKEY);localStorage.removeItem('lesson-plan-files-v1');}catch(e){}
     boards=[]; render();
+    if(typeof files!=='undefined'){ files=[]; frender(); }
   });
   var PLAN_TOKEN = new URLSearchParams(location.search).get('plan');
   if(PLAN_TOKEN && /^[0-9a-f]{10}$/.test(PLAN_TOKEN)){ PLAN_VIEW = true; } else { PLAN_TOKEN = null; load(); }
@@ -547,6 +577,57 @@ footer.doc a{ color:var(--ink-faint); }
     binput.value='';
   });
   bload();
+
+  // ===== 投影片、講義／學習單：上傳到伺服器（PDF 會逐頁截圖），教案只存檔案代碼 =====
+  var FKEY='lesson-plan-files-v1', FILE_API='https://www.emath.tw/lesson-plan/api/';
+  var files=[];
+  try{ if(!PLAN_VIEW) files=JSON.parse(localStorage.getItem(FKEY)||'[]'); }catch(e){ files=[]; }
+  function fsave(){ if(PLAN_VIEW) return; try{ localStorage.setItem(FKEY,JSON.stringify(files)); }catch(e){} }
+  function fesc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function mb(n){ return (n/1048576).toFixed(n<1048576?2:1)+' MB'; }
+  function frender(){
+    ['slides','handout'].forEach(function(k){
+      var list=document.getElementById(k+'-list'); list.innerHTML='';
+      files.forEach(function(f,i){
+        if(f.kind!==k) return;
+        var d=document.createElement('div'); d.className='att-item';
+        d.innerHTML='<a href="'+FILE_API+'file/'+f.id+'" target="_blank" rel="noopener">'+fesc(f.name)+'</a>'
+          +'<span class="meta">'+mb(f.size)+(f.pages ? '・'+f.pages+' 頁，可逐頁給意見' : '・只能下載')+'</span>'
+          +(PLAN_VIEW ? '' : '<button type="button" class="del">移除</button>');
+        var del=d.querySelector('.del');
+        if(del) del.addEventListener('click',function(){ files.splice(i,1); fsave(); frender(); });
+        list.appendChild(d);
+      });
+    });
+  }
+  function uploadFile(file,kind){
+    var list=document.getElementById(kind+'-pending');
+    var row=document.createElement('div'); row.className='att-item';
+    row.innerHTML='<span>'+fesc(file.name)+'</span><span class="meta">上傳中…</span>';
+    list.appendChild(row);
+    var meta=row.querySelector('.meta');
+    if(file.size>20*1024*1024){ meta.className='meta err'; meta.textContent='超過 20 MB，請先壓縮或減少圖片後再上傳'; return; }
+    var fd=new FormData(); fd.append('kind',kind); fd.append('file',file);
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST',FILE_API+'upload');
+    xhr.upload.onprogress=function(e){ if(e.lengthComputable) meta.textContent='上傳中 '+Math.round(e.loaded/e.total*100)+'%'+(e.loaded===e.total?'，正在截取頁面…':''); };
+    xhr.onload=function(){
+      var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
+      if(d && d.ok){ row.remove(); files.push({id:d.id,name:d.name,size:d.size,kind:d.kind,pages:d.pages}); fsave(); frender(); }
+      else { meta.className='meta err'; meta.textContent='上傳沒有成功：'+((d&&d.error)||'請稍後再試'); }
+    };
+    xhr.onerror=function(){ meta.className='meta err'; meta.textContent='連不上伺服器，請檢查網路後再試一次'; };
+    xhr.send(fd);
+  }
+  document.querySelectorAll('.att-btn').forEach(function(b){
+    var inp=document.getElementById(b.dataset.kind+'-input');
+    b.addEventListener('click',function(){ inp.click(); });
+    inp.addEventListener('change',function(){
+      Array.prototype.forEach.call(inp.files,function(f){ uploadFile(f,b.dataset.kind); });
+      inp.value='';
+    });
+  });
+  frender();
 
   // ===== 學習單連結 → 自動抓取預覽圖 =====
   function deriveImageSrc(url){
@@ -785,6 +866,7 @@ footer.doc a{ color:var(--ink-faint); }
       el.innerHTML = (v===undefined?'':v);
     });
     boards=[ex.board];
+    files=[]; fsave(); frender();
     bsave(); render(); save();
     window.scrollTo({top:0});
   }
@@ -798,7 +880,7 @@ footer.doc a{ color:var(--ink-faint); }
     b.addEventListener('click',function(e){
       e.stopPropagation();
       exMenu.classList.remove('open');
-      var hasContent = Object.keys(JSON.parse(localStorage.getItem(KEY)||'{}')).length>0 || boards.length>0;
+      var hasContent = Object.keys(JSON.parse(localStorage.getItem(KEY)||'{}')).length>0 || boards.length>0 || files.length>0;
       if(hasContent && !confirm('載入範例會覆蓋目前已填寫的內容，確定嗎？')) return;
       loadExample(b.dataset.ex);
     });
@@ -846,6 +928,7 @@ footer.doc a{ color:var(--ink-faint); }
           el.innerHTML=(v===undefined?'':v);
         });
         boards=(d.boards||[]).slice(); render();
+        files=(d.files||[]).slice(); frender();
         var b=document.getElementById('plan-banner');
         b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）'
           +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>'
@@ -891,7 +974,7 @@ footer.doc a{ color:var(--ink-faint); }
     subMsg.textContent='傳送中⋯'; subMsg.className='sub-msg';
     fetch(SUBMIT_URL,{
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({sid:sid,name:name,fields:fields,boards:boards})
+      body:JSON.stringify({sid:sid,name:name,fields:fields,boards:boards,files:files})
     }).then(function(r){ return r.json(); }).then(function(d){
       if(d.ok){
         subMsg.className='sub-msg ok';
