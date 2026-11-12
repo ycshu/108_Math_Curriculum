@@ -82,7 +82,14 @@ body{
 .sub-card{
   background:var(--surface); border:1px solid var(--border); border-radius:14px;
   padding:24px 28px; max-width:420px; width:100%; box-shadow:0 16px 48px rgba(0,0,0,.35);
+  max-height:92vh; overflow-y:auto;
 }
+.qr-box{ margin-top:14px; padding:12px; border:1px dashed #1f7a52; border-radius:10px; text-align:center; color:var(--ink); }
+.qr-box b{ color:#1f7a52; }
+.qr-box img{ display:block; margin:8px auto; width:190px; height:190px; background:#fff; padding:6px; border-radius:6px; image-rendering:pixelated; }
+.qr-box .qr-act{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.qr-box .qr-act a, .qr-box .qr-act button{ font-size:.8rem; font-weight:600; text-decoration:none; color:#1f7a52;
+  border:1px solid #1f7a52; border-radius:8px; padding:5px 12px; background:transparent; cursor:pointer; font-family:inherit; }
 .sub-card h3{ font-family:"Noto Serif TC",serif; font-size:1.1rem; margin:0 0 14px; }
 .sub-card label{ display:block; font-size:.84rem; color:var(--ink-soft); margin:10px 0 4px; }
 .sub-card input{
@@ -235,6 +242,7 @@ footer.doc a{ color:var(--ink-faint); }
   .lightbox{ display:none !important; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -796,6 +804,36 @@ footer.doc a{ color:var(--ink-faint); }
     });
   });
 
+  // ===== 觀課 QR Code =====
+  function observeUrl(token){
+    return 'https://ycshu.github.io/108_Math_Curriculum/plan-observe/?plan='+token;
+  }
+  function qrDataUrl(text){
+    var q=qrcode(0,'M'); q.addData(text); q.make();
+    return q.createDataURL(8,4);
+  }
+  function printQR(token,name,unit){
+    var url=observeUrl(token), esc=function(s){ return String(s||'').replace(/[<>&"]/g,function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); };
+    var w=window.open('','_blank');
+    if(!w) return;
+    w.document.write('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>觀課 QR Code</title>'
+      +'<style>body{font-family:"Noto Sans TC","PingFang TC",sans-serif;text-align:center;padding:40px 16px;color:#1a2733}'
+      +'h1{font-size:1.6rem;margin:0 0 6px}p{margin:4px 0}img{width:320px;max-width:80vw;image-rendering:pixelated;margin:18px auto;display:block}'
+      +'.u{font-size:.8rem;color:#1f5f9e;word-break:break-all}button{margin-top:18px;font-size:1rem;padding:8px 22px}@media print{button{display:none}}</style></head><body>'
+      +'<h1>📝 歡迎來觀課</h1><p><b>'+esc(name)+'</b>'+(unit?'　'+esc(unit):'')+'</p>'
+      +'<img src="'+qrDataUrl(url)+'" alt="觀課 QR Code">'
+      +'<p>用手機掃描，就能一邊看教案、一邊照教案的時間記錄觀課。</p><p class="u">'+esc(url)+'</p>'
+      +'<button onclick="print()">列印</button></body></html>');
+    w.document.close();
+  }
+  function qrBoxHTML(token){
+    return '<div class="qr-box"><b>📱 觀課用 QR Code</b>'
+      +'<div style="font-size:.78rem;margin-top:4px">請留下來（下載或列印）。上課當天給來觀課的人掃描，就能照你的教案時間直接做觀課紀錄。</div>'
+      +'<img src="'+qrDataUrl(observeUrl(token))+'" alt="觀課 QR Code">'
+      +'<div class="qr-act"><a id="qr-dl" href="'+qrDataUrl(observeUrl(token))+'" download="觀課QR_'+token+'.gif">下載圖片</a>'
+      +'<button type="button" id="qr-print">列印一張</button></div></div>';
+  }
+
   // ===== 以網址載入已繳交教案 =====
   if(PLAN_TOKEN){
     fetch('https://www.emath.tw/lesson-plan/api/plan/'+PLAN_TOKEN)
@@ -810,8 +848,13 @@ footer.doc a{ color:var(--ink-faint); }
         boards=(d.boards||[]).slice(); render();
         var b=document.getElementById('plan-banner');
         b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）'
-          +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>';
+          +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>'
+          +'　<a href="#" id="banner-qr" style="color:#f5d76e;font-weight:700">📱 觀課 QR Code</a>';
         b.classList.add('show');
+        document.getElementById('banner-qr').addEventListener('click',function(ev){
+          ev.preventDefault();
+          printQR(PLAN_TOKEN,d.name,(d.fields.unit||'').replace(/<[^>]*>/g,''));
+        });
         document.title=d.name+'－'+((d.fields.unit||'教案').replace(/<[^>]*>/g,''));
       })
       .catch(function(){
@@ -855,6 +898,12 @@ footer.doc a{ color:var(--ink-faint); }
         subMsg.innerHTML='✓ 已繳交（'+d.time+'）。可重複繳交，以最後一次為準。<br>你的<b>教案網址</b>（請複製後貼到 Moodle 繳交）：'
           +'<span class="share-box"><input id="share-url" readonly value="'+d.share+'">'
           +'<button type="button" id="share-copy">複製</button></span>';
+        var tk=(String(d.share).match(/plan=([0-9a-f]{10})/)||[])[1];
+        if(tk){
+          subMsg.insertAdjacentHTML('beforeend',qrBoxHTML(tk));
+          var unit=(fields.unit||'').replace(/<[^>]*>/g,'');
+          document.getElementById('qr-print').addEventListener('click',function(){ printQR(tk,name,unit); });
+        }
         document.getElementById('share-copy').addEventListener('click',function(){
           var inp=document.getElementById('share-url');
           inp.select(); inp.setSelectionRange(0,200);
