@@ -809,7 +809,8 @@ footer.doc a{ color:var(--ink-faint); }
         });
         boards=(d.boards||[]).slice(); render();
         var b=document.getElementById('plan-banner');
-        b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）';
+        b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）'
+          +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>';
         b.classList.add('show');
         document.title=d.name+'－'+((d.fields.unit||'教案').replace(/<[^>]*>/g,''));
       })

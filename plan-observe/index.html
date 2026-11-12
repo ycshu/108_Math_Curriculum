@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教案觀課｜數學教材教法</title>
+<style>
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --surface-2:#f6f8fa;
+  --ink:#1a2733; --ink-soft:#4b5b6b; --ink-faint:#7c8b99;
+  --border:#c9d3dc; --border-soft:#dde4ea;
+  --accent:#1f3a5f; --accent-soft:#eaf0f8;
+  --t1:#b3541e; --t2:#1f7a52; --t3:#6a3fa0; --fill:#fbfcfd;
+  --now:#fff4d6; --note:#f3eefb;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#111823; --surface:#161f2b; --surface-2:#1b2531;
+    --ink:#e7edf3; --ink-soft:#aebccb; --ink-faint:#8294a6;
+    --border:#3a4856; --border-soft:#28333f;
+    --accent:#8fb2de; --accent-soft:#1c2d42;
+    --t1:#e0a06a; --t2:#5fc99a; --t3:#b89bdb; --fill:#131b26;
+    --now:#3a3218; --note:#231d33;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:14.5px;line-height:1.7}
+button{font-family:inherit}
+.bar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border-soft);
+  padding:8px clamp(12px,3vw,32px);box-shadow:0 4px 14px -10px rgba(20,30,45,.4)}
+.row1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.row1 .tl{font-weight:800;margin-right:auto;font-size:.95rem}
+.row1 input{font-family:inherit;font-size:.86rem;border:1px solid var(--border);border-radius:8px;padding:5px 10px;
+  background:var(--fill);color:var(--ink);width:150px}
+.btn{font-size:.85rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--ink);border-radius:999px;padding:6px 14px}
+#b-start{background:var(--t2);border-color:var(--t2);color:#fff}
+#b-start.running{background:var(--surface);color:var(--t2)}
+#b-pause.paused{background:var(--t3);border-color:var(--t3);color:#fff}
+#b-note{border:2px solid var(--t1);color:var(--t1);background:var(--surface)}
+#clock{font-family:monospace;font-size:1.15rem;font-weight:800;color:var(--ink-soft);min-width:84px}
+#clock.running{color:var(--t2)} #clock.paused{color:var(--t1)}
+#sync{font-size:.75rem;color:var(--t2)} #sync.err{color:#a13c3c}
+.timeline{display:flex;gap:3px;margin-top:8px;position:relative}
+.seg{flex:1;min-width:0;border-radius:7px;background:var(--surface-2);border:1px solid var(--border-soft);
+  padding:3px 8px;font-size:.74rem;line-height:1.35;cursor:pointer;position:relative;overflow:hidden}
+.seg b{display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg .pl{color:var(--ink-faint)} .seg .ac{color:var(--t3);font-weight:700}
+.seg.now{background:var(--now);border-color:var(--t1)}
+.seg.now b::before{content:'▶ ';color:var(--t1)}
+.seg .fillbar{position:absolute;left:0;bottom:0;height:3px;background:var(--t1)}
+.over{color:#c0392b!important}
+.sharerow{display:none;gap:8px;align-items:center;margin-top:6px;font-size:.75rem;color:var(--ink-faint);flex-wrap:wrap}
+.sharerow input{flex:1;min-width:180px;font-family:monospace;font-size:.75rem;border:1px solid var(--border);
+  border-radius:6px;padding:3px 8px;background:var(--fill);color:var(--ink)}
+
+.sheet{max-width:900px;margin:22px auto 80px;background:var(--surface);border:1px solid var(--border-soft);
+  border-radius:12px;padding:clamp(18px,4vw,40px)}
+h1{font-size:1.5rem;text-align:center;margin:0 0 2px}
+.sub{text-align:center;color:var(--ink-faint);font-size:.85rem;margin-bottom:18px}
+table.meta{width:100%;border-collapse:collapse;margin-bottom:18px}
+table.meta th,table.meta td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top;font-size:.9rem}
+table.meta th{background:var(--surface-2);width:96px;white-space:nowrap;color:var(--ink-soft)}
+.part{margin-bottom:20px}
+.ph{display:flex;align-items:center;gap:10px;border-left:4px solid var(--accent);padding-left:10px;margin-bottom:6px}
+.ph h2{font-size:1.02rem;margin:0}
+.add{margin-left:auto;font-size:.76rem;font-weight:700;cursor:pointer;border:1px dashed var(--t3);color:var(--t3);
+  background:var(--note);border-radius:999px;padding:2px 12px}
+.content{font-size:.9rem;padding:2px 4px 2px 14px}
+.content:empty::before{content:'（未填寫）';color:var(--ink-faint)}
+.act{border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+.act.now{background:var(--now);border-color:var(--t1)}
+.act .ah{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.act .stg{font-weight:800;color:var(--accent)}
+.act .tm{font-size:.78rem;color:var(--ink-faint)}
+.act .tm .ac{color:var(--t3);font-weight:700}
+.act .res{font-size:.82rem;color:var(--ink-soft);margin-top:4px;border-top:1px dashed var(--border-soft);padding-top:4px}
+.notes{display:flex;flex-direction:column;gap:8px;margin:6px 0 0 14px}
+.entry{border:1px solid var(--t3);border-left-width:4px;border-radius:8px;padding:8px 10px;background:var(--note)}
+.entry .er{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.entry .et{font-family:monospace;font-weight:800;color:var(--t2);min-width:60px;border-radius:4px;padding:0 4px;outline:none}
+.entry select{font-family:inherit;font-size:.74rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink)}
+.entry .del{margin-left:auto;font-size:.72rem;background:none;border:1px solid var(--border);border-radius:6px;
+  color:var(--ink-faint);cursor:pointer;padding:1px 8px}
+.entry .tx{min-height:2.4em;border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:5px 8px;outline:none}
+.entry .tx:empty::before{content:'看到什麼、學生怎麼反應……';color:var(--t1);opacity:.75;font-size:.9em}
+.photos{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.ph1{position:relative;width:80px;height:80px;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.ph1 img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.ph1 button{position:absolute;top:2px;right:2px;font-size:.62rem;background:rgba(20,30,45,.7);color:#fff;border:none;border-radius:4px;cursor:pointer}
+.padd{width:80px;height:80px;border:1px dashed var(--border);border-radius:6px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:.7rem;color:var(--t3);cursor:pointer;background:var(--surface)}
+.bigfill{border:1px solid var(--border);border-radius:8px;background:var(--fill);min-height:80px;padding:8px 12px;outline:none}
+.bigfill:empty::before{content:attr(data-ph);color:var(--t1);opacity:.75;font-size:.88em}
+.boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.boards img{width:100%;border:1px solid var(--border);border-radius:8px;cursor:zoom-in}
+.loader{max-width:560px;margin:60px auto;background:var(--surface);border:1px solid var(--border-soft);border-radius:12px;padding:24px}
+.loader input{width:100%;font-size:.95rem;border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin:8px 0;background:var(--fill);color:var(--ink)}
+.lightbox{position:fixed;inset:0;z-index:100;display:none;background:rgba(10,16,24,.88);align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.open{display:flex} .lightbox img{max-width:94vw;max-height:92vh;border-radius:8px;background:#fff}
+footer{margin-top:28px;font-size:.76rem;color:var(--ink-faint);display:flex;justify-content:space-between}
+footer a{color:var(--ink-faint)}
+@media print{
+  .bar,.add,.del,.padd,.ph1 button,.lightbox{display:none!important}
+  body{background:#fff;color:#111}
+  .sheet{border:none;margin:0;padding:0;max-width:none}
+  .act.now{background:#fff}
+  .entry,.act{break-inside:avoid}
+  .entry .tx,.entry select{border:none}
+}
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader" style="display:none">
+  <h2 style="margin-top:0">教案觀課</h2>
+  <p>貼上學生繳交的<b>教案網址</b>（例如 …/lesson-plan/?plan=xxxxxxxxxx），就會把教案打開，直接在上面做觀課紀錄。</p>
+  <input id="plan-url" placeholder="貼上教案網址或 10 碼代碼">
+  <button class="btn" id="b-open" type="button">打開教案 →</button>
+  <p id="load-msg" style="color:#a13c3c;font-size:.85rem"></p>
+</div>
+
+<div id="app" style="display:none">
+<div class="bar">
+  <div class="row1">
+    <span class="tl">📝 教案觀課</span>
+    <input id="observer" placeholder="觀察者姓名（必填）">
+    <span id="clock">尚未開始</span>
+    <button class="btn" id="b-start" type="button">▶ 開始上課</button>
+    <button class="btn" id="b-pause" type="button" style="display:none">⏸ 暫停</button>
+    <button class="btn" id="b-next" type="button" style="display:none" title="老師實際進到下一段時按，之後的時間表會跟著往後挪">⏭ 進入下一段</button>
+    <button class="btn" id="b-end" type="button" style="display:none">■ 結束</button>
+    <button class="btn" id="b-note" type="button">＋ 記一筆</button>
+    <button class="btn" type="button" onclick="window.print()">列印</button>
+    <span id="sync">尚未同步</span>
+  </div>
+  <div class="timeline" id="timeline"></div>
+  <div class="sharerow" id="sharerow">繼續紀錄／換裝置用這個網址：<input id="share" readonly><button class="btn" id="b-copy" type="button">複製</button></div>
+</div>
+
+<div class="sheet">
+  <h1 id="unit">教案</h1>
+  <div class="sub" id="who"></div>
+  <table class="meta" id="meta"></table>
+  <div id="plan"></div>
+  <div class="part">
+    <div class="ph"><h2>其他紀錄（不屬於上面任何一段）</h2><button class="add" data-anchor="general" type="button">＋ 記在這裡</button></div>
+    <div class="notes" data-notes="general"></div>
+  </div>
+  <div class="part">
+    <div class="ph"><h2>整體印象</h2></div>
+    <div class="bigfill" contenteditable="true" id="overall" data-ph="觀察結束後，整堂課留給你最深的印象？時間分配和教案相比如何？"></div>
+  </div>
+  <footer><span>數學教材教法・教案＋觀課紀錄</span><span><a href="../">課程資源總覽</a></span></footer>
+</div>
+</div>
+
+<div class="lightbox" id="lightbox"><img id="lb-img" alt="照片放大"></div>
+
+<script>
+(function(){
+  var PLAN_API = 'https://www.emath.tw/lesson-plan/api/plan/';
+  var NOTE_API = 'https://www.emath.tw/classroom-notes/api';
+  var qs = new URLSearchParams(location.search);
+  var PLAN = qs.get('plan'), NOTE = qs.get('note');
+  var ok10 = function(t){ return /^[0-9a-f]{10}$/.test(t || ''); };
+
+  // ---------- 沒有 plan：先貼網址 ----------
+  if(!ok10(PLAN)){
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('b-open').addEventListener('click', function(){
+      var v = document.getElementById('plan-url').value.trim(), m = v.match(/plan=([0-9a-f]{10})/) || v.match(/^([0-9a-f]{10})$/);
+      if(!m){ document.getElementById('load-msg').textContent = '看不出教案代碼，請貼上完整的教案網址'; return; }
+      location.search = '?plan=' + m[1];
+    });
+    return;
+  }
+
+  var LKEY = 'plan-observe-' + PLAN;
+  var state = { token:null, fields:{}, entries:[] };
+  var plan = null, stages = [];
+  // 計時：start（ms epoch）、paused、pausedMs；marks：各段實際開始的經過毫秒
+  var timer = { start:null, paused:false, pausedMs:0 }, marks = {};
+
+  function strip(h){ return (h || '').replace(/<[^>]*>/g, '').trim(); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmt(ms){ var s = Math.max(0, Math.floor(ms/1000)), m = Math.floor(s/60), r = s%60; return (m<10?'0':'')+m+':'+(r<10?'0':'')+r; }
+  function elapsed(){ return timer.start === null ? null : (timer.paused ? timer.pausedMs : Date.now() - timer.start); }
+
+  // ---------- 教案內容 ----------
+  var SECTIONS = [
+    ['basis', '一、設計依據', ['perf','學習表現'],['cont','學習內容'],['comp','核心素養'],['issue1','議題融入'],['crossdomain','跨領域連結'],['textbook','教材來源'],['equip','教學設備／資源']],
+    ['prior', '二、學生先備知識與經驗分析', ['prior','']],
+    ['rationale', '三、教學設計理念', ['rationale','']],
+    ['goals', '四、學習目標', ['goal1','1.'],['goal2','2.'],['goal3','3.'],['goal4','4.']],
+    ['acts', '五、教學活動設計'],
+    ['board', '六、板書設計與學習單'],
+    ['diff', '七、差異化教學規劃', ['diff','']],
+    ['assess', '八、評量規劃', ['assess','']],
+    ['reflect', '九、教學省思', ['reflect','']]
+  ];
+  var STAGE_NAMES = ['引起動機','發展活動（一）','發展活動（二）','總結活動'];
+
+  function buildStages(){
+    var f = plan.fields;
+    stages = [];
+    for(var i=1;i<=4;i++){
+      var txt = strip(f['act'+i]), mm = parseFloat(strip(f['act'+i+'t']).replace(/[^\d.]/g, ''));
+      if(!txt && !(mm > 0)) continue;
+      stages.push({key:'act'+i, name:STAGE_NAMES[i-1], min: mm > 0 ? mm : 0});
+    }
+  }
+  // 每段的開始時間（毫秒）：有按「進入下一段」就用實際時間，沒有就接在前一段後面照教案的分鐘數排
+  function starts(){
+    var out = [], t = 0;
+    stages.forEach(function(s, i){
+      if(i === 0) t = 0;
+      else t = (marks[s.key] !== undefined) ? marks[s.key] : out[i-1] + stages[i-1].min*60000;
+      out.push(t);
+    });
+    return out;
+  }
+  function curIdx(ms){
+    if(ms === null || !stages.length) return -1;
+    var st = starts(), k = 0;
+    for(var i=0;i<st.length;i++) if(ms >= st[i]) k = i;
+    return k;
+  }
+
+  function renderPlan(){
+    var f = plan.fields;
+    document.getElementById('unit').textContent = strip(f.unit) || '（未命名教案）';
+    document.getElementById('who').textContent = plan.name + '（' + plan.sid + '）・繳交於 ' + plan.time;
+    document.title = (strip(f.unit) || '教案') + '｜教案觀課';
+    document.getElementById('meta').innerHTML =
+      '<tr><th>設計者</th><td>'+(f.author||'')+'</td><th>教學對象</th><td>'+(f.target||'')+'</td></tr>'+
+      '<tr><th>教學節數</th><td colspan="3">'+(f.periods||'')+'</td></tr>';
+    var host = document.getElementById('plan'); host.innerHTML = '';
+    SECTIONS.forEach(function(sec){
+      var d = document.createElement('div'); d.className = 'part';
+      d.innerHTML = '<div class="ph"><h2>'+sec[1]+'</h2>' + (sec[0] === 'acts' ? '' : '<button class="add" data-anchor="'+sec[0]+'" type="button">＋ 記在這裡</button>') + '</div>';
+      if(sec[0] === 'acts'){
+        stages.forEach(function(s){
+          var n = s.key.slice(3), a = document.createElement('div');
+          a.className = 'act'; a.id = 'blk-' + s.key;
+          a.innerHTML = '<div class="ah"><span class="stg">'+s.name+'</span><span class="tm" data-tm="'+s.key+'"></span>'+
+            '<button class="add" data-anchor="'+s.key+'" type="button">＋ 記在這裡</button></div>'+
+            '<div class="content">'+(f['act'+n]||'')+'</div>'+
+            (strip(f['act'+n+'a']) ? '<div class="res"><b>評量／資源：</b>'+f['act'+n+'a']+'</div>' : '')+
+            '<div class="notes" data-notes="'+s.key+'"></div>';
+          d.appendChild(a);
+        });
+        if(!stages.length) d.innerHTML += '<div class="content"></div>';
+      } else if(sec[0] === 'board'){
+        var b = document.createElement('div'); b.className = 'boards';
+        (plan.boards||[]).forEach(function(src){ var im = document.createElement('img'); im.src = src; im.alt = '板書'; b.appendChild(im); });
+        if(!(plan.boards||[]).length) b.innerHTML = '<div class="content"></div>';
+        d.appendChild(b);
+        d.insertAdjacentHTML('beforeend', '<div class="notes" data-notes="board"></div>');
+      } else {
+        var c = document.createElement('div'); c.className = 'content';
+        c.innerHTML = sec.slice(2).filter(function(p){ return strip(f[p[0]]); })
+          .map(function(p){ return (p[1] ? '<b>'+p[1]+'</b> ' : '') + f[p[0]]; }).join('<br>');
+        d.appendChild(c);
+        d.insertAdjacentHTML('beforeend', '<div class="notes" data-notes="'+sec[0]+'"></div>');
+      }
+      host.appendChild(d);
+    });
+  }
+
+  // ---------- 時間表（上方的進度條＋每段的預計／實際） ----------
+  var ANCHOR_NAMES = {general:'其他'};
+  function renderTimeline(){
+    var tl = document.getElementById('timeline'), ms = elapsed(), st = starts(), ci = curIdx(ms);
+    tl.innerHTML = '';
+    var plannedStart = 0;
+    stages.forEach(function(s, i){
+      var seg = document.createElement('div'); seg.className = 'seg' + (i === ci ? ' now' : '');
+      seg.style.flex = Math.max(s.min, 3);
+      var pe = plannedStart + s.min;
+      var html = '<b>'+s.name+'</b><span class="pl">預計 '+plannedStart+'–'+pe+' 分</span>';
+      if(ms !== null && (i < ci || i === ci)){
+        var end = (i < ci) ? st[i+1] : ms, dur = end - st[i], over = dur > s.min*60000 && s.min > 0;
+        html += '<br><span class="ac'+(over?' over':'')+'">實際 '+fmt(st[i])+' 起・'+(i<ci?'用了 ':'已 ')+fmt(dur)+'</span>';
+        if(i === ci && s.min > 0) html += '<span class="fillbar" style="width:'+Math.min(100, dur/(s.min*600))+'%"></span>';
+      }
+      seg.innerHTML = html;
+      seg.addEventListener('click', function(){ var el = document.getElementById('blk-'+s.key); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); });
+      tl.appendChild(seg);
+      var tm = document.querySelector('[data-tm="'+s.key+'"]');
+      if(tm){
+        var t2 = '預計 '+s.min+' 分（第 '+plannedStart+'–'+pe+' 分）';
+        if(ms !== null && i <= ci){ var e2 = (i < ci) ? st[i+1] : ms; t2 += '　<span class="ac">實際 '+fmt(st[i])+(i<ci ? '–'+fmt(e2) : ' 起進行中')+'</span>'; }
+        tm.innerHTML = t2;
+      }
+      var blk = document.getElementById('blk-'+s.key); if(blk) blk.classList.toggle('now', i === ci);
+      plannedStart = pe;
+    });
+    var total = stages.reduce(function(a, s){ return a + s.min; }, 0);
+    var clock = document.getElementById('clock');
+    if(timer.start === null){ clock.textContent = '尚未開始'; clock.className = ''; }
+    else { clock.textContent = (timer.paused ? '⏸ ' : '⏱ ') + fmt(ms) + (total ? ' / '+total+' 分' : ''); clock.className = timer.paused ? 'paused' : 'running'; }
+  }
+
+  // ---------- 紀錄 ----------
+  function anchorOptions(cur){
+    var opts = [];
+    SECTIONS.forEach(function(sec){
+      if(sec[0] === 'acts') stages.forEach(function(s){ opts.push([s.key, '五、'+s.name]); });
+      else opts.push([sec[0], sec[1]]);
+    });
+    opts.push(['general','其他']);
+    return opts.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===cur?' selected':'')+'>'+o[1]+'</option>'; }).join('');
+  }
+  function renderNotes(){
+    document.querySelectorAll('[data-notes]').forEach(function(h){ h.innerHTML = ''; });
+    state.entries.forEach(function(en, i){
+      var host = document.querySelector('[data-notes="'+(en.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
+      var c = document.createElement('div'); c.className = 'entry';
+      c.innerHTML = '<div class="er"><span class="et" contenteditable="true">'+esc(en.time||'')+'</span>'+
+        '<select title="改放到別的段落">'+anchorOptions(en.anchor||'general')+'</select>'+
+        '<button class="del" type="button">刪除</button></div><div class="tx" contenteditable="true"></div><div class="photos"></div>';
+      var tx = c.querySelector('.tx'); tx.innerHTML = en.text || '';
+      tx.addEventListener('input', function(){ en.text = tx.innerHTML; changed(); });
+      var et = c.querySelector('.et'); et.addEventListener('input', function(){ en.time = et.textContent; changed(); });
+      c.querySelector('select').addEventListener('change', function(e){ en.anchor = e.target.value; changed(); renderNotes(); });
+      c.querySelector('.del').addEventListener('click', function(){ if(!strip(en.text) && !(en.photos||[]).length || confirm('刪除這一筆紀錄？')){ state.entries.splice(i,1); changed(); renderNotes(); } });
+      var ph = c.querySelector('.photos');
+      (en.photos||[]).forEach(function(src, pi){
+        var b = document.createElement('div'); b.className = 'ph1';
+        b.innerHTML = '<img alt="觀課照片"><button type="button">移除</button>';
+        b.querySelector('img').src = src;
+        b.querySelector('img').addEventListener('click', function(){ openLB(src); });
+        b.querySelector('button').addEventListener('click', function(){ en.photos.splice(pi,1); changed(); renderNotes(); });
+        ph.appendChild(b);
+      });
+      var add = document.createElement('label'); add.className = 'padd'; add.innerHTML = '📷<span>加照片</span>';
+      var fi = document.createElement('input'); fi.type = 'file'; fi.accept = 'image/*'; fi.multiple = true; fi.style.display = 'none';
+      fi.addEventListener('change', function(){ Array.prototype.forEach.call(fi.files, function(f){ addPhoto(en, f); }); fi.value = ''; });
+      add.appendChild(fi); ph.appendChild(add);
+      host.appendChild(c);
+    });
+  }
+  function addPhoto(en, file){
+    var img = new Image();
+    img.onload = function(){
+      var MAX = 900, w = img.width, h = img.height;
+      if(w > MAX || h > MAX){ var r = MAX/Math.max(w,h); w = Math.round(w*r); h = Math.round(h*r); }
+      var cv = document.createElement('canvas'); cv.width = w; cv.height = h; cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      (en.photos = en.photos || []).push(cv.toDataURL('image/jpeg', 0.6));
+      URL.revokeObjectURL(img.src); changed(); renderNotes();
+    };
+    img.src = URL.createObjectURL(file);
+  }
+  function addEntry(anchor){
+    var ms = elapsed();
+    if(!anchor){ var ci = curIdx(ms); anchor = ci >= 0 ? stages[ci].key : 'general'; }
+    state.entries.push({anchor:anchor, time: ms === null ? '' : fmt(ms), text:'', photos:[]});
+    changed(); renderNotes();
+    var hosts = document.querySelectorAll('[data-notes="'+anchor+'"] .entry'), last = hosts[hosts.length-1];
+    if(last){ last.scrollIntoView({behavior:'smooth', block:'center'}); last.querySelector('.tx').focus(); }
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('.add'); if(a) addEntry(a.getAttribute('data-anchor'));
+  });
+  document.getElementById('b-note').addEventListener('click', function(){ addEntry(null); });
+
+  // ---------- 計時按鈕 ----------
+  var bStart = document.getElementById('b-start'), bPause = document.getElementById('b-pause'),
+      bNext = document.getElementById('b-next'), bEnd = document.getElementById('b-end');
+  function syncButtons(){
+    var on = timer.start !== null;
+    bStart.textContent = on ? '⟲ 重新計時' : '▶ 開始上課'; bStart.classList.toggle('running', on);
+    [bPause, bNext, bEnd].forEach(function(b){ b.style.display = on ? '' : 'none'; });
+    bPause.textContent = timer.paused ? '▶ 繼續' : '⏸ 暫停'; bPause.classList.toggle('paused', timer.paused);
+  }
+  function saveTimer(){ state.fields.timer = JSON.stringify(timer); state.fields.marks = JSON.stringify(marks); changed(); }
+  bStart.addEventListener('click', function(){
+    if(timer.start !== null && !confirm('從現在重新開始計時？（已寫的紀錄不會刪除）')) return;
+    timer = {start:Date.now(), paused:false, pausedMs:0}; marks = {}; saveTimer(); syncButtons(); renderTimeline();
+  });
+  bPause.addEventListener('click', function(){
+    if(timer.paused){ timer.start = Date.now() - timer.pausedMs; timer.paused = false; }
+    else { timer.pausedMs = Date.now() - timer.start; timer.paused = true; }
+    saveTimer(); syncButtons(); renderTimeline();
+  });
+  bNext.addEventListener('click', function(){
+    var ms = elapsed(), ci = curIdx(ms);
+    if(ci < 0 || ci >= stages.length - 1){ alert('已經是最後一段了'); return; }
+    marks[stages[ci+1].key] = ms;
+    // 後面已記的實際時間如果比現在早，就作廢
+    for(var j=ci+2;j<stages.length;j++) if(marks[stages[j].key] !== undefined && marks[stages[j].key] < ms) delete marks[stages[j].key];
+    saveTimer(); renderTimeline();
+  });
+  bEnd.addEventListener('click', function(){
+    if(!confirm('結束計時？')) return;
+    state.fields.ended = fmt(elapsed()); timer = {start:null, paused:false, pausedMs:0}; saveTimer(); syncButtons(); renderTimeline();
+  });
+  setInterval(function(){ if(timer.start !== null && !timer.paused) renderTimeline(); }, 1000);
+
+  // ---------- 存檔與同步 ----------
+  var obs = document.getElementById('observer'), overall = document.getElementById('overall');
+  obs.addEventListener('input', function(){ state.fields.observer = obs.value; try{ localStorage.setItem('plan-observe-name', obs.value); }catch(e){} changed(); });
+  overall.addEventListener('input', function(){ state.fields.overall = overall.innerHTML; changed(); });
+  var syncT = null, syncing = false, again = false, syncEl = document.getElementById('sync');
+  function setSync(t, err){ syncEl.textContent = t; syncEl.classList.toggle('err', !!err); }
+  function changed(){
+    try{ localStorage.setItem(LKEY, JSON.stringify(state)); }catch(e){}
+    clearTimeout(syncT); syncT = setTimeout(doSync, 1500);
+  }
+  function doSync(){
+    var name = (state.fields.observer || '').trim();
+    if(!name){ setSync('請先填觀察者姓名才能同步', true); return; }
+    if(syncing){ again = true; return; }
+    syncing = true; setSync('同步中…');
+    state.fields.plan = PLAN;
+    state.fields.target = plan ? (plan.name + '：' + strip(plan.fields.unit)).slice(0, 200) : '';
+    fetch(NOTE_API + '/save', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({token:state.token, sid:name, name:name, fields:state.fields, entries:state.entries})})
+      .then(function(r){ return r.json(); }).then(function(d){
+        syncing = false;
+        if(!d.ok){ setSync('同步失敗：' + (d.error||''), true); return; }
+        if(state.token !== d.token){ state.token = d.token; try{ localStorage.setItem(LKEY, JSON.stringify(state)); }catch(e){} }
+        showShare();
+        setSync('✓ 已同步 ' + d.time.slice(11) + (d.truncated ? '・照片已達上限' : ''));
+        if(again){ again = false; changed(); }
+      }).catch(function(){ syncing = false; setSync('⚠️ 連不上伺服器，先存在這台裝置，稍後自動重試', true); clearTimeout(syncT); syncT = setTimeout(doSync, 5000); });
+  }
+  function showShare(){
+    if(!state.token) return;
+    var u = location.origin + location.pathname + '?plan=' + PLAN + '&note=' + state.token;
+    document.getElementById('share').value = u;
+    document.getElementById('sharerow').style.display = 'flex';
+    if(qs.get('note') !== state.token){ try{ history.replaceState(null, '', u); }catch(e){} }
+  }
+  document.getElementById('b-copy').addEventListener('click', function(){
+    var i = document.getElementById('share'); i.select();
+    try{ navigator.clipboard.writeText(i.value); }catch(e){ try{ document.execCommand('copy'); }catch(e2){} }
+    this.textContent = '已複製 ✓';
+  });
+
+  function applyState(){
+    try{ timer = JSON.parse(state.fields.timer || 'null') || timer; }catch(e){}
+    try{ marks = JSON.parse(state.fields.marks || 'null') || {}; }catch(e){}
+    obs.value = state.fields.observer || (function(){ try{ return localStorage.getItem('plan-observe-name') || ''; }catch(e){ return ''; } })();
+    state.fields.observer = obs.value;
+    overall.innerHTML = state.fields.overall || '';
+    syncButtons(); renderNotes(); renderTimeline(); showShare();
+  }
+
+  var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
+  function openLB(src){ lbImg.src = src; lb.classList.add('open'); }
+  lb.addEventListener('click', function(){ lb.classList.remove('open'); });
+  document.addEventListener('click', function(e){ if(e.target.matches && e.target.matches('.boards img')) openLB(e.target.src); });
+
+  // ---------- 載入：先抓教案，再抓（或接續）紀錄 ----------
+  document.getElementById('app').style.display = 'block';
+  setSync('讀取教案中…');
+  fetch(PLAN_API + PLAN).then(function(r){ return r.json(); }).then(function(d){
+    if(!d.ok) throw new Error(d.error || 'notfound');
+    plan = d; buildStages(); renderPlan();
+    var local = null; try{ local = JSON.parse(localStorage.getItem(LKEY) || 'null'); }catch(e){}
+    if(ok10(NOTE)){
+      return fetch(NOTE_API + '/note/' + NOTE).then(function(r){ return r.json(); }).then(function(n){
+        if(!n.ok) throw new Error('note');
+        state = {token:NOTE, fields:n.fields || {}, entries:n.entries || []};
+        // 本機比較新（例如剛剛離線時寫的）就用本機的
+        if(local && local.token === NOTE && JSON.stringify(local).length > JSON.stringify(state).length) state = local;
+        applyState(); setSync('✓ 已接續紀錄（' + n.time.slice(5, 16) + '）');
+      }).catch(function(){ if(local) state = local; applyState(); setSync('找不到這份紀錄，改用這台裝置上的', true); });
+    }
+    if(local) state = local;
+    applyState(); setSync(state.token ? '✓ 已載入這台裝置上的紀錄' : '尚未同步');
+  }).catch(function(){
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('load-msg').textContent = '找不到這份教案，網址可能有誤或已被移除。';
+  });
+})();
+</script>
+</body>
+</html>
