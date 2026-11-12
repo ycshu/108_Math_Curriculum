@@ -102,7 +102,24 @@ table.meta th{background:var(--surface-2);width:96px;white-space:nowrap;color:va
 .lightbox.open{display:flex} .lightbox img{max-width:94vw;max-height:92vh;border-radius:8px;background:#fff}
 footer{margin-top:28px;font-size:.76rem;color:var(--ink-faint);display:flex;justify-content:space-between}
 footer a{color:var(--ink-faint)}
+.sum-only{display:none}
+body.summary .sum-only{display:block}
+body.summary .rec-only,body.summary .add{display:none!important}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{font-size:.78rem;font-weight:700;border-radius:999px;padding:2px 10px;cursor:pointer;color:#fff;border:2px solid transparent;user-select:none}
+.chip.off{background:transparent!important;color:var(--ink-faint)}
+.entry.sm{background:var(--surface);border-color:var(--c);border-left-width:5px}
+.entry.sm .who{font-size:.74rem;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:0 9px}
+.entry.sm .tx2{font-size:.9rem;white-space:normal}
+.cnt{font-size:.74rem;color:var(--t3);font-weight:700;margin-left:4px}
+table.tt{width:100%;border-collapse:collapse;font-size:.84rem;margin:6px 0 4px}
+table.tt th,table.tt td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
+table.tt th{background:var(--surface-2)}
+table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowrap}
+.ov{border-left:5px solid var(--c);background:var(--surface-2);border-radius:8px;padding:8px 12px;margin-bottom:8px}
+.ov b{color:var(--c)}
 @media print{
+  .chip.off{display:none}
   .bar,.add,.del,.padd,.ph1 button,.lightbox{display:none!important}
   body{background:#fff;color:#111}
   .sheet{border:none;margin:0;padding:0;max-width:none}
@@ -125,31 +142,37 @@ footer a{color:var(--ink-faint)}
 <div id="app" style="display:none">
 <div class="bar">
   <div class="row1">
-    <span class="tl">📝 教案觀課</span>
-    <input id="observer" placeholder="觀察者姓名（必填）">
-    <span id="clock">尚未開始</span>
+    <span class="tl" id="bar-tl">📝 教案觀課</span>
+    <input id="observer" class="rec-only" placeholder="觀察者姓名（必填）">
+    <span id="clock" class="rec-only">尚未開始</span>
     <button class="btn" id="b-start" type="button">▶ 開始上課</button>
     <button class="btn" id="b-pause" type="button" style="display:none">⏸ 暫停</button>
     <button class="btn" id="b-next" type="button" style="display:none" title="老師實際進到下一段時按，之後的時間表會跟著往後挪">⏭ 進入下一段</button>
     <button class="btn" id="b-end" type="button" style="display:none">■ 結束</button>
-    <button class="btn" id="b-note" type="button">＋ 記一筆</button>
+    <button class="btn rec-only" id="b-note" type="button">＋ 記一筆</button>
+    <a class="btn rec-only" id="b-sum" target="_blank" style="text-decoration:none" title="所有觀察者的紀錄合在一起，議課時用">📋 議課總整理</a>
+    <a class="btn sum-only" id="b-back" style="text-decoration:none">← 我的觀課紀錄</a>
+    <button class="btn sum-only" id="b-reload" type="button">⟳ 重新整理</button>
     <button class="btn" type="button" onclick="window.print()">列印</button>
     <span id="sync">尚未同步</span>
   </div>
-  <div class="timeline" id="timeline"></div>
-  <div class="sharerow" id="sharerow">繼續紀錄／換裝置用這個網址：<input id="share" readonly><button class="btn" id="b-copy" type="button">複製</button></div>
+  <div class="timeline rec-only" id="timeline"></div>
+  <div class="chips sum-only" id="chips"></div>
+  <div class="sharerow rec-only" id="sharerow">繼續紀錄／換裝置用這個網址：<input id="share" readonly><button class="btn" id="b-copy" type="button">複製</button></div>
 </div>
 
 <div class="sheet">
   <h1 id="unit">教案</h1>
   <div class="sub" id="who"></div>
   <table class="meta" id="meta"></table>
+  <div class="part sum-only" id="sum-top"></div>
   <div id="plan"></div>
   <div class="part">
     <div class="ph"><h2>其他紀錄（不屬於上面任何一段）</h2><button class="add" data-anchor="general" type="button">＋ 記在這裡</button></div>
     <div class="notes" data-notes="general"></div>
   </div>
-  <div class="part">
+  <div class="part sum-only"><div class="ph"><h2>各觀察者的整體印象</h2></div><div id="sum-overall"></div></div>
+  <div class="part rec-only">
     <div class="ph"><h2>整體印象</h2></div>
     <div class="bigfill" contenteditable="true" id="overall" data-ph="觀察結束後，整堂課留給你最深的印象？時間分配和教案相比如何？"></div>
   </div>
@@ -164,7 +187,7 @@ footer a{color:var(--ink-faint)}
   var PLAN_API = 'https://www.emath.tw/lesson-plan/api/plan/';
   var NOTE_API = 'https://www.emath.tw/classroom-notes/api';
   var qs = new URLSearchParams(location.search);
-  var PLAN = qs.get('plan'), NOTE = qs.get('note');
+  var PLAN = qs.get('plan'), NOTE = qs.get('note'), SUMMARY = qs.get('view') === 'summary';
   var ok10 = function(t){ return /^[0-9a-f]{10}$/.test(t || ''); };
 
   // ---------- 沒有 plan：先貼網址 ----------
@@ -444,12 +467,129 @@ footer a{color:var(--ink-faint)}
   lb.addEventListener('click', function(){ lb.classList.remove('open'); });
   document.addEventListener('click', function(e){ if(e.target.matches && e.target.matches('.boards img')) openLB(e.target.src); });
 
+  // ---------- 議課總整理：同一份教案所有觀察者的紀錄 ----------
+  var COLORS = ['#c0392b','#1f6fb2','#1f7a52','#8e44ad','#b9770e','#16807f','#c2185b','#5d6d1e'];
+  var notesAll = [], hidden = {};
+  function toText(h){
+    var t = String(h || '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/(div|p|li)>/gi, '\n').replace(/<[^>]*>/g, '');
+    var ta = document.createElement('textarea'); ta.innerHTML = t;
+    return esc(ta.value.trim()).replace(/\n+/g, '<br>');
+  }
+  function toMs(s){ var m = String(s || '').match(/(\d+):(\d{2})/); return m ? (+m[1]*60 + +m[2])*1000 : null; }
+  function obsTimes(f){
+    var mk = {}; try{ mk = JSON.parse(f.marks || '{}') || {}; }catch(e){}
+    var endMs = toMs(f.ended), st = [], t = 0;
+    stages.forEach(function(s, i){ t = i === 0 ? 0 : (mk[s.key] !== undefined ? mk[s.key] : st[i-1] + stages[i-1].min*60000); st.push(t); });
+    // 只有兩端都是實際按下的時間才算「實際」
+    return stages.map(function(s, i){
+      var last = i === stages.length - 1, okS = i === 0 || mk[s.key] !== undefined,
+          okE = last ? endMs !== null : mk[stages[i+1].key] !== undefined;
+      return okS && okE ? {start:st[i], end: last ? endMs : st[i+1]} : null;
+    });
+  }
+  function startSummary(){
+    document.body.classList.add('summary');
+    document.getElementById('bar-tl').textContent = '📋 議課總整理';
+    document.title = (strip(plan.fields.unit) || '教案') + '｜議課總整理';
+    document.getElementById('b-back').href = '?plan=' + PLAN;
+    document.getElementById('b-reload').addEventListener('click', loadSummary);
+    loadSummary();
+  }
+  function loadSummary(){
+    setSync('讀取所有觀察者的紀錄…');
+    fetch(NOTE_API + '/byplan/' + PLAN).then(function(r){ return r.json(); }).then(function(d){
+      if(!d.ok) throw new Error(d.error);
+      d.notes.forEach(function(n){ n.entries = n.entries.filter(function(e){ return strip(e.text) || (e.photos||[]).length; }); });
+      notesAll = d.notes.filter(function(n){ return n.entries.length || strip(n.fields.overall); });
+      var seen = {};
+      notesAll.forEach(function(n, i){
+        n.color = COLORS[i % COLORS.length];
+        var nm = (n.fields.observer || n.name || '觀察者').trim();
+        seen[nm] = (seen[nm] || 0) + 1; n.label = seen[nm] > 1 ? nm + '（' + seen[nm] + '）' : nm;
+      });
+      renderSummary();
+      setSync('✓ ' + notesAll.length + ' 位觀察者・更新於 ' + new Date().toTimeString().slice(0, 5));
+    }).catch(function(){ setSync('⚠️ 讀不到觀課紀錄，請稍後按「重新整理」', true); });
+  }
+  function renderSummary(){
+    var shown = notesAll.filter(function(n){ return !hidden[n.token]; });
+    // 觀察者標籤（點一下可以暫時隱藏）
+    var chips = document.getElementById('chips'); chips.innerHTML = '';
+    notesAll.forEach(function(n){
+      var c = document.createElement('span'); c.className = 'chip' + (hidden[n.token] ? ' off' : '');
+      c.style.background = n.color; c.style.borderColor = n.color;
+      c.textContent = n.label + '・' + n.entries.length + ' 筆';
+      c.title = '點一下暫時隱藏／顯示這位的紀錄';
+      c.addEventListener('click', function(){ hidden[n.token] = !hidden[n.token]; renderSummary(); });
+      chips.appendChild(c);
+    });
+    // 時間分配對照
+    var top = document.getElementById('sum-top');
+    if(!notesAll.length){ top.innerHTML = '<div class="ph"><h2>還沒有觀課紀錄</h2></div><div class="content">觀察者在觀課頁填了姓名、寫了紀錄後，就會出現在這裡。</div>'; }
+    else {
+      var h = '<div class="ph"><h2>時間分配：教案預計 vs. 各觀察者記到的實際時間</h2></div><table class="tt"><tr><th>段落</th><th>預計</th>';
+      shown.forEach(function(n){ h += '<th style="color:'+n.color+'">'+esc(n.label)+'</th>'; });
+      h += '<th>紀錄數</th></tr>';
+      var times = shown.map(function(n){ return obsTimes(n.fields); }), ps = 0;
+      stages.forEach(function(s, i){
+        h += '<tr><td>'+s.name+'</td><td>'+s.min+' 分<br><small>第 '+ps+'–'+(ps+s.min)+' 分</small></td>';
+        times.forEach(function(tt){
+          var x = tt[i];
+          if(!x){ h += '<td>—</td>'; return; }
+          var dur = x.end - x.start, over = s.min > 0 && dur > s.min*60000 + 30000;
+          h += '<td><b class="'+(over?'over':'')+'">'+Math.round(dur/6000)/10+' 分</b><br><small>'+fmt(x.start)+'–'+fmt(x.end)+'</small></td>';
+        });
+        var cnt = shown.reduce(function(a, n){ return a + n.entries.filter(function(e){ return e.anchor === s.key; }).length; }, 0);
+        h += '<td>'+cnt+'</td></tr>';
+        ps += s.min;
+      });
+      h += '</table><div style="font-size:.76rem;color:var(--t3)">「—」表示那位觀察者沒有按「進入下一段」或「結束」，記不到實際時間；紅字是比預計多 30 秒以上。</div>';
+      top.innerHTML = h;
+    }
+    // 各段紀錄：所有人合在一起，照時間排
+    document.querySelectorAll('[data-notes]').forEach(function(hst){ hst.innerHTML = ''; });
+    document.querySelectorAll('.cnt').forEach(function(c){ c.remove(); });
+    var all = [];
+    shown.forEach(function(n){ n.entries.forEach(function(e){ all.push({n:n, e:e}); }); });
+    all.sort(function(a, b){ var x = toMs(a.e.time), y = toMs(b.e.time); return (x === null ? 1e12 : x) - (y === null ? 1e12 : y); });
+    var per = {};
+    all.forEach(function(it){
+      var e = it.e, n = it.n;
+      var host = document.querySelector('[data-notes="'+(e.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
+      var k = host.getAttribute('data-notes'); per[k] = per[k] || {c:0, who:{}}; per[k].c++; per[k].who[n.token] = 1;
+      var c = document.createElement('div'); c.className = 'entry sm'; c.style.setProperty('--c', n.color);
+      c.innerHTML = '<div class="er"><span class="who">'+esc(n.label)+'</span><span class="et">'+esc(e.time||'')+'</span></div><div class="tx2">'+toText(e.text)+'</div><div class="photos"></div>';
+      var ph = c.querySelector('.photos');
+      (e.photos||[]).forEach(function(src){
+        if(!/^data:image\//.test(src)) return;
+        var b = document.createElement('div'); b.className = 'ph1'; var im = document.createElement('img'); im.src = src; im.alt = '觀課照片';
+        im.addEventListener('click', function(){ openLB(src); }); b.appendChild(im); ph.appendChild(b);
+      });
+      host.appendChild(c);
+    });
+    Object.keys(per).forEach(function(k){
+      var host = document.querySelector('[data-notes="'+k+'"]'), head = k.indexOf('act') === 0 ? document.querySelector('#blk-'+k+' .ah') : host.parentNode.querySelector('.ph');
+      if(head) head.insertAdjacentHTML('beforeend', '<span class="cnt">'+per[k].c+' 筆・'+Object.keys(per[k].who).length+' 位</span>');
+    });
+    // 整體印象
+    var ov = document.getElementById('sum-overall'); ov.innerHTML = '';
+    shown.forEach(function(n){
+      var t = toText(n.fields.overall);
+      ov.insertAdjacentHTML('beforeend', '<div class="ov" style="--c:'+n.color+'"><b>'+esc(n.label)+'</b>'+(n.fields.ended ? '<small>（記錄到 '+esc(n.fields.ended)+'）</small>' : '')+'<br>'+(t || '<span style="color:var(--t1)">（沒有寫整體印象）</span>')+'</div>');
+    });
+    // 預計時間仍標在每段上
+    var ps2 = 0;
+    stages.forEach(function(s){ var tm = document.querySelector('[data-tm="'+s.key+'"]'); if(tm) tm.textContent = '預計 '+s.min+' 分（第 '+ps2+'–'+(ps2+s.min)+' 分）'; ps2 += s.min; });
+  }
+
   // ---------- 載入：先抓教案，再抓（或接續）紀錄 ----------
   document.getElementById('app').style.display = 'block';
   setSync('讀取教案中…');
   fetch(PLAN_API + PLAN).then(function(r){ return r.json(); }).then(function(d){
     if(!d.ok) throw new Error(d.error || 'notfound');
     plan = d; buildStages(); renderPlan();
+    document.getElementById('b-sum').href = '?plan=' + PLAN + '&view=summary';
+    if(SUMMARY){ startSummary(); return; }
     var local = null; try{ local = JSON.parse(localStorage.getItem(LKEY) || 'null'); }catch(e){}
     if(ok10(NOTE)){
       return fetch(NOTE_API + '/note/' + NOTE).then(function(r){ return r.json(); }).then(function(n){
