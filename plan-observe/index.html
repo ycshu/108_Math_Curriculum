@@ -230,7 +230,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     ['rationale', '三、教學設計理念', ['rationale','']],
     ['goals', '四、學習目標', ['goal1','1.'],['goal2','2.'],['goal3','3.'],['goal4','4.']],
     ['acts', '五、教學活動設計'],
-    ['board', '六、板書設計與學習單'],
+    ['board', '六、板書設計'],
     ['diff', '七、差異化教學規劃', ['diff','']],
     ['assess', '八、評量規劃', ['assess','']],
     ['reflect', '九、教學省思', ['reflect','']]
@@ -298,6 +298,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     var host = document.getElementById('plan'); host.innerHTML = '';
     SECTIONS.forEach(function(sec){
       if(sec[0] === 'talk' && !strip(f.talkPoints) && !strip(f.roles)) return;   // 舊教案沒有說課欄
+      if(/^(diff|assess|reflect)$/.test(sec[0]) && !strip(f[sec[0]])) return;   // 七～九寫教案時不填
       var d = document.createElement('div'); d.className = 'part' + (sec[0] === 'talk' ? ' talk' : '');
       d.innerHTML = '<div class="ph"><h2>'+sec[1]+'</h2>' + (sec[0] === 'acts' ? '' : '<button class="add" data-anchor="'+sec[0]+'" type="button">＋ 記在這裡</button>') + '</div>';
       if(sec[0] === 'acts'){

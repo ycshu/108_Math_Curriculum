@@ -406,21 +406,28 @@ footer.doc a{ color:var(--ink-faint); }
 
 <!-- 板書設計 -->
 <section class="part">
-  <div class="part-head"><h2>六、板書設計與學習單</h2><span class="en">Board Plan &amp; Worksheet</span></div>
+  <div class="part-head"><h2>六、板書設計</h2><span class="en">Board Plan</span></div>
   <p class="part-note">可手繪板書規劃後拍照上傳，或直接上傳試教時的黑板照片；照片會存在這台裝置的瀏覽器並隨列印輸出。</p>
   <div class="check-row" style="margin-bottom:10px">
     <button type="button" id="board-btn" style="font-family:'Noto Sans TC',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 16px;">＋ 加入板書照片</button>
     <input type="file" id="board-input" accept="image/*" multiple style="display:none">
     <span style="font-size:.76rem;color:var(--ink-faint)">可多張；過大的照片會自動縮小以便儲存</span>
   </div>
+  <div hidden>
   <p class="part-note" style="margin-top:14px">若學習單是做在雲端（Google 雲端硬碟、簡報等），貼上「知道連結的人均可查看」的分享網址，按「抓取畫面」自動把預覽圖接進教案，跟板書照片顯示在一起。</p>
   <div class="check-row" style="margin-bottom:6px">
     <div class="fill" contenteditable="true" data-key="worksheetUrl" data-ph="貼上學習單的分享網址…" style="flex:1;min-width:240px;font-family:'IBM Plex Mono',monospace;font-size:.82rem;border:1px solid var(--border);border-radius:6px;padding:6px 10px"></div>
     <button type="button" id="worksheet-fetch" style="font-family:'Noto Sans TC',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 16px;">抓取畫面 →</button>
   </div>
   <div id="worksheet-msg" style="font-size:.78rem;margin-bottom:10px;min-height:1.2em"></div>
+  </div>
   <div id="board-gallery" class="board-gallery"></div>
+</section>
 
+<!-- 投影片、講義／學習單 -->
+<section class="part">
+  <div class="part-head"><h2 data-num="投影片與學習單">七、投影片與學習單</h2><span class="en">Slides &amp; Worksheet</span></div>
+  <p class="part-note">試教要用的投影片、講義或學習單上傳到這裡。觀課和議課時，大家可以一頁一頁給意見。</p>
   <div class="att">
     <div class="att-row">
       <b>📊 投影片</b>
@@ -439,29 +446,30 @@ footer.doc a{ color:var(--ink-faint); }
   </div>
 </section>
 
+<!-- 七～九：寫教案時不用填，只有舊教案已經填過才顯示 -->
 <!-- 差異化 -->
-<section class="part">
-  <div class="part-head"><h2>七、差異化教學規劃</h2><span class="en">Differentiation</span></div>
+<section class="part" data-opt="diff" hidden>
+  <div class="part-head"><h2 data-num="差異化教學規劃">七、差異化教學規劃</h2><span class="en">Differentiation</span></div>
   <p class="part-note">針對學習超前與學習緩慢的學生，各準備什麼？布題是否「低地板、高天花板」？</p>
   <div class="bigfill short" contenteditable="true" data-key="diff" data-ph="對學習緩慢學生的支持（降低認知負荷的方式）：&#10;對學習超前學生的挑戰（延伸任務）："></div>
 </section>
 
 <!-- 評量規劃 -->
-<section class="part">
-  <div class="part-head"><h2>八、評量規劃</h2><span class="en">Assessment</span></div>
+<section class="part" data-opt="assess" hidden>
+  <div class="part-head"><h2 data-num="評量規劃">八、評量規劃</h2><span class="en">Assessment</span></div>
   <div class="bigfill short" contenteditable="true" data-key="assess" data-ph="形成性評量（課中）：&#10;總結性評量（課後／單元末）：&#10;給分或回饋原則（如：要求寫出過程、分段給分）："></div>
 </section>
 
 <!-- 省思 -->
-<section class="part">
-  <div class="part-head"><h2>九、教學省思</h2><span class="en">Reflection</span></div>
+<section class="part" data-opt="reflect" hidden>
+  <div class="part-head"><h2 data-num="教學省思">九、教學省思</h2><span class="en">Reflection</span></div>
   <p class="part-note">試教或演示後填寫：學生實際反應與預期的落差？下次如何調整？</p>
   <div class="bigfill short" contenteditable="true" data-key="reflect" data-ph=""></div>
 </section>
 
 <!-- 說課 -->
 <section class="part">
-  <div class="part-head"><h2>附、說課</h2><span class="en">Briefing</span></div>
+  <div class="part-head"><h2 data-num="說課">八、說課</h2><span class="en">Briefing</span></div>
   <p class="part-note">試教開始前，先花 3 分鐘向觀課的老師說明。這兩欄會出現在觀課頁面的最上方。</p>
   <p class="part-note"><b>課程重點</b>：這堂課最想讓學生學會什麼？哪個環節最希望觀課老師幫忙看？</p>
   <div class="bigfill short" contenteditable="true" data-key="talkPoints" data-ph="例：讓學生自己數出 18 和 10 的差別；請特別注意摺紙步驟三學生是否跟得上"></div>
@@ -510,6 +518,19 @@ footer.doc a{ color:var(--ink-faint); }
     }catch(e){}
   }
   var PLAN_VIEW=false;
+  // 差異化、評量、教學省思：寫教案時不用填，已經有內容（舊教案、範例）才顯示
+  function showReflect(){
+    document.querySelectorAll('section[data-opt]').forEach(function(sec){
+      var el=sec.querySelector('[data-key="'+sec.dataset.opt+'"]');
+      sec.hidden = !(el && el.textContent.trim());
+    });
+    // 六以後的段落依實際顯示的順序重新編號
+    var i=0;
+    document.querySelectorAll('h2[data-num]').forEach(function(h){
+      if(h.closest('section').hidden) return;
+      h.textContent=['七','八','九','十','十一'][i++]+'、'+h.dataset.num;
+    });
+  }
   function save(){
     if(PLAN_VIEW) return;
     try{
@@ -533,9 +554,10 @@ footer.doc a{ color:var(--ink-faint); }
     try{localStorage.removeItem(BKEY);localStorage.removeItem('lesson-plan-files-v1');}catch(e){}
     boards=[]; render();
     if(typeof files!=='undefined'){ files=[]; frender(); }
+    showReflect();
   });
   var PLAN_TOKEN = new URLSearchParams(location.search).get('plan');
-  if(PLAN_TOKEN && /^[0-9a-f]{10}$/.test(PLAN_TOKEN)){ PLAN_VIEW = true; } else { PLAN_TOKEN = null; load(); }
+  if(PLAN_TOKEN && /^[0-9a-f]{10}$/.test(PLAN_TOKEN)){ PLAN_VIEW = true; } else { PLAN_TOKEN = null; load(); showReflect(); }
 
   // ===== 板書照片 =====
   var BKEY='lesson-plan-boards-v1';
@@ -872,12 +894,12 @@ footer.doc a{ color:var(--ink-faint); }
     document.querySelectorAll('[data-key]').forEach(function(el){
       if(el.type==='checkbox'){ el.checked=false; return; }
       var k = el.dataset.key;
-      var v = (k in ex) ? ex[k] : (k in EX_COMMON_J ? EX_COMMON_J[k] : '');
+      var v = /^(diff|assess|reflect)$/.test(k) ? '' : (k in ex) ? ex[k] : (k in EX_COMMON_J ? EX_COMMON_J[k] : '');   // 七～九寫教案時不用填
       el.innerHTML = (v===undefined?'':v);
     });
     boards=[ex.board];
     files=[]; fsave(); frender();
-    bsave(); render(); save();
+    bsave(); render(); save(); showReflect();
     window.scrollTo({top:0});
   }
   var exMenu=document.getElementById('ex-menu');
@@ -938,7 +960,7 @@ footer.doc a{ color:var(--ink-faint); }
           el.innerHTML=(v===undefined?'':v);
         });
         boards=(d.boards||[]).slice(); render();
-        files=(d.files||[]).slice(); frender();
+        files=(d.files||[]).slice(); frender(); showReflect();
         var b=document.getElementById('plan-banner');
         b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）'
           +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>'
