@@ -139,7 +139,6 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
 .phs{font-size:.72rem;font-weight:800;border-radius:999px;padding:0 8px;margin-right:6px;color:#fff;background:#d97706}
 .phs.post{background:#0f766e}
 .from{font-size:.74rem;color:var(--t3);margin-left:6px}
-.part.talk .hint{color:var(--t3);font-size:.88rem}
 .part.talk .content b{color:#d97706}
 </style>
 </head>
@@ -228,7 +227,6 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
 
   // ---------- 教案內容 ----------
   var SECTIONS = [
-    ['talk', '說課紀錄（還沒按「開始上課」前記的，不計時間）', ['talkPoints','課程重點：'],['roles','試教時請扮演：']],
     ['basis', '一、設計依據', ['perf','學習表現'],['cont','學習內容'],['comp','核心素養'],['issue1','議題融入'],['crossdomain','跨領域連結'],['textbook','教材來源'],['equip','教學設備／資源']],
     ['prior', '二、學生先備知識與經驗分析', ['prior','']],
     ['rationale', '三、教學設計理念', ['rationale','']],
@@ -300,9 +298,11 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
       '<tr><th>設計者</th><td>'+(f.author||'')+'</td><th>教學對象</th><td>'+(f.target||'')+'</td></tr>'+
       '<tr><th>教學節數</th><td colspan="3">'+(f.periods||'')+'</td></tr>';
     var host = document.getElementById('plan'); host.innerHTML = '';
+    // 議課總整理最上方：上課前（說課時）記的紀錄
+    if(SUMMARY) host.insertAdjacentHTML('beforeend', '<div class="part talk" id="blk-pre" hidden><div class="ph"><h2>上課前的紀錄（說課時記的，沒有時間）</h2></div><div class="notes" data-notes="pre"></div></div>');
     SECTIONS.forEach(function(sec){
       if(/^(diff|assess|reflect)$/.test(sec[0]) && !strip(f[sec[0]])) return;   // 七～九寫教案時不填
-      var d = document.createElement('div'); d.className = 'part' + (sec[0] === 'talk' ? ' talk' : '');
+      var d = document.createElement('div'); d.className = 'part';
       d.innerHTML = '<div class="ph"><h2>'+sec[1]+'</h2>' + (sec[0] === 'acts' ? '' : '<button class="add" data-anchor="'+sec[0]+'" type="button">＋ 記在這裡</button>') + '</div>';
       if(sec[0] === 'acts'){
         stages.forEach(function(s){
@@ -325,8 +325,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
       } else {
         var c = document.createElement('div'); c.className = 'content';
         c.innerHTML = sec.slice(2).filter(function(p){ return strip(f[p[0]]); })
-          .map(function(p){ return (p[1] ? '<b>'+p[1]+'</b> ' : '') + f[p[0]]; }).join('<br>')
-          || (sec[0] === 'talk' ? '<span class="hint">上課前設計者會口頭說課（課程重點、請大家扮演什麼樣的學生）。聽到的內容按「＋ 記在這裡」或上方「＋ 記一筆」記下來。</span>' : '');
+          .map(function(p){ return (p[1] ? '<b>'+p[1]+'</b> ' : '') + f[p[0]]; }).join('<br>');
         d.appendChild(c);
         d.insertAdjacentHTML('beforeend', '<div class="notes" data-notes="'+sec[0]+'"></div>');
       }
@@ -422,7 +421,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   }
   function addEntry(anchor){
     var ms = elapsed();
-    if(!anchor){ var ci = curIdx(ms); anchor = ms === null ? 'talk' : ci >= 0 ? stages[ci].key : 'general'; }
+    if(!anchor){ var ci = curIdx(ms); anchor = ms === null ? 'general' : ci >= 0 ? stages[ci].key : 'general'; }
     var phase = ms !== null ? 'class' : state.fields.ended ? 'post' : 'pre';
     state.entries.push({anchor:anchor, time: ms === null ? '' : fmt(ms), phase:phase, text:'', photos:[]});
     changed(); renderNotes();
@@ -603,6 +602,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     }
     // 各段紀錄：所有人合在一起，照時間排
     document.querySelectorAll('[data-notes]').forEach(function(hst){ hst.innerHTML = ''; });
+    var bp = document.getElementById('blk-pre'); if(bp) bp.hidden = true;
     document.querySelectorAll('.cnt').forEach(function(c){ c.remove(); });
     document.querySelectorAll('.pg.has').forEach(function(c){ c.classList.remove('has'); });
     var all = [];
@@ -615,8 +615,9 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     all.forEach(function(it){
       var e = it.e, n = it.n;
       var pre = phaseOf(e) === 'pre', from = '';
-      var host = pre ? document.querySelector('[data-notes="talk"]') : null;
-      if(pre && e.anchor && e.anchor !== 'talk'){ from = anchorName(e.anchor); }
+      var host = pre ? document.querySelector('[data-notes="pre"]') : null;
+      if(pre && e.anchor && !/^(talk|general)$/.test(e.anchor)){ from = anchorName(e.anchor); }
+      if(pre) document.getElementById('blk-pre').hidden = false;
       host = host || document.querySelector('[data-notes="'+(e.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
       var k = host.getAttribute('data-notes'); per[k] = per[k] || {c:0, who:{}}; per[k].c++; per[k].who[n.token] = 1;
       var c = document.createElement('div'); c.className = 'entry sm'; c.style.setProperty('--c', n.color);
