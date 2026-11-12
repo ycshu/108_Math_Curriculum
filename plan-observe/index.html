@@ -255,7 +255,7 @@ footer a{color:var(--ink-faint)}
         if(!stages.length) d.innerHTML += '<div class="content"></div>';
       } else if(sec[0] === 'board'){
         var b = document.createElement('div'); b.className = 'boards';
-        (plan.boards||[]).forEach(function(src){ var im = document.createElement('img'); im.src = src; im.alt = '板書'; b.appendChild(im); });
+        (plan.boards||[]).forEach(function(src){ var im = document.createElement('img'); im.src = /^(data:|https?:)/.test(src) ? src : '../lesson-plan/' + src; im.alt = '板書'; b.appendChild(im); });
         if(!(plan.boards||[]).length) b.innerHTML = '<div class="content"></div>';
         d.appendChild(b);
         d.insertAdjacentHTML('beforeend', '<div class="notes" data-notes="board"></div>');
