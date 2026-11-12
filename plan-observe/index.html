@@ -135,6 +135,8 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   .entry,.act,.pg{break-inside:avoid}
   .entry .tx{border:none}
 }
+.part.talk{border:2px solid #f59e0b;border-radius:10px;padding:10px 14px;background:color-mix(in srgb,#f59e0b 9%,var(--surface,transparent))}
+.part.talk .content b{color:#d97706}
 </style>
 </head>
 <body>
@@ -222,6 +224,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
 
   // ---------- 教案內容 ----------
   var SECTIONS = [
+    ['talk', '說課（上課前，設計者先說明）', ['talkPoints','課程重點：'],['roles','試教時請扮演：']],
     ['basis', '一、設計依據', ['perf','學習表現'],['cont','學習內容'],['comp','核心素養'],['issue1','議題融入'],['crossdomain','跨領域連結'],['textbook','教材來源'],['equip','教學設備／資源']],
     ['prior', '二、學生先備知識與經驗分析', ['prior','']],
     ['rationale', '三、教學設計理念', ['rationale','']],
@@ -294,7 +297,8 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
       '<tr><th>教學節數</th><td colspan="3">'+(f.periods||'')+'</td></tr>';
     var host = document.getElementById('plan'); host.innerHTML = '';
     SECTIONS.forEach(function(sec){
-      var d = document.createElement('div'); d.className = 'part';
+      if(sec[0] === 'talk' && !strip(f.talkPoints) && !strip(f.roles)) return;   // 舊教案沒有說課欄
+      var d = document.createElement('div'); d.className = 'part' + (sec[0] === 'talk' ? ' talk' : '');
       d.innerHTML = '<div class="ph"><h2>'+sec[1]+'</h2>' + (sec[0] === 'acts' ? '' : '<button class="add" data-anchor="'+sec[0]+'" type="button">＋ 記在這裡</button>') + '</div>';
       if(sec[0] === 'acts'){
         stages.forEach(function(s){
