@@ -81,7 +81,7 @@ table.meta th{background:var(--surface-2);width:96px;white-space:nowrap;color:va
 .entry{border:1px solid var(--t3);border-left-width:4px;border-radius:8px;padding:8px 10px;background:var(--note)}
 .entry .er{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
 .entry .et{font-family:monospace;font-weight:800;color:var(--t2);min-width:60px;border-radius:4px;padding:0 4px;outline:none}
-.entry select{font-family:inherit;font-size:.74rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink)}
+
 .entry .del{margin-left:auto;font-size:.72rem;background:none;border:1px solid var(--border);border-radius:6px;
   color:var(--ink-faint);cursor:pointer;padding:1px 8px}
 .entry .tx{min-height:2.4em;border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:5px 8px;outline:none}
@@ -108,7 +108,7 @@ footer a{color:var(--ink-faint)}
   .sheet{border:none;margin:0;padding:0;max-width:none}
   .act.now{background:#fff}
   .entry,.act{break-inside:avoid}
-  .entry .tx,.entry select{border:none}
+  .entry .tx{border:none}
 }
 </style>
 </head>
@@ -305,27 +305,16 @@ footer a{color:var(--ink-faint)}
   }
 
   // ---------- 紀錄 ----------
-  function anchorOptions(cur){
-    var opts = [];
-    SECTIONS.forEach(function(sec){
-      if(sec[0] === 'acts') stages.forEach(function(s){ opts.push([s.key, '五、'+s.name]); });
-      else opts.push([sec[0], sec[1]]);
-    });
-    opts.push(['general','其他']);
-    return opts.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===cur?' selected':'')+'>'+o[1]+'</option>'; }).join('');
-  }
   function renderNotes(){
     document.querySelectorAll('[data-notes]').forEach(function(h){ h.innerHTML = ''; });
     state.entries.forEach(function(en, i){
       var host = document.querySelector('[data-notes="'+(en.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
       var c = document.createElement('div'); c.className = 'entry';
       c.innerHTML = '<div class="er"><span class="et" contenteditable="true">'+esc(en.time||'')+'</span>'+
-        '<select title="改放到別的段落">'+anchorOptions(en.anchor||'general')+'</select>'+
         '<button class="del" type="button">刪除</button></div><div class="tx" contenteditable="true"></div><div class="photos"></div>';
       var tx = c.querySelector('.tx'); tx.innerHTML = en.text || '';
       tx.addEventListener('input', function(){ en.text = tx.innerHTML; changed(); });
       var et = c.querySelector('.et'); et.addEventListener('input', function(){ en.time = et.textContent; changed(); });
-      c.querySelector('select').addEventListener('change', function(e){ en.anchor = e.target.value; changed(); renderNotes(); });
       c.querySelector('.del').addEventListener('click', function(){ if(!strip(en.text) && !(en.photos||[]).length || confirm('刪除這一筆紀錄？')){ state.entries.splice(i,1); changed(); renderNotes(); } });
       var ph = c.querySelector('.photos');
       (en.photos||[]).forEach(function(src, pi){
