@@ -136,6 +136,9 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   .entry .tx{border:none}
 }
 .part.talk{border:2px solid #f59e0b;border-radius:10px;padding:10px 14px;background:color-mix(in srgb,#f59e0b 9%,var(--surface,transparent))}
+.phs{font-size:.72rem;font-weight:800;border-radius:999px;padding:0 8px;margin-right:6px;color:#fff;background:#d97706}
+.phs.post{background:#0f766e}
+.from{font-size:.74rem;color:var(--t3);margin-left:6px}
 .part.talk .hint{color:var(--t3);font-size:.88rem}
 .part.talk .content b{color:#d97706}
 </style>
@@ -368,12 +371,23 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   }
 
   // ---------- 紀錄 ----------
+  var PHASE_NAMES = {pre:'上課前', post:'下課後'};
+  function phaseOf(e){ return e.phase || (strip(e.time||'') ? 'class' : 'pre'); }   // 舊紀錄沒有 phase：沒時間的當作說課時寫的
+  function phaseTag(e){ var p = phaseOf(e); return PHASE_NAMES[p] ? '<span class="phs '+p+'">'+PHASE_NAMES[p]+'</span>' : ''; }
+  // 紀錄原本記在哪一段（議課總整理把上課前的紀錄移到最上方時標出來）
+  function anchorName(a){
+    var h = document.querySelector('[data-notes="'+a+'"]'); if(!h) return '';
+    var b = h.closest('.pg, .act, .part'); if(!b) return '';
+    var t = b.querySelector('.pgh b, .stg, h2'); var name = t ? t.textContent : '';
+    if(b.classList.contains('pg')){ var ph = b.closest('.part'); var pt = ph && ph.querySelector('h2'); name = (pt ? pt.textContent.replace(/（.*$/, '') + ' ' : '') + name; }
+    return name;
+  }
   function renderNotes(){
     document.querySelectorAll('[data-notes]').forEach(function(h){ h.innerHTML = ''; });
     state.entries.forEach(function(en, i){
       var host = document.querySelector('[data-notes="'+(en.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
       var c = document.createElement('div'); c.className = 'entry';
-      c.innerHTML = '<div class="er"><span class="et" contenteditable="true">'+esc(en.time||'')+'</span>'+
+      c.innerHTML = '<div class="er">'+phaseTag(en)+'<span class="et" contenteditable="true">'+esc(en.time||'')+'</span>'+
         '<button class="del" type="button">刪除</button></div><div class="tx" contenteditable="true"></div><div class="photos"></div>';
       var tx = c.querySelector('.tx'); tx.innerHTML = en.text || '';
       tx.addEventListener('input', function(){ en.text = tx.innerHTML; changed(); });
@@ -409,7 +423,8 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   function addEntry(anchor){
     var ms = elapsed();
     if(!anchor){ var ci = curIdx(ms); anchor = ms === null ? 'talk' : ci >= 0 ? stages[ci].key : 'general'; }
-    state.entries.push({anchor:anchor, time: ms === null ? '' : fmt(ms), text:'', photos:[]});
+    var phase = ms !== null ? 'class' : state.fields.ended ? 'post' : 'pre';
+    state.entries.push({anchor:anchor, time: ms === null ? '' : fmt(ms), phase:phase, text:'', photos:[]});
     changed(); renderNotes();
     var hosts = document.querySelectorAll('[data-notes="'+anchor+'"] .entry'), last = hosts[hosts.length-1];
     if(last){ last.scrollIntoView({behavior:'smooth', block:'center'}); last.querySelector('.tx').focus(); }
@@ -592,14 +607,21 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     document.querySelectorAll('.pg.has').forEach(function(c){ c.classList.remove('has'); });
     var all = [];
     shown.forEach(function(n){ n.entries.forEach(function(e){ all.push({n:n, e:e}); }); });
-    all.sort(function(a, b){ var x = toMs(a.e.time), y = toMs(b.e.time); return (x === null ? 1e12 : x) - (y === null ? 1e12 : y); });
+    var RANK = {pre:0, 'class':1, post:2};
+    all.sort(function(a, b){
+      var pa = RANK[phaseOf(a.e)], pb = RANK[phaseOf(b.e)]; if(pa !== pb) return pa - pb;
+      var x = toMs(a.e.time), y = toMs(b.e.time); return (x === null ? 1e12 : x) - (y === null ? 1e12 : y); });
     var per = {};
     all.forEach(function(it){
       var e = it.e, n = it.n;
-      var host = document.querySelector('[data-notes="'+(e.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
+      var pre = phaseOf(e) === 'pre', from = '';
+      var host = pre ? document.querySelector('[data-notes="talk"]') : null;
+      if(pre && e.anchor && e.anchor !== 'talk'){ from = anchorName(e.anchor); }
+      host = host || document.querySelector('[data-notes="'+(e.anchor||'general')+'"]') || document.querySelector('[data-notes="general"]');
       var k = host.getAttribute('data-notes'); per[k] = per[k] || {c:0, who:{}}; per[k].c++; per[k].who[n.token] = 1;
       var c = document.createElement('div'); c.className = 'entry sm'; c.style.setProperty('--c', n.color);
-      c.innerHTML = '<div class="er"><span class="who">'+esc(n.label)+'</span><span class="et">'+esc(e.time||'')+'</span></div><div class="tx2">'+toText(e.text)+'</div><div class="photos"></div>';
+      c.innerHTML = '<div class="er"><span class="who">'+esc(n.label)+'</span>'+phaseTag(e)+'<span class="et">'+esc(e.time||'')+'</span>'+
+        (from ? '<span class="from">記在：'+esc(from)+'</span>' : '')+'</div><div class="tx2">'+toText(e.text)+'</div><div class="photos"></div>';
       var ph = c.querySelector('.photos');
       (e.photos||[]).forEach(function(src){
         if(!/^data:image\//.test(src)) return;
