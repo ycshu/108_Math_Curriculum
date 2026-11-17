@@ -140,6 +140,9 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
 .phs.post{background:#0f766e}
 .from{font-size:.74rem;color:var(--t3);margin-left:6px}
 .part.talk .content b{color:#d97706}
+#observer:placeholder-shown{ border:2px solid #e08a00; background:#fff7e6; }
+#observer.need{ animation:needname .4s ease 3; box-shadow:0 0 0 4px rgba(224,138,0,.35); }
+@keyframes needname{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); } }
 </style>
 </head>
 <body>
@@ -156,7 +159,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
 <div class="bar">
   <div class="row1">
     <span class="tl" id="bar-tl">📝 教案觀課</span>
-    <input id="observer" class="rec-only" placeholder="觀察者姓名（必填）">
+    <input id="observer" class="rec-only" placeholder="✍️ 觀課者姓名（必填）">
     <span id="clock" class="rec-only">尚未開始</span>
     <button class="btn rec-only" id="b-start" type="button">▶ 開始上課</button>
     <button class="btn" id="b-pause" type="button" style="display:none">⏸ 暫停</button>
@@ -424,7 +427,17 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     };
     img.src = URL.createObjectURL(file);
   }
+  // 觀察者姓名沒填就不能開始：沒有名字紀錄存不上伺服器，議課時也不知道是誰寫的
+  function needName(){
+    var o = document.getElementById('observer');
+    if(o.value.trim()) return false;
+    o.classList.add('need'); o.focus();
+    setSync('請先在最上面填你的名字，再開始觀課', true);
+    setTimeout(function(){ o.classList.remove('need'); }, 1600);
+    return true;
+  }
   function addEntry(anchor){
+    if(needName()) return;
     var ms = elapsed();
     if(!anchor){ var ci = curIdx(ms); anchor = ms === null ? 'general' : ci >= 0 ? stages[ci].key : 'general'; }
     var phase = ms !== null ? 'class' : state.fields.ended ? 'post' : 'pre';
@@ -449,6 +462,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   }
   function saveTimer(){ state.fields.timer = JSON.stringify(timer); state.fields.marks = JSON.stringify(marks); changed(); }
   bStart.addEventListener('click', function(){
+    if(needName()) return;
     if(timer.start !== null && !confirm('從現在重新開始計時？（已寫的紀錄不會刪除）')) return;
     timer = {start:Date.now(), paused:false, pausedMs:0}; marks = {}; saveTimer(); syncButtons(); renderTimeline();
   });
