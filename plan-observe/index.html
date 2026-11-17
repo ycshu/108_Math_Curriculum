@@ -263,11 +263,16 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     return d;
   }
 
+  // 時間欄可能分好幾小段寫（例如 5分鐘、15分鐘），每個數字分開讀再加起來，不能把字黏在一起變成 515
+  function mins(h){
+    var t = (h || '').replace(/<\/(div|p)>|<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, ' ');
+    return (t.match(/\d+(\.\d+)?/g) || []).reduce(function(a, n){ return a + parseFloat(n); }, 0);
+  }
   function buildStages(){
     var f = plan.fields;
     stages = [];
     for(var i=1;i<=4;i++){
-      var txt = strip(f['act'+i]), mm = parseFloat(strip(f['act'+i+'t']).replace(/[^\d.]/g, ''));
+      var txt = strip(f['act'+i]), mm = mins(f['act'+i+'t']);
       if(!txt && !(mm > 0)) continue;
       stages.push({key:'act'+i, name:STAGE_NAMES[i-1], min: mm > 0 ? mm : 0});
     }
