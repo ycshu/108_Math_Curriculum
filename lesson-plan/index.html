@@ -970,7 +970,7 @@ footer.doc a{ color:var(--ink-faint); }
           +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>'
           +'　<a href="#" id="banner-qr" style="color:#f5d76e;font-weight:700">📱 觀課 QR Code</a>'
           +((EDIT_KEY || !d.locked) ? '　<a href="#" id="banner-edit" style="color:#f5d76e;font-weight:700">✏️ 修改這份教案</a>' : '');
-        if(EDIT_KEY){ b.insertAdjacentHTML('afterbegin','<b style="color:#f5d76e">✏️ 這是你的修改連結，按右邊「修改這份教案」開始修改。</b><br>'); }
+        if(EDIT_KEY){ b.insertAdjacentHTML('afterbegin','<b style="color:#f5d76e">✏️ 這是你的修改連結，按下面這一行的「✏️ 修改這份教案」就可以開始修改。</b><br>'); }
         b.classList.add('show');
         // 把這份教案搬進編輯區，之後按「繳交至課程」會更新同一份（網址、觀課 QR Code 不變）
         var be=document.getElementById('banner-edit');
