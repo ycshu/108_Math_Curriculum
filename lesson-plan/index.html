@@ -978,12 +978,24 @@ footer.doc a{ color:var(--ink-faint); }
       +'<button onclick="print()">列印</button></body></html>');
     w.document.close();
   }
+  // 下載的 QR 圖片下方加上短網址，印出來或傳給別人都看得到
+  function qrWithText(src,text,cb){
+    var im=new Image();
+    im.onload=function(){
+      var c=document.createElement('canvas'), pad=text?64:0;
+      c.width=im.width; c.height=im.height+pad;
+      var g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(im,0,0);
+      if(text){ g.fillStyle='#1a2733'; g.font='bold 30px Menlo, Consolas, monospace'; g.textAlign='center'; g.fillText(text,c.width/2,im.height+34); }
+      cb(c.toDataURL('image/png'));
+    };
+    im.src=src;
+  }
   function qrBoxHTML(token,short){
     return '<div class="qr-box"><b>📱 觀課用 QR Code</b>'
       +'<div style="font-size:.78rem;margin-top:4px">請留下來（下載或列印）。上課當天給來觀課的人掃描，就能照你的教案時間直接做觀課紀錄。</div>'
       +'<img src="'+qrDataUrl(observeUrl(token))+'" alt="觀課 QR Code">'
       +(short?'<div style="font:700 1.05rem Menlo,monospace;margin:2px 0 6px">emath.tw/o/'+short+'</div>':'')
-      +'<div class="qr-act"><a id="qr-dl" href="'+qrDataUrl(observeUrl(token))+'" download="觀課QR_'+token+'.gif">下載圖片</a>'
+      +'<div class="qr-act"><a id="qr-dl" href="'+qrDataUrl(observeUrl(token))+'" download="觀課QR_'+(short||token)+'.png">下載圖片</a>'
       +'<button type="button" id="qr-print">列印一張</button></div></div>';
   }
 
@@ -1097,6 +1109,7 @@ footer.doc a{ color:var(--ink-faint); }
         var tk=(String(d.share).match(/plan=([0-9a-f]{10})/)||[])[1];
         if(tk){
           subMsg.insertAdjacentHTML('beforeend',qrBoxHTML(tk,d.short));
+          qrWithText(qrDataUrl(observeUrl(tk)), d.short?'emath.tw/o/'+d.short:'', function(u){ var a=document.getElementById('qr-dl'); if(a) a.href=u; });
           var unit=(fields.unit||'').replace(/<[^>]*>/g,'');
           document.getElementById('qr-print').addEventListener('click',function(){ printQR(tk,name,unit,d.short); });
         }
