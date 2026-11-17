@@ -167,7 +167,7 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     <button class="btn" id="b-next" type="button" style="display:none" title="老師實際進到下一段時按，之後的時間表會跟著往後挪">⏭ 進入下一段</button>
     <button class="btn" id="b-end" type="button" style="display:none">■ 結束</button>
     <button class="btn rec-only" id="b-note" type="button">＋ 記一筆</button>
-    <button class="btn rec-only" id="b-restart" type="button" title="清空這台裝置上的計時和紀錄，開始一份新的觀課紀錄">↺ 重新開始</button>
+    <button class="btn rec-only" id="b-restart" type="button" title="計時回到「尚未開始」，已寫的觀課紀錄都留著">↺ 計時重新開始</button>
     <a class="btn rec-only" id="b-sum" target="_blank" style="text-decoration:none" title="所有觀察者的紀錄合在一起，議課時用">📋 議課總整理</a>
     <a class="btn sum-only" id="b-back" style="text-decoration:none">← 我的觀課紀錄</a>
     <button class="btn sum-only" id="b-reload" type="button">⟳ 重新整理</button>
@@ -487,13 +487,12 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
     state.fields.ended = fmt(elapsed()); timer = {start:null, paused:false, pausedMs:0}; saveTimer(); syncButtons(); renderTimeline();
   });
   setInterval(function(){ if(timer.start !== null && !timer.paused) renderTimeline(); }, 1000);
-  // 重新開始：這台裝置換一份全新的觀課紀錄（名字留著）；已經同步的舊紀錄還在伺服器上
+  // 計時重新開始：同一份紀錄，只把計時、分段時間、「已結束」清掉，回到「尚未開始」；寫過的紀錄都留著
   document.getElementById('b-restart').addEventListener('click', function(){
-    var has = state.entries.length || timer.start !== null || state.fields.ended || strip(state.fields.overall || '');
-    if(has && !confirm('重新開始一份新的觀課紀錄？\n這台裝置上的計時和紀錄會清空（已經同步的會留在議課總整理裡）。')) return;
-    clearTimeout(syncT);
-    try{ localStorage.removeItem(LKEY); }catch(e){}
-    location.href = location.pathname + '?plan=' + PLAN;
+    if(timer.start === null && !state.fields.ended){ setSync('還沒開始計時，等老師開始上課時按「▶ 開始上課」就可以'); return; }
+    if(!confirm('計時重新開始？\n計時會回到「尚未開始」，你寫的觀課紀錄都會留著。')) return;
+    timer = {start:null, paused:false, pausedMs:0}; marks = {}; state.fields.ended = '';
+    saveTimer(); syncButtons(); renderTimeline();
   });
 
   // ---------- 存檔與同步 ----------
