@@ -963,7 +963,7 @@ footer.doc a{ color:var(--ink-faint); }
     var q=qrcode(0,'M'); q.addData(text); q.make();
     return q.createDataURL(8,4);
   }
-  function printQR(token,name,unit){
+  function printQR(token,name,unit,short){
     var url=observeUrl(token), esc=function(s){ return String(s||'').replace(/[<>&"]/g,function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); };
     var w=window.open('','_blank');
     if(!w) return;
@@ -973,16 +973,16 @@ footer.doc a{ color:var(--ink-faint); }
       +'.u{font-size:.8rem;color:#1f5f9e;word-break:break-all}.s{font:700 1.7rem/1.3 Menlo,monospace;letter-spacing:1px;margin:0 0 12px}button{margin-top:18px;font-size:1rem;padding:8px 22px}@media print{button{display:none}}</style></head><body>'
       +'<h1>📝 歡迎來觀課</h1><p><b>'+esc(name)+'</b>'+(unit?'　'+esc(unit):'')+'</p>'
       +'<img src="'+qrDataUrl(url)+'" alt="觀課 QR Code">'
-      +'<p class="s">emath.tw/o/'+esc(token)+'</p>'
-      +'<p>用手機掃描，或在瀏覽器輸入上面的短網址，就能一邊看教案、一邊照教案的時間記錄觀課。</p><p class="u">'+esc(url)+'</p>'
+      +(short?'<p class="s">emath.tw/o/'+esc(short)+'</p>':'')
+      +'<p>用手機掃描'+(short?'，或在瀏覽器輸入上面的短網址':'')+'，就能一邊看教案、一邊照教案的時間記錄觀課。</p><p class="u">'+esc(url)+'</p>'
       +'<button onclick="print()">列印</button></body></html>');
     w.document.close();
   }
-  function qrBoxHTML(token){
+  function qrBoxHTML(token,short){
     return '<div class="qr-box"><b>📱 觀課用 QR Code</b>'
       +'<div style="font-size:.78rem;margin-top:4px">請留下來（下載或列印）。上課當天給來觀課的人掃描，就能照你的教案時間直接做觀課紀錄。</div>'
       +'<img src="'+qrDataUrl(observeUrl(token))+'" alt="觀課 QR Code">'
-      +'<div style="font:700 1.05rem Menlo,monospace;margin:2px 0 6px">emath.tw/o/'+token+'</div>'
+      +(short?'<div style="font:700 1.05rem Menlo,monospace;margin:2px 0 6px">emath.tw/o/'+short+'</div>':'')
       +'<div class="qr-act"><a id="qr-dl" href="'+qrDataUrl(observeUrl(token))+'" download="觀課QR_'+token+'.gif">下載圖片</a>'
       +'<button type="button" id="qr-print">列印一張</button></div></div>';
   }
@@ -1026,7 +1026,7 @@ footer.doc a{ color:var(--ink-faint); }
         });
         document.getElementById('banner-qr').addEventListener('click',function(ev){
           ev.preventDefault();
-          printQR(PLAN_TOKEN,d.name,(d.fields.unit||'').replace(/<[^>]*>/g,''));
+          printQR(PLAN_TOKEN,d.name,(d.fields.unit||'').replace(/<[^>]*>/g,''),d.short);
         });
         document.title=d.name+'－'+((d.fields.unit||'教案').replace(/<[^>]*>/g,''));
       })
@@ -1096,9 +1096,9 @@ footer.doc a{ color:var(--ink-faint); }
             +'<button type="button" id="edit-copy">複製</button></span></div>' : '');
         var tk=(String(d.share).match(/plan=([0-9a-f]{10})/)||[])[1];
         if(tk){
-          subMsg.insertAdjacentHTML('beforeend',qrBoxHTML(tk));
+          subMsg.insertAdjacentHTML('beforeend',qrBoxHTML(tk,d.short));
           var unit=(fields.unit||'').replace(/<[^>]*>/g,'');
-          document.getElementById('qr-print').addEventListener('click',function(){ printQR(tk,name,unit); });
+          document.getElementById('qr-print').addEventListener('click',function(){ printQR(tk,name,unit,d.short); });
         }
         var ec=document.getElementById('edit-copy');
         if(ec) ec.addEventListener('click',function(){
