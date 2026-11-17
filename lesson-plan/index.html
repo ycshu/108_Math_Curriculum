@@ -106,6 +106,8 @@ body{
 .sub-card button.go{ background:#1f7a52; border-color:#1f7a52; color:#fff; }
 .sub-msg{ font-size:.82rem; margin-top:10px; min-height:1.4em; }
 .sub-msg.ok{ color:#1f7a52; } .sub-msg.err{ color:#a13c3c; }
+.sub-bind{ margin-top:12px; padding:10px 12px; border-radius:8px; background:#fff7e6; border:1px solid #f0c36d; font-size:.82rem; color:#7a4b00; line-height:1.6; }
+.sub-bind label{ display:flex; gap:6px; align-items:center; margin:6px 0 0; color:#7a4b00; font-size:.82rem; }
 @media print{ .sub-modal{ display:none !important; } }
 .ex-menu button b{
   flex:none; font-family:"IBM Plex Mono",monospace; font-size:.7rem; font-weight:700;
@@ -490,6 +492,7 @@ footer.doc a{ color:var(--ink-faint); }
     <input id="sub-sid" type="text" placeholder="例：A1234567" autocomplete="off">
     <label>姓名</label>
     <input id="sub-name" type="text" placeholder="請填真實姓名" autocomplete="off">
+    <div class="sub-bind" id="sub-bind" hidden></div>
     <div class="sub-msg" id="sub-msg"></div>
     <div class="row">
       <button type="button" id="sub-cancel">取消</button>
@@ -551,12 +554,13 @@ footer.doc a{ color:var(--ink-faint); }
     document.querySelectorAll('[data-key]').forEach(function(el){
       if(el.type==='checkbox'){el.checked=false;} else {el.innerHTML='';}
     });
-    try{localStorage.removeItem(BKEY);localStorage.removeItem('lesson-plan-files-v1');}catch(e){}
+    try{localStorage.removeItem(BKEY);localStorage.removeItem('lesson-plan-files-v1');localStorage.removeItem('lp-bind');}catch(e){}
     boards=[]; render();
     if(typeof files!=='undefined'){ files=[]; frender(); }
     showReflect();
   });
   var PLAN_TOKEN = new URLSearchParams(location.search).get('plan');
+  var EDIT_KEY = (new URLSearchParams(location.search).get('edit')||'').replace(/[^0-9a-f]/g,'');
   if(PLAN_TOKEN && /^[0-9a-f]{10}$/.test(PLAN_TOKEN)){ PLAN_VIEW = true; } else { PLAN_TOKEN = null; load(); showReflect(); }
 
   // ===== 板書照片 =====
@@ -964,8 +968,26 @@ footer.doc a{ color:var(--ink-faint); }
         var b=document.getElementById('plan-banner');
         b.innerHTML='📄 檢視已繳交教案：<b>'+d.name.replace(/</g,'&lt;')+'（'+d.sid+'）</b>・繳交於 '+d.time+'　（此頁的編輯不會影響原繳交內容）'
           +'　<a href="../plan-observe/?plan='+PLAN_TOKEN+'" style="color:#f5d76e;font-weight:700">📝 用這份教案觀課 →</a>'
-          +'　<a href="#" id="banner-qr" style="color:#f5d76e;font-weight:700">📱 觀課 QR Code</a>';
+          +'　<a href="#" id="banner-qr" style="color:#f5d76e;font-weight:700">📱 觀課 QR Code</a>'
+          +((EDIT_KEY || !d.locked) ? '　<a href="#" id="banner-edit" style="color:#f5d76e;font-weight:700">✏️ 修改這份教案</a>' : '');
+        if(EDIT_KEY){ b.insertAdjacentHTML('afterbegin','<b style="color:#f5d76e">✏️ 這是你的修改連結，按右邊「修改這份教案」開始修改。</b><br>'); }
         b.classList.add('show');
+        // 把這份教案搬進編輯區，之後按「繳交至課程」會更新同一份（網址、觀課 QR Code 不變）
+        var be=document.getElementById('banner-edit');
+        if(be) be.addEventListener('click',function(ev){
+          ev.preventDefault();
+          var has=false;
+          try{ has=Object.keys(JSON.parse(localStorage.getItem(KEY)||'{}')).length>0; }catch(e){}
+          if(has && !confirm('這台電腦上已經有一份還沒交的草稿，載入這份教案會蓋掉它。要繼續嗎？')) return;
+          try{
+            localStorage.setItem(KEY,JSON.stringify(d.fields||{}));
+            localStorage.setItem(BKEY,JSON.stringify(d.boards||[]));
+            localStorage.setItem('lesson-plan-files-v1',JSON.stringify(d.files||[]));
+            localStorage.setItem('lp-bind',JSON.stringify({token:PLAN_TOKEN, edit:EDIT_KEY, sid:d.sid}));
+            localStorage.setItem('lp-sid',d.sid); localStorage.setItem('lp-name',d.name);
+          }catch(e){}
+          location.href=location.pathname;
+        });
         document.getElementById('banner-qr').addEventListener('click',function(ev){
           ev.preventDefault();
           printQR(PLAN_TOKEN,d.name,(d.fields.unit||'').replace(/<[^>]*>/g,''));
@@ -981,6 +1003,7 @@ footer.doc a{ color:var(--ink-faint); }
 
   // ===== 繳交至課程 =====
   var SUBMIT_URL='https://www.emath.tw/lesson-plan/api/submit';
+  function getBind(){ try{ var b=JSON.parse(localStorage.getItem('lp-bind')||'null'); return b&&b.token?b:null; }catch(e){ return null; } }
   var subModal=document.getElementById('sub-modal');
   var subMsg=document.getElementById('sub-msg');
   var sidEl=document.getElementById('sub-sid'), nameEl=document.getElementById('sub-name');
@@ -990,6 +1013,16 @@ footer.doc a{ color:var(--ink-faint); }
       nameEl.value=localStorage.getItem('lp-name')||'';
     }catch(e){}
     subMsg.textContent=''; subMsg.className='sub-msg';
+    var bind=getBind(), bx=document.getElementById('sub-bind');
+    if(bind){
+      bx.innerHTML='你之前已經交過這份教案，這次送出會<b>更新原本那一份</b>，教案網址和觀課 QR Code 都不會變。'
+        +'<label><input type="checkbox" id="sub-new"> 這是另一份新的教案（會拿到新的網址和 QR Code）</label>';
+      bx.hidden=false;
+      document.getElementById('sub-go').textContent='送出修改';
+      document.getElementById('sub-new').addEventListener('change',function(){
+        document.getElementById('sub-go').textContent=this.checked?'送出繳交':'送出修改';
+      });
+    }else{ bx.hidden=true; bx.innerHTML=''; document.getElementById('sub-go').textContent='送出繳交'; }
     subModal.classList.add('open');
   });
   document.getElementById('sub-cancel').addEventListener('click',function(){ subModal.classList.remove('open'); });
@@ -1004,21 +1037,40 @@ footer.doc a{ color:var(--ink-faint); }
     });
     fields.sid=sid;
     subMsg.textContent='傳送中⋯'; subMsg.className='sub-msg';
+    var payload={sid:sid,name:name,fields:fields,boards:boards,files:files};
+    var bind=getBind(), nb=document.getElementById('sub-new');
+    if(bind && !(nb && nb.checked)){ payload.token=bind.token; payload.edit=bind.edit||''; }
     fetch(SUBMIT_URL,{
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({sid:sid,name:name,fields:fields,boards:boards,files:files})
+      body:JSON.stringify(payload)
     }).then(function(r){ return r.json(); }).then(function(d){
       if(d.ok){
         subMsg.className='sub-msg ok';
-        subMsg.innerHTML='✓ 已繳交（'+d.time+'）。可重複繳交，以最後一次為準。<br>你的<b>教案網址</b>（請複製後貼到 Moodle 繳交）：'
+        try{ localStorage.setItem('lp-bind',JSON.stringify({token:d.token, edit:d.edit||'', sid:sid})); }catch(e){}
+        var bx=document.getElementById('sub-bind'); bx.hidden=true; bx.innerHTML='';
+        subMsg.innerHTML=(d.updated
+            ? '✓ 已更新（'+d.time+'）。教案網址和觀課 QR Code 都沒有變，之前存的可以繼續用。'
+            : '✓ 已繳交（'+d.time+'）。之後要修改，直接在這台電腦改好再按一次「繳交至課程」就會更新這一份。')
+          +'<br>你的<b>教案網址</b>（請複製後貼到 Moodle 繳交）：'
           +'<span class="share-box"><input id="share-url" readonly value="'+d.share+'">'
-          +'<button type="button" id="share-copy">複製</button></span>';
+          +'<button type="button" id="share-copy">複製</button></span>'
+          +(d.edit ? '<div style="margin-top:10px;padding:10px 12px;border-radius:8px;background:#fff7e6;border:1px solid #f0c36d;color:#7a4b00">'
+            +'✏️ 你的<b>修改連結</b>：之後要改教案，用這個連結打開，改好按「繳交至課程」就會更新同一份（網址和 QR Code 不變）。請自己留著，不要分享給別人。'
+            +'<span class="share-box"><input id="edit-url" readonly value="'+d.share+'&edit='+d.edit+'">'
+            +'<button type="button" id="edit-copy">複製</button></span></div>' : '');
         var tk=(String(d.share).match(/plan=([0-9a-f]{10})/)||[])[1];
         if(tk){
           subMsg.insertAdjacentHTML('beforeend',qrBoxHTML(tk));
           var unit=(fields.unit||'').replace(/<[^>]*>/g,'');
           document.getElementById('qr-print').addEventListener('click',function(){ printQR(tk,name,unit); });
         }
+        var ec=document.getElementById('edit-copy');
+        if(ec) ec.addEventListener('click',function(){
+          var inp=document.getElementById('edit-url');
+          inp.select(); inp.setSelectionRange(0,300);
+          try{ navigator.clipboard.writeText(inp.value); }catch(e){ try{ document.execCommand('copy'); }catch(e2){} }
+          this.textContent='已複製 ✓';
+        });
         document.getElementById('share-copy').addEventListener('click',function(){
           var inp=document.getElementById('share-url');
           inp.select(); inp.setSelectionRange(0,200);
