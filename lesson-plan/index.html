@@ -178,8 +178,14 @@ table.acts .t-col{ width:64px; text-align:center; }
 table.acts .r-col{ width:150px; }
 table.acts td.stage{
   width:84px; text-align:center; font-weight:700; color:var(--accent);
-  background:var(--surface-2); font-size:.84rem;
+  background:var(--surface-2); font-size:.84rem; position:relative;
 }
+table.acts td.stage .fill{ min-height:2.4em; text-align:center; }
+table.acts .act-del{ display:block; margin:8px auto 0; font-size:.72rem; padding:2px 8px; border-radius:999px;
+  border:1px solid #d9a3a3; background:transparent; color:#a13c3c; cursor:pointer; }
+.acts-tools{ margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; font-size:.8rem; color:#2f6f8f; }
+.acts-tools button{ font-size:.86rem; padding:6px 14px; border-radius:8px; border:1.5px dashed var(--accent); background:transparent; color:var(--accent); font-weight:700; cursor:pointer; }
+@media print{ .acts-tools, table.acts .act-del{ display:none !important; } }
 
 ol.goal{ margin:0; padding-left:1.4em; counter-reset:g; list-style:decimal; }
 ol.goal li{ margin-bottom:6px; }
@@ -376,33 +382,12 @@ footer.doc a{ color:var(--ink-faint); }
 <section class="part">
   <div class="part-head"><h2>五、教學活動設計</h2><span class="en">Activities</span></div>
   <p class="part-note">評量方式一欄請具體寫出「看什麼、如何回饋」（提問／操作觀察／隨堂練習／小組發表⋯⋯），使學習任務兼具形成性評量功能。</p>
-  <table class="acts">
+  <table class="acts" id="acts">
     <tr><th style="width:84px">階段</th><th>教學活動與布題（含教師引導語、預期學生反應）</th><th class="t-col">時間</th><th class="r-col">評量方式／教學資源</th></tr>
-    <tr>
-      <td class="stage">引起動機</td>
-      <td><div class="fill" contenteditable="true" data-key="act1" data-ph=""></div></td>
-      <td class="narrow"><div class="fill" contenteditable="true" data-key="act1t" data-ph="分"></div></td>
-      <td><div class="fill" contenteditable="true" data-key="act1a" data-ph=""></div></td>
-    </tr>
-    <tr>
-      <td class="stage">發展活動</td>
-      <td><div class="fill" contenteditable="true" data-key="act2" data-ph=""></div></td>
-      <td class="narrow"><div class="fill" contenteditable="true" data-key="act2t" data-ph="分"></div></td>
-      <td><div class="fill" contenteditable="true" data-key="act2a" data-ph=""></div></td>
-    </tr>
-    <tr>
-      <td class="stage">發展活動</td>
-      <td><div class="fill" contenteditable="true" data-key="act3" data-ph=""></div></td>
-      <td class="narrow"><div class="fill" contenteditable="true" data-key="act3t" data-ph="分"></div></td>
-      <td><div class="fill" contenteditable="true" data-key="act3a" data-ph=""></div></td>
-    </tr>
-    <tr>
-      <td class="stage">總結活動</td>
-      <td><div class="fill" contenteditable="true" data-key="act4" data-ph=""></div></td>
-      <td class="narrow"><div class="fill" contenteditable="true" data-key="act4t" data-ph="分"></div></td>
-      <td><div class="fill" contenteditable="true" data-key="act4a" data-ph=""></div></td>
-    </tr>
   </table>
+  <div class="acts-tools"><button type="button" id="act-add">＋ 新增一列</button>
+    <span>一列寫一段活動；階段名稱（例如引起動機、發展活動、總結活動）可以自己改。</span></div>
+  <div hidden class="fill" data-key="actrows"></div>
 </section>
 
 
@@ -509,9 +494,56 @@ footer.doc a{ color:var(--ink-faint); }
 <script>
 (function(){
   var KEY='lesson-plan-draft-v1';
+  // ===== 五、教學活動設計：列數可以增減，階段名稱自己填 =====
+  var STAGE_PH=['引起動機','發展活動','發展活動','總結活動'];
+  function actRow(i){
+    var ph=STAGE_PH[i-1]||'發展活動';
+    return '<tr class="act-row">'
+      +'<td class="stage"><div class="fill" contenteditable="true" data-key="act'+i+'n" data-ph="'+ph+'"></div>'
+      +'<button type="button" class="act-del" data-i="'+i+'" title="刪除這一列">刪除這列</button></td>'
+      +'<td><div class="fill" contenteditable="true" data-key="act'+i+'" data-ph=""></div></td>'
+      +'<td class="narrow"><div class="fill" contenteditable="true" data-key="act'+i+'t" data-ph="分"></div></td>'
+      +'<td><div class="fill" contenteditable="true" data-key="act'+i+'a" data-ph=""></div></td></tr>';
+  }
+  function actCount(){ return document.querySelectorAll('#acts .act-row').length; }
+  // 依資料決定要幾列（至少 4 列），先把格子做出來，load 才填得進去
+  function setActRows(n, keep){
+    var vals={};
+    if(keep) document.querySelectorAll('#acts [data-key]').forEach(function(el){ vals[el.dataset.key]=el.innerHTML; });
+    document.querySelectorAll('#acts .act-row').forEach(function(r){ r.remove(); });
+    var tb=document.querySelector('#acts tbody')||document.getElementById('acts'), h='';
+    for(var i=1;i<=n;i++) h+=actRow(i);
+    tb.insertAdjacentHTML('beforeend',h);
+    if(keep) Object.keys(vals).forEach(function(k){ var el=document.querySelector('#acts [data-key="'+k+'"]'); if(el) el.innerHTML=vals[k]; });
+    var rc=document.querySelector('[data-key="actrows"]'); if(rc) rc.textContent=String(n);
+  }
+  function rowsFor(d){
+    var n=Math.max(4, parseInt((d&&d.actrows)||'0',10)||0);
+    Object.keys(d||{}).forEach(function(k){ var m=k.match(/^act(\d+)[nta]?$/); if(m) n=Math.max(n,+m[1]); });
+    return Math.min(n,30);
+  }
+  setActRows(4);
+  document.getElementById('act-add').addEventListener('click',function(){
+    if(actCount()>=30) return;
+    setActRows(actCount()+1, true); save();
+    var last=document.querySelector('#acts .act-row:last-child [data-key$="n"]'); if(last) last.focus();
+  });
+  document.getElementById('acts').addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.act-del'); if(!b) return;
+    var i=+b.dataset.i, n=actCount();
+    if(n<=1) return;
+    var row=b.closest('tr'), has=Array.prototype.some.call(row.querySelectorAll('[data-key]'),function(el){ return el.textContent.trim(); });
+    if(has && !confirm('確定刪除這一列（第 '+i+' 列）？這列寫的內容會一起刪掉。')) return;
+    // 後面的列往前補
+    for(var j=i;j<n;j++) ['n','','t','a'].forEach(function(x){
+      document.querySelector('#acts [data-key="act'+j+x+'"]').innerHTML=document.querySelector('#acts [data-key="act'+(j+1)+x+'"]').innerHTML;
+    });
+    setActRows(n-1, true); save();
+  });
   function load(){
     try{
       var d=JSON.parse(localStorage.getItem(KEY)||'{}');
+      setActRows(rowsFor(d));
       document.querySelectorAll('[data-key]').forEach(function(el){
         var v=d[el.dataset.key];
         if(v===undefined)return;
@@ -555,7 +587,7 @@ footer.doc a{ color:var(--ink-faint); }
       if(el.type==='checkbox'){el.checked=false;} else {el.innerHTML='';}
     });
     try{localStorage.removeItem(BKEY);localStorage.removeItem('lesson-plan-files-v1');localStorage.removeItem('lp-bind');}catch(e){}
-    boards=[]; render();
+    boards=[]; render(); setActRows(4);
     if(typeof files!=='undefined'){ files=[]; frender(); }
     showReflect();
   });
@@ -895,6 +927,7 @@ footer.doc a{ color:var(--ink-faint); }
 
   function loadExample(id){
     var ex = EXAMPLES[id]; if(!ex) return;
+    setActRows(4);
     document.querySelectorAll('[data-key]').forEach(function(el){
       if(el.type==='checkbox'){ el.checked=false; return; }
       var k = el.dataset.key;
@@ -958,6 +991,7 @@ footer.doc a{ color:var(--ink-faint); }
       .then(function(r){ return r.json(); })
       .then(function(d){
         if(!d.ok){ throw new Error(d.error||'load failed'); }
+        setActRows(rowsFor(d.fields));
         document.querySelectorAll('[data-key]').forEach(function(el){
           if(el.type==='checkbox'){ el.checked=false; return; }
           var v=d.fields[el.dataset.key];

@@ -275,10 +275,11 @@ table.tt td:first-child,table.tt th:first-child{text-align:left;white-space:nowr
   function buildStages(){
     var f = plan.fields;
     stages = [];
-    for(var i=1;i<=4;i++){
+    for(var i=1;i<=30;i++){
       var txt = strip(f['act'+i]), mm = mins(f['act'+i+'t']);
       if(!txt && !(mm > 0)) continue;
-      stages.push({key:'act'+i, name:STAGE_NAMES[i-1], min: mm > 0 ? mm : 0});
+      // 階段名稱學生自己填；舊教案沒有就用預設的四段名稱
+      stages.push({key:'act'+i, name: strip(f['act'+i+'n']) || STAGE_NAMES[i-1] || ('第 '+i+' 段'), min: mm > 0 ? mm : 0});
     }
   }
   // 每段的開始時間（毫秒）：有按「進入下一段」就用實際時間，沒有就接在前一段後面照教案的分鐘數排
