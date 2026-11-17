@@ -182,7 +182,7 @@ table.acts td.stage{
 }
 table.acts td.stage .fill{ min-height:2.4em; text-align:center; }
 table.acts .act-del{ display:block; margin:8px auto 0; font-size:.72rem; padding:2px 8px; border-radius:999px;
-  border:1px solid #d9a3a3; background:transparent; color:#a13c3c; cursor:pointer; }
+  border:1px solid #d9a3a3; background:transparent; color:#a13c3c; cursor:pointer; white-space:nowrap; }
 .acts-tools{ margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; font-size:.8rem; color:#2f6f8f; }
 .acts-tools button{ font-size:.86rem; padding:6px 14px; border-radius:8px; border:1.5px dashed var(--accent); background:transparent; color:var(--accent); font-weight:700; cursor:pointer; }
 @media print{ .acts-tools, table.acts .act-del{ display:none !important; } }
@@ -500,7 +500,7 @@ footer.doc a{ color:var(--ink-faint); }
     var ph=STAGE_PH[i-1]||'發展活動';
     return '<tr class="act-row">'
       +'<td class="stage"><div class="fill" contenteditable="true" data-key="act'+i+'n" data-ph="'+ph+'"></div>'
-      +'<button type="button" class="act-del" data-i="'+i+'" title="刪除這一列">刪除這列</button></td>'
+      +'<button type="button" class="act-del" data-i="'+i+'" title="刪除這一列">✕ 刪除</button></td>'
       +'<td><div class="fill" contenteditable="true" data-key="act'+i+'" data-ph=""></div></td>'
       +'<td class="narrow"><div class="fill" contenteditable="true" data-key="act'+i+'t" data-ph="分"></div></td>'
       +'<td><div class="fill" contenteditable="true" data-key="act'+i+'a" data-ph=""></div></td></tr>';
